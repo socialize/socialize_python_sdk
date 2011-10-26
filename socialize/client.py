@@ -76,7 +76,7 @@ class Applications(CollectionBase):
         self.next_url = None
         self.previous_url = None
     
-    def find(self, params={}):
+    def find(self):
         meta, items = self._find('application')
         apps = []
         for item in items:
@@ -90,32 +90,48 @@ class Applications(CollectionBase):
         return app
 
     def new(self):
-        return Application().new()
+        newapp = {}  ## add blank app
+        return Application(newapp)
     
+
 class Application(object):
     def __repr__(self):
-        return '<id: %s ,name: %s>'%(self.app_id, self.name)
-    
-    ## can use kwargs later // 
-    def __init__(self,app):
-        self.app_id                 = app['id']
-        self.android_package_name   = app['android_package_name']
-        self.apple_store_id         = app['apple_store_id']
-        self.category               = app['category']  
-        self.description            = app['description']   
-        self.platform               = app['platforms']   
-        self.name                   = app['name']  
-        self.user_id                = app['user']  
+        if self.name=="":
+            return '<new application>'
+        elif self.id==0:
+            return '<id: %s, name:%s unsaved app>'%(self.id, self.name) 
+        return '<id: %s ,name: %s>'%(self.id, self.name)
+       
+    def __init__(self,app_dict={}):
+        '''
+            new app using app_dict = {} > id = 0
+        '''
+## can't modify
+        self.id                         =app_dict.get('id',0) 
+        self.created                    =app_dict.get('created','') 
+        self.deleted                    =app_dict.get('deleted','') 
+        self.last_saved                 =app_dict.get('last_saved','') 
+        self.socialize_consumer_key     =app_dict.get('socialize_consumer_key','') 
+        self.socialize_consumer_secret  =app_dict.get('socialize_consumer_secret','') 
+        self.socialize_app              =app_dict.get('socialize_app','') 
 
-    def new(self):
-        self.android_package_name   = ''
-        self.apple_store_id         = ''
-        self.category               = ''
-        self.description            = ''
-        self.mobile_platform        = ''   
-        self.name                   = ''
-        self.user_id                = ''
- 
+## modifiable  
+        self.android_package_name 		=app_dict.get('android_package_name','') 
+        self.apple_store_id             =app_dict.get('apple_store_id','') 
+        self.category                   =app_dict.get('category','') 
+        self.description                =app_dict.get('description','') 
+        self.name                       =app_dict.get('name','') 
+        self.platforms                  =app_dict.get('platforms',[]) 
+        self.resource_uri               =app_dict.get('resource_uri','') 
+        self.stats                      =app_dict.get('stats','') 
+        self.user                       =app_dict.get('user','') 
+
+    def save():
+        
+        
+        return True
+    
+
     def to_dict(self):
         return self.__dict__
 
@@ -140,24 +156,29 @@ class Request(object):
         self.token = oauth.Token('','')
         self.client = oauth.Client(self.consumer,self.token)
 
-    def __construt_response(self,response_header, response_body):
+    def __construt_response(self, url, response_header, response_body):
+        ## response from request will be json.
+        
         try:
             status_code = response_header['status']
-            
+            content = json.loads(response_body)
+
             if status_code[0] != '2':    ## Only accept '2xx'
                 raise Exception('Server return status code %i\n%s'%(status_code, content))
-        
-            content = json.loads(response_body)
             return content
         except Exception, err:
-            raise Exception('Bad Response please check url\n%s'%err)
+            raise Exception('Bad Response please check url:%s\n%s'%(url,err))
 
     def get(self,url,params={}):
         response_header, response_body = self.client.request(url,'GET')
-        return  self.__construt_response(response_header, response_body)
+        return  self.__construt_response(url,response_header, response_body)
 
-    def post(key,secret,url,params):
-        pass
+    def post(key,secret,url,payload):
+        response_header, response_body = self.client.request(url,
+                                            method='POST',
+                                            body='payload='+json.dumps(payload))
+        print response_header
+        print response_body
 
     def delete(key,secret,url):
         pass
