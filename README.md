@@ -1,14 +1,13 @@
 Socialize Python SDK
 ====================
 
-Status
-------
+How to use
+----------
 
 This SDK is a work in progress. Below are the implemented endpoints.
 
     * Partner API
-        * application GET 
-        * application/<id>
+        Please check the tests/partner.py 
 
 
 Usage
@@ -22,13 +21,12 @@ Examples:
     from socialize.client import Partner
     
     partner = Partner(key,secret,url)  
-    apps = partner.applications()
+    apps = partner.applications(userId)
     # apps.find() return meta dict, list of application
     meta, result = apps.find()
     # apps.findOne(id) return application object
     application = apps.findOne(42)
 
 
-    ## meta['next'], meta['previous'] will return url for next page
 
 
