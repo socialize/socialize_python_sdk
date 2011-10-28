@@ -7,8 +7,7 @@ How to use
 This SDK is a work in progress. Below are the implemented endpoints.
 
     * Partner API
-        Please check the tests/partner.py 
-
+        There 's no doc for this yet, Please check the tests/partner.py 
         TEST:
             
             modify setting.py
