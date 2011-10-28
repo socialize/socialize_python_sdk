@@ -1,4 +1,7 @@
-from settings import version, host, key, secret, user_id , app_id
+try:
+    from local_settings import version, host, key, secret, user_id , app_id
+except:
+    from settings import version, host, key, secret, user_id , app_id
 from socialize.client import *
 from tests.base import SocializeTest
 

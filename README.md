@@ -15,9 +15,8 @@ This SDK is a work in progress. Below are the implemented endpoints.
 
             run test
             nosetests
-        
-            run test with printing
-            nosetests -s
+            nosetests -s    # runtest with print output
+            nosetests -v    # runtest with verbosity
 Usage
 -----
 
