@@ -9,7 +9,15 @@ This SDK is a work in progress. Below are the implemented endpoints.
     * Partner API
         Please check the tests/partner.py 
 
+        TEST:
+            
+            modify setting.py
 
+            run test
+            nosetests
+        
+            run test with printing
+            nosetests -s
 Usage
 -----
 
