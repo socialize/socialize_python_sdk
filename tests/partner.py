@@ -76,7 +76,7 @@ class PartnerTestWrite(SocializeTest):
         or run specific using nosetests 
     '''
     
-    def test_write_flow(self):
+    def xtest_write_flow(self):
         app_id = self.create_app()
         self.update_app(app_id)
         self.delete_app(app_id)
@@ -101,7 +101,7 @@ class PartnerTestWrite(SocializeTest):
         self.assertTrue(app.last_saved != '')
         return app.id
 
-    def update_app(self,app_id):
+    def test_update_app(self,app_id):
         partner = Partner(key,secret,url=host)
         applications = partner.applications()
         app =  applications.findOne(app_id)            

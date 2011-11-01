@@ -108,7 +108,7 @@ class Applications(CollectionBase):
         findOne(id) Return single application by id    
     '''
     ## next, previous will be carefully implement next release 
-    find_valid_constrains = ['format','offset','limit','user','order_by']
+    find_valid_constrains = ['format','offset','limit','user','order_by','deleted']
     findOne_valid_constrains = ['format','user'] ## not allowed any constran
 
     def verify_constrain(self,params,is_findOne):
@@ -190,8 +190,12 @@ class Application(ObjectBase):
         self.resource_uri               =app_dict.get('resource_uri','') 
         self.stats                      =app_dict.get('stats','') 
         self.user                       =app_dict.get('user','0')
-
-    def __to_post_payload(self,isPost=True):
+        self.display_name               =self.name
+    def __to_post_payload(self,isPost=True):    
+        '''
+            isPost = Add new application
+            not isPost = PUT , update application
+        '''
         if isPost: 
             item ={    "category" : self.category,
                         "description" : self.description,
@@ -232,7 +236,6 @@ class Application(ObjectBase):
             location = self._post('application', self.__to_post_payload(True))
             self.id =location.split('/')[-2]
         else:           #PUT
-            
             self._put('application', self.id, self.__to_post_payload(False))
         self.refresh()
 
@@ -310,3 +313,4 @@ class Request(object):
             (parts[0], parts[1], parts[2], parts[3], urllib.urlencode(query), parts[5])
         )           
         return url
+
