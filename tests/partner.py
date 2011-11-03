@@ -9,7 +9,7 @@ from tests.base import SocializeTest
 class PartnerTestRead(SocializeTest):
     '''
         find(), findOne(),
-    '''
+    '''   
     def test_collections_get(self):
         '''
             ** get applications by user in database
