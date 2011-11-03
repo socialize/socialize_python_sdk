@@ -191,6 +191,8 @@ class Application(ObjectBase):
         self.stats                      =app_dict.get('stats','') 
         self.user                       =app_dict.get('user','0')
         self.display_name               =self.name
+        self.icon_url                   =app_dict.get('icon_url',None)
+
     def __to_post_payload(self,isPost=True):    
         '''
             isPost = Add new application
