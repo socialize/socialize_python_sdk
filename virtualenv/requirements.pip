@@ -1,4 +1,7 @@
 distribute==0.6.19
 httplib2==0.7.1
+nose==1.1.2
 oauth2==1.5.170
+simplejson==2.2.1
 wsgiref==0.1.2
+yolk==0.4.1
