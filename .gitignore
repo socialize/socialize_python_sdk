@@ -2,4 +2,5 @@
 *.swp
 local_settings.py
 .coverage
-virtualenv/lib/
+coverage.xml
+_install/
