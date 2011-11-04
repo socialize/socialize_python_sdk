@@ -7,36 +7,35 @@ How to use
 First time running you will need to activate the virtual environment to download
 required package.
 
-    First time runner:
-    __________________
 
     ./build.sh build
 
-    Unit tests:
-    ___________
+    or modify the settings.py with verified partner key/secret.
 
     ./build.sh unit_test
 
     Or running tests using nosetests:
-    _________________________________
 
-    _install/bin/nosetests [-s for print output| -v more verbose]
+    _install/bin/nosetests [ -s for print output| -v more verbose ]
 
     
     
 
 This SDK is a work in progress. Below are the implemented endpoints.
 
-    * Partner API
-        There 's no doc for this yet, Please check the tests/partner.py 
-        TEST:
-            
-            modify setting.py
 
-            run test
-            nosetests
-            nosetests -s    # runtest with print output
-            nosetests -v    # runtest with verbosity
+Partner API:
+
+    partner/v1/application
+        GET list of applications
+        POST new application
+
+    partner/v1/application/<id>
+        GET specific application
+        PUT update application information
+
+
+
 Usage
 -----
 
