@@ -4,6 +4,27 @@ Socialize Python SDK
 How to use
 ----------
 
+First time running you will need to activate the virtual environment to download
+required package.
+
+    First time runner:
+    __________________
+
+    ./build.sh build
+
+    Unit tests:
+    ___________
+
+    ./build.sh unit_test
+
+    Or running tests using nosetests:
+    _________________________________
+
+    _install/bin/nosetests [-s for print output| -v more verbose]
+
+    
+    
+
 This SDK is a work in progress. Below are the implemented endpoints.
 
     * Partner API
