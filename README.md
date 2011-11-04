@@ -27,12 +27,12 @@ This SDK is a work in progress. Below are the implemented endpoints.
 Partner API:
 
     partner/v1/application
-        GET list of applications
-        POST new application
+        - GET list of applications
+        - POST new application
 
     partner/v1/application/<id>
-        GET specific application
-        PUT update application information
+        - GET specific application
+        - PUT update application information
 
 
 
