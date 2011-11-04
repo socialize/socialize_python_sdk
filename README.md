@@ -44,13 +44,27 @@ The client can be installed as a module and imported.
 
 Examples:
 
+    
     from socialize.client import Partner
     
+    '''
+        Partner interface can return
+            - a list of applications
+            - Single Application Object
+    '''
+
     partner = Partner(key,secret,url)  
     apps = partner.applications(userId)
-    # apps.find() return meta dict, list of application
+
+    for app in apps:
+        print app
+        print app.to_dict()
+
+    # apps.find() return meta dict, list of application by userId
     meta, result = apps.find()
+    
     # apps.findOne(id) return application object
+    
     application = apps.findOne(42)
 
 
