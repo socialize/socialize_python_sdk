@@ -210,6 +210,23 @@ def testFindByUser():
     for i in result:
         print i
 
+
+def testOauthDelete():
+    url = 'http://stage.api.getsocialize.com/partner/v1/application/323109/'
+    method = 'DELETE'
+    app_id = 323109
+    consumer = oauth.Consumer(key,secret)
+    token = oauth.Token('','')
+
+    client = oauth.Client(consumer,token)
+#resp,content = client.request(url, 'GET',parameters='{format:json}',use_oauth_headers=True)
+
+    resp , content = client.request(url, method)
+    print resp
+    print content
+    print '--'
+
+
 def testAll():           
     testOauthGet() 
     testClientGet()
@@ -225,10 +242,12 @@ def testAll():
     testPartnerUpdateApp()
     testFindByUser()
     testConstructUrl()
-
+    #testOauthDelete()
 #testAll()
 #testApplicationFindOne()
 #testPartnerSaveApp()
 #testRequestPut()
 #testPartnerSaveApp()
-testPartnerUpdateApp()
+#testPartnerUpdateApp()
+
+testOauthDelete()

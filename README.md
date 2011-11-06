@@ -33,7 +33,7 @@ Partner API:
     partner/v1/application/<id>
         - GET specific application
         - PUT update application information
-
+        - Delete 
 
 
 Usage

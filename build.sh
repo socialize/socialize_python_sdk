@@ -28,8 +28,8 @@ unit_test(){
     clean
     build
     echo ----------- Running Unit Test ----------------
-    _install/bin/nosetests tests --with-coverage --cover-package=socialize -v
-    _install/bin/coverage xml
+    $INSTALL_DIR/bin/nosetests tests --with-coverage --cover-package=socialize -v
+    $INSTALL_DIR/bin/coverage xml
 }
 
 usage() {

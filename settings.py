@@ -6,4 +6,5 @@ secret = 'sharing-secret-is-same-as-sharing-toothbrush'
 user_id = 0
 ## app_id use for test // do not use Your own app_id, data might get deleted, update.
 app_id = 0
-
+## delete app use for test // test_delete_app // api will set flag delete = True
+delete_app = 0

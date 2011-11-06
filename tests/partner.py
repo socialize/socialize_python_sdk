@@ -1,10 +1,12 @@
 try:
-    from local_settings import version, host, key, secret, user_id , app_id
+    from local_settings import version, host, key, secret, user_id , app_id, delete_app
 except:
-    from settings import version, host, key, secret, user_id , app_id
-from socialize.client import Partner
-from tests.base import SocializeTest
+    from settings import version, host, key, secret, user_id , app_id, delete_app
 
+
+
+from socialize.client import Partner ,Applications, Application
+from tests.base import SocializeTest
 
 class PartnerTestRead(SocializeTest):
     '''
@@ -14,8 +16,7 @@ class PartnerTestRead(SocializeTest):
         '''
             ** get applications by user in database
         '''
-        partner = Partner(key,secret,url=host)
-        apps = partner.applications(user_id)
+        apps = self.partner.applications(user_id)
         meta, result = apps.find()
 
         self.assertTrue(meta['total_count'] > 0)
@@ -26,10 +27,7 @@ class PartnerTestRead(SocializeTest):
         '''
             ** get collection of applications with parameters
         '''
-        
-        partner = Partner(key,secret,url=host)
-        apps = partner.applications(user_id)
-        
+        apps = self.partner.applications(user_id)
         params = {'format':'json',
                 'offset':1,         ## start position
                 'limit':4,          ## number of return per page
@@ -46,8 +44,7 @@ class PartnerTestRead(SocializeTest):
         '''
             ** get with bad params 
         '''
-        partner = Partner(key,secret,url=host)
-        apps = partner.applications(user_id)
+        apps = self.partner.applications(user_id)
         
         params = {'invalid param':'xox'}
         try:
@@ -60,13 +57,40 @@ class PartnerTestRead(SocializeTest):
         '''
             ** get single application object by app-id using findOne()
         '''
-        partner = Partner(key,secret,url=host)
-        apps = partner.applications(user_id)
+
+        apps = self.partner.applications(user_id)
 
         ## get specific app id
         app = apps.findOne(app_id)
+        self.assertEqual( app.id , str(app_id))
+        self.assertTrue( app.name != '')
         
         ## show Application Object <id: 240754 ,name: test_app>
+    def test_app_obj(self):
+        '''
+            ** return valid type of object
+        '''
+        apps = self.partner.applications(user_id)
+        self.assertEqual( type(apps), Applications)
+
+        new_app = self.partner.application()
+        self.assertEqual( type(new_app), Application)
+
+        app = apps.findOne(app_id)
+        self.assertEqual( type(app), Application)
+
+    def test_new_apps(self):
+        '''
+            ** test two ways of creating new application
+        '''
+        new_app = self.partner.application()
+        self.assertEqual( type(new_app), Application)
+
+        apps = self.partner.applications(user_id)
+        new_app2 = apps.new()
+
+        self.assertEqual( type(new_app), type(new_app2))
+        self.assertEqual( new_app, new_app)
 
 class PartnerTestWrite(SocializeTest):
     '''
@@ -76,14 +100,12 @@ class PartnerTestWrite(SocializeTest):
         or run specific using nosetests 
     '''
     
-    def xtest_write_flow(self):
+    def test_write_flow(self):
         app_id = self.create_app()
         self.update_app(app_id)
-        self.delete_app(app_id)
 
     def create_app(self):
-        partner = Partner(key,secret,url=host)
-        applications = partner.applications()
+        applications = self.partner.applications(user_id)
         app =  applications.new()
         
         ## app id =0 before save()
@@ -91,7 +113,7 @@ class PartnerTestWrite(SocializeTest):
         
         app.name='The newest Socialize App'
         app.desc='Test application from python sdk'
-        app.mobile_platform=['iPhone','android']
+        app.mobile_platform=['iPhone','android', ]
         app.category = 'Business'
         ## need to assign to specific user
         app.user = user_id
@@ -101,21 +123,45 @@ class PartnerTestWrite(SocializeTest):
         self.assertTrue(app.last_saved != '')
         return app.id
 
-    def test_update_app(self,app_id):
-        partner = Partner(key,secret,url=host)
-        applications = partner.applications()
+    def update_app(self,app_id):
+        applications = self.partner.applications(user_id)
         app =  applications.findOne(app_id)            
+
         previous_save_time = app.last_saved        
         new_name = 'Change name to new name'
+        #print app.to_dict()
         app.name= new_name
         ## update if app already have an id
         app.save()
+        #print app.to_dict()
         self.assertEqual(app.name,new_name) 
         self.assertTrue(app.last_saved != previous_save_time)
 
+    def test_delete_app(self,delete_app = delete_app):
+        '''
+            Application DELETE 
+        '''
+        applications = self.partner.applications(user_id)
+        app = applications.findOne(delete_app)
+        ## return True when succesfully delete
+        resp = app.delete()
+        self.assertTrue(resp)
+        app = applications.findOne(delete_app)
+        self.assertEqual( app.delete(), True)
 
-#    def delete_app(self,app_id):
-        #partner = Partner(key,secret,url=host)
-        #applications = partner.applications()
-        #app =  applications.findOne(app_id)
-        #app.delete()
+    def test_applications_delete( self,delete_app = delete_app):
+        '''
+            Applications delete by app_id
+        '''
+        applications = self.partner.applications(user_id)
+        resp = applications.delete(delete_app)
+        ## return True when succesfully delete
+        self.assertTrue(resp)
+
+        applications = self.partner.applications(user_id)        
+        app = applications.findOne(delete_app)
+        self.assertEqual( app.delete(), True)  
+
+
+
+

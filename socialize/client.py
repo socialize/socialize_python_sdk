@@ -18,7 +18,7 @@ class Partner(object):
         self.url = url
         
 
-    def applications(self,user=None):
+    def applications(self,user):
         """ return collection of applications object"""
         return Applications(self.key,self.secret,self.url,user)
 
@@ -28,7 +28,7 @@ class Partner(object):
 
     def users(app_id):
         """ return user object (not yet implemented)"""
-        pass
+        raise Exception("Not yet implemented")
 
 class CollectionBase(Partner):
     def _find(self, endpoint, params={}):
@@ -62,7 +62,21 @@ class CollectionBase(Partner):
                                 )
         request = Request(self.key,self.secret)
         return request.get(request_url, params)
-                                         
+
+    def _delete(self, endpoint, app_id):
+        '''
+            DELETE specific item on api
+        '''
+        request_url = '%s/%s/%s/%s/%s/'%(self.url,
+                                self.base_partner_path,
+                                self.version,
+                                self.partner_endpoints[endpoint],
+                                app_id
+                                )
+        request = Request(self.key,self.secret)
+        return request.delete(request_url)   
+                                                     
+
 class ObjectBase(Partner):
     def _post(self, endpoint, payload, params={}):
         """
@@ -90,6 +104,19 @@ class ObjectBase(Partner):
         request = Request(self.key,self.secret)
         return request.put(request_url, payload)   
 
+    def _delete(self, endpoint, item_id):
+        '''
+            DELETE specific item on api
+        '''
+        request_url = '%s/%s/%s/%s/%s/'%(self.url,
+                                self.base_partner_path,
+                                self.version,
+                                self.partner_endpoints[endpoint],
+                                item_id
+                                )
+        request = Request(self.key,self.secret)
+        return request.delete(request_url)   
+
     def _get(self, endpoint, item_id):
         """
             update itself after post/put
@@ -105,11 +132,13 @@ class ObjectBase(Partner):
  
 class Applications(CollectionBase):
     ''' find() Return collection of Application
-        findOne(id) Return single application by id    
+        findOne(id) Return single application by id 
+
+        **  parameter user is required 
     '''
     ## next, previous will be carefully implement next release 
     find_valid_constrains = ['format','offset','limit','user','order_by','deleted']
-    findOne_valid_constrains = ['format','user'] ## not allowed any constran
+    findOne_valid_constrains = ['format','user'] ## not allowed any constrain
 
     def verify_constrain(self,params,is_findOne):
         for query in params:
@@ -121,7 +150,7 @@ class Applications(CollectionBase):
                     raise Exception("parameter %s is not acceptable in find()\n %s"%(query, self.find_valid_constrains))
                         
                             
-    def __init__(self, key,secret,url,user=None):
+    def __init__(self, key,secret,url,user):
         self.key = key                                              
         self.secret  = secret
         self.url = url
@@ -130,9 +159,7 @@ class Applications(CollectionBase):
         self.previous_url = None
     
     def find(self,params={}):
-        if self.user:
-            params['user']=self.user
-
+        params['user']=self.user
         self.verify_constrain(params, is_findOne=False)
         meta, items = self._find('application',params)
         apps = []
@@ -142,9 +169,7 @@ class Applications(CollectionBase):
         return meta,apps
 
     def findOne(self, app_id, params={}):
-        if self.user:
-            params['user'] = self.user
-
+        params['user'] = self.user
         self.verify_constrain(params, is_findOne=True)
         item = self._findOne('application',app_id,params)
         app = Application(self.key,self.secret,self.url,item)
@@ -153,7 +178,17 @@ class Applications(CollectionBase):
     def new(self):
         return Application(self.key,self.secret,self.url)
 
+    def delete(self, app_id):
+        '''
+            verify app owner by using findOne() 
+            return True/ False
+        '''
+        app = self.findOne(app_id)
 
+        if self.user == app.user:
+            return app.delete()
+        else:
+            raise Exception("can not perform delete for non owner")
 
 class Application(ObjectBase):
     def __repr__(self):
@@ -198,6 +233,9 @@ class Application(ObjectBase):
             isPost = Add new application
             not isPost = PUT , update application
         '''
+## PARTNER api model accept only 50 char_len
+        self.name = self.name[:49]
+
         if isPost: 
             item ={    "category" : self.category,
                         "description" : self.description,
@@ -215,7 +253,8 @@ class Application(ObjectBase):
                         'mobile_platform'        :self.mobile_platform,       
                         'resource_uri'           :self.resource_uri,          
                         'stats'                  :self.stats,                 
-                        'user'                   :self.user,                  
+                        'user'                   :self.user,
+                        'deleted'                :self.deleted,
                     }
         return item
 
@@ -240,7 +279,17 @@ class Application(ObjectBase):
         else:           #PUT
             self._put('application', self.id, self.__to_post_payload(False))
         self.refresh()
-
+        
+    def delete(self):
+        '''
+            Delete application
+            Note: you can either delete from Applications or Application
+        '''
+        if int(self.user)== 0 or int(self.id)== 0:
+            raise Exception("Unable to delete with app_id or user is 0")
+        
+        return self._delete('application',self.id)
+    
     def to_dict(self):
         return self.__dict__
 
@@ -258,26 +307,6 @@ class Request(object):
         self.token = oauth.Token('','')
         self.client = oauth.Client(self.consumer,self.token)
 
-    def __construct_response(self, url, response, content, payload=''):
-        '''response from request will be json for GET
-            POST/PUT return url location, and False when Fail
-        '''
-        
-
-        try:
-            status_code = response['status']
-            if status_code == '201':
-                return response['location']
-            elif status_code =='200':
-                return json.loads(content)    
-            elif status_code[0] != '2':    ## Only accept '2xx'
-                raise Exception('Server return status code %s\n%s\n\n%s'%(status_code,payload,content))
-            return content
-        except Exception, err:
-            raise Exception('''Bad Response please check url or payload:%s
-                    %s
-                    \n%s\n%s'''%(url,'-'*20,payload,err))
-
     def get(self,url,params={}):
         
         url = self.construct_url( url, params)
@@ -292,16 +321,16 @@ class Request(object):
         return self.__construct_response(url, response, content,payload)
     
     def put(self, url,payload):
-        ## Hacked because Somehow django doesn't like PUT method.
+        ## Hacked because Somehow oauth doesn't like PUT method.
         payload = {'payload': json.dumps(payload)}
         client = OauthClient(self.consumer, self.token)
-
         response, content = client.request(url, 'PUT', parameters = payload, use_oauth_headers=False)
         return self.__construct_response(url, response, content,payload)
 
-        
-    def delete(self, key,secret,url):
-        raise Exception('not implemented yet')     
+    def delete(self,url):
+        client = OauthClient(self.consumer, self.token)
+        response, content = client.request(url, 'DELETE')
+        return self.__construct_response(url, response, content,'') 
     
     def construct_url(self,url, params={}):
         '''
@@ -313,6 +342,28 @@ class Request(object):
         query.update(params)
         url = urlunparse(
             (parts[0], parts[1], parts[2], parts[3], urllib.urlencode(query), parts[5])
-        )           
+        )
         return url
 
+    def __construct_response(self, url, response, content, payload=''):
+        '''response from request will be json for GET
+            POST/PUT return url location, and Exception when Fail
+            Delete return True else Exception
+        '''
+        formatted_payload = json.dumps(payload,sort_keys=True, indent=4) 
+        status_code = response['status']
+        if status_code == '201':
+            return response['location']
+
+        
+        elif status_code in ('204','202'):
+            return True
+
+        elif status_code =='200':
+            try:
+                return json.loads(content)
+            except Exception, err:
+                raise Exception('Bad response please check\n%s\n%s\n%s'%(url, formatted_payload, err))
+        elif status_code[0] != '2':    ## Only accept '2xx'
+            raise Exception('Server return status code %s\n%s\n%s\n%s'%(status_code,formatted_payload,url,content))
+        return content
