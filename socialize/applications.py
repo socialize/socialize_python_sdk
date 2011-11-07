@@ -83,7 +83,7 @@ class Application(ObjectBase):
             self.refresh()
         else:
             ## can't modify
-            self.id                         =app.get('id',0) 
+            self.id                         =int(app.get('id',0)) 
             self.created                    =app.get('created','') 
             self.deleted                    =app.get('deleted','') 
             self.last_saved                 =app.get('last_saved','') 
@@ -100,7 +100,7 @@ class Application(ObjectBase):
             self.mobile_platform            =app.get('platforms',[]) 
             self.resource_uri               =app.get('resource_uri','') 
             self.stats                      =app.get('stats','') 
-            self.user                       =app.get('user','0')
+            self.user                       =int(app.get('user','0'))
             self.display_name               =self.name
             self.icon_url                   =app.get('icon_url',None)
 

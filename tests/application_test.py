@@ -60,7 +60,7 @@ class ApplicationTestRead(SocializeTest):
 
         ## get specific app id
         app = apps.findOne(app_id)
-        self.assertEqual( app.id , str(app_id))
+        self.assertEqual( app.id , app_id)
         self.assertTrue( app.name != '')
         
         ## show Application Object <id: 240754 ,name: test_app>

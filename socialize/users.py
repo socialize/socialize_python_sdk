@@ -20,7 +20,7 @@ class ApiUser(ObjectBase):
             self.id = api_user
             self.refresh()
         else:                      
-            self.id                  = api_user.get('id','0')                
+            self.id                  = int(api_user.get('id','0'))                
             self.created             = api_user.get('created','')           
             self.date_of_birth       = api_user.get('date_of_birth','')     
             self.description         = api_user.get('description','')       
@@ -34,7 +34,7 @@ class ApiUser(ObjectBase):
             self.resource_uri        = api_user.get('resource_uri','')      
             self.sex                 = api_user.get('sex','')               
             self.small_image         = api_user.get('small_image','')       
-            self.updated             = api_user.get('updated','')           
+            self.updated             = api_user.get('updated','')       
 
     def to_dict(self):
         return self.__dict__
