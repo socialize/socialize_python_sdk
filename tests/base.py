@@ -8,7 +8,7 @@ except:
 
 class SocializeTest(unittest.TestCase):
     def setUp(self):
-        self.partner = Partner(key,secret,url=host)
+        self.partner = Partner(key,secret,host)
 
     def tearDown(self):
         pass

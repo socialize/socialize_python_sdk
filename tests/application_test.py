@@ -3,12 +3,10 @@ try:
 except:
     from settings import version, host, key, secret, user_id , app_id, delete_app
 
-
-
 from socialize.client import Partner ,Applications, Application
 from tests.base import SocializeTest
-
-class PartnerTestRead(SocializeTest):
+from time import sleep
+class ApplicationTestRead(SocializeTest):
     '''
         find(), findOne(),
     '''   
@@ -35,7 +33,7 @@ class PartnerTestRead(SocializeTest):
                 'order_by':'-created'}  ## order by created desc
 
         meta, result = apps.find(params)
-        
+         
         self.assertEqual(meta['offset'], params['offset'])
         self.assertEqual(meta['limit'], params['limit'])
         self.assertEqual(len(result), params['limit'])
@@ -92,7 +90,7 @@ class PartnerTestRead(SocializeTest):
         self.assertEqual( type(new_app), type(new_app2))
         self.assertEqual( new_app, new_app)
 
-class PartnerTestWrite(SocializeTest):
+class ApplicationTestWrite(SocializeTest):
     '''
         save() , update(), delete()
         This test has been disable by QA 
@@ -120,6 +118,10 @@ class PartnerTestWrite(SocializeTest):
         app.save()
         ## app id will be obtain after save()
         self.assertTrue(app.id>0)
+
+        ## get that app from api
+        app.refresh() 
+
         self.assertTrue(app.last_saved != '')
         return app.id
 
@@ -132,9 +134,10 @@ class PartnerTestWrite(SocializeTest):
         #print app.to_dict()
         app.name= new_name
         ## update if app already have an id
+        sleep(1)
         app.save()
-        #print app.to_dict()
-        self.assertEqual(app.name,new_name) 
+        app.refresh() 
+        self.assertEqual(app.name,new_name)
         self.assertTrue(app.last_saved != previous_save_time)
 
     def test_delete_app(self,delete_app = delete_app):
@@ -161,7 +164,4 @@ class PartnerTestWrite(SocializeTest):
         applications = self.partner.applications(user_id)        
         app = applications.findOne(delete_app)
         self.assertEqual( app.delete(), True)  
-
-
-
 

@@ -22,7 +22,6 @@ class OauthClient(httplib2.Http):
     def set_signature_method(self, method):
         if not isinstance(method, SignatureMethod):
             raise ValueError("Invalid signature method.")
-
         self.method = method
 
     def request(self, uri, method="GET", body='', headers=None,

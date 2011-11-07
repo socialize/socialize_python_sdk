@@ -8,3 +8,5 @@ user_id = 0
 app_id = 0
 ## delete app use for test // test_delete_app // api will set flag delete = True
 delete_app = 0
+
+api_user_id = 0
