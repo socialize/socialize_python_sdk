@@ -1,6 +1,7 @@
 try:
     from local_settings import version, host, key, secret, user_id , app_id, delete_app
 except:
+    print 'unable to load local settings using-> settings.py'
     from settings import version, host, key, secret, user_id , app_id, delete_app
 
 from socialize.client import Partner ,Applications, Application
@@ -158,7 +159,7 @@ class ApplicationTestWrite(SocializeTest):
 
     def test_applications_delete( self,delete_app = delete_app):
         '''
-            Applications delete by app_id
+            ** Applications delete by app_id
         '''
         applications = self.partner.applications(user_id)
         resp = applications.delete(delete_app)
