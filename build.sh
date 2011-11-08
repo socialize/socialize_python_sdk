@@ -19,7 +19,7 @@ clean() {
     echo ----------- Clean up -----------------
     rm -rf $INSTALL_DIR
     rm -rf \.coverage
-    rm -rf html coverage.xml
+    rm -rf tests/html coverage.xml
     find . -iname "*.pyc" | xargs rm -rvf
 }
 
@@ -30,6 +30,7 @@ unit_test(){
     echo ----------- Running Unit Test ----------------
     $INSTALL_DIR/bin/nosetests tests --with-coverage --cover-package=socialize -v
     $INSTALL_DIR/bin/coverage xml
+    $INSTALL_DIR/bin/coverage html -d tests/html
 }
 
 usage() {
