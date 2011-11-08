@@ -1,26 +1,25 @@
 import oauth2 as oauth
 import simplejson as json
 ## REQUEST ##
-from client import Request,Applications, Partner
-from client import Application
+from base import Request
 from urlparse import parse_qs
 import random
 
 '''
     local
 '''
-#url = 'http://127.0.0.1:8000'
-#key = '6118f9f1-a8a2-45c4-aefa-226a6d5b4755'
-#secret = 'c1270fbd-4ae2-49f7-b16e-bc447cf463c9'
-#qa_id  = 130827
+url = 'http://127.0.0.1:8000'
+key = '6118f9f1-a8a2-45c4-aefa-226a6d5b4755'
+secret = 'c1270fbd-4ae2-49f7-b16e-bc447cf463c9'
+qa_id  = 130827
 
 '''
     stage
 '''
-url = 'http://stage.api.getsocialize.com'
-key= '1878ed35-6d08-410c-a441-ba21d754ec36' 
-secret = 'cf3cb3d5-6e90-4fd2-a8e7-8a05c028e18a'  
-qa_id = 145874
+#url = 'http://stage.api.getsocialize.com'
+#key= '1878ed35-6d08-410c-a441-ba21d754ec36' 
+#secret = 'cf3cb3d5-6e90-4fd2-a8e7-8a05c028e18a'  
+#qa_id = 145874
 
 payload = {
     "category" : 'what ever',
@@ -227,6 +226,20 @@ def testOauthDelete():
     print '--'
 
 
+def testPut():
+    url = 'http://localhost:8000/partner/v1/application/323109/'
+    method = 'PUT'     
+    consumer = oauth.Consumer(key,secret)
+    token = oauth.Token('','')              
+    client = oauth.Client(consumer,token)
+    app_payload = {'name': 'hello', 'description':'world'}
+    payload='payload=%s'%json.dumps(app_payload)
+    resp , content = client.request(url, method,parameters=payload)
+    print resp
+    out = json.loads(content)
+    print out['traceback']
+    print '--'   
+
 def testAll():           
     testOauthGet() 
     testClientGet()
@@ -250,4 +263,5 @@ def testAll():
 #testPartnerSaveApp()
 #testPartnerUpdateApp()
 
-testOauthDelete()
+#testOauthDelete()
+testPut()

@@ -1,9 +1,8 @@
-from oauth_client import OauthClient
 from urlparse import urlparse, parse_qs, urlunparse
 import urllib
 import oauth2 as oauth
 import simplejson as json
-
+import httplib2
 
 class PartnerBase(object):
     base_partner_path = 'partner'
@@ -145,18 +144,29 @@ class Request(object):
     
     def put(self, url,payload):
         '''
-            HACKED oauth2 doesn't like PUT method, so I need to modify it.
+            HACKED oauth2 doesn't like PUT method, so I need to modify it. in the parameters.
+            
         '''
-        
-        payload = {'payload': json.dumps(payload)}
-        client = OauthClient(self.consumer, self.token)
-        response, content = client.request(url,method='PUT', parameters = payload, use_oauth_headers=False)
-        return self.__construct_response(url, response, content,payload)
+        url_payload = urllib.quote(json.dumps(payload))
+        url += '?payload=%s'%url_payload
+        req = oauth.Request.from_consumer_and_token(self.consumer, 
+                    token=self.token, http_method='PUT', http_url=url, 
+                    )
+
+        req.sign_request(oauth.SignatureMethod_HMAC_SHA1(), self.consumer, self.token)
+        headers =  req.to_header()
+        headers['content-length']= '0'
+        print headers
+
+        http =  httplib2.Http()
+        response, content  = http.request(url, method='PUT',headers=headers )
+        return self.__construct_response(url, response, content)
 
     def delete(self,url):
-        client = OauthClient(self.consumer, self.token)
-        response, content = client.request(url, 'DELETE')
-        return self.__construct_response(url, response, content,'') 
+        response, content = self.client.request(url,
+                                            method='DELETE',
+                                            )
+        return self.__construct_response(url, response, content) 
     
     def construct_url(self,url, params={}):
         '''

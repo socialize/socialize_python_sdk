@@ -99,6 +99,10 @@ class ApplicationTestWrite(SocializeTest):
     '''
     
     def test_write_flow(self):
+        '''
+            ** test create app then edit the app, then refresh()
+        '''
+        
         app_id = self.create_app()
         self.update_app(app_id)
 
@@ -142,7 +146,7 @@ class ApplicationTestWrite(SocializeTest):
 
     def test_delete_app(self,delete_app = delete_app):
         '''
-            Application DELETE 
+            ** test Application DELETE 
         '''
         applications = self.partner.applications(user_id)
         app = applications.findOne(delete_app)

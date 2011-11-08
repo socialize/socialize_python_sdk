@@ -46,7 +46,7 @@ class OauthClient(httplib2.Http):
         req = Request.from_consumer_and_token(self.consumer,
             token=self.token, http_method=method, http_url=uri,
             parameters=parameters, body=body, is_form_encoded=is_form_encoded)
-
+        
         req.sign_request(self.method, self.consumer, self.token)
 
         schema, rest = urllib.splittype(uri)
@@ -65,7 +65,10 @@ class OauthClient(httplib2.Http):
             uri = req.to_url()
         else:
             headers.update(req.to_header(realm=realm))
+            headers['content-Length']=len(body)
 
+        
+        print headers
         return httplib2.Http.request(self, uri, method=method, body=body,
             headers=headers, redirections=redirections,
             connection_type=connection_type)
