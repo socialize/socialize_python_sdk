@@ -7,16 +7,16 @@ except:
 from socialize.client import Partner
 from tests.base import SocializeTest
 
-#class ApiUserTest(SocializeTest):
+class ApiUserTest(SocializeTest):
 
-    #'''
-        #find()
-    #'''   
-    #def xtest_get(self):
-        #'''
-            #** get api_user by api_user_id
-        #'''
-        #api_user = self.partner.api_user(api_user_id)
-        #self.assertEqual( int(api_user.id) , api_user_id)
-        #self.assertTrue( len(api_user.device_id) > 0)
+    '''
+        find()
+    '''   
+    def test_get(self):
+        '''
+            ** get api_user by api_user_id
+        '''
+        api_user = self.partner.api_user(api_user_id)
+        self.assertEqual( int(api_user.id) , api_user_id)
+        self.assertTrue( len(api_user.device_id) > 0)
 
