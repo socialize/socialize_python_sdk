@@ -9,7 +9,9 @@ class Partner(object):
         
 
     def applications(self,user):
-        """ return collection of applications object"""
+        """ return collection of applications object
+            create new app* applications.new()
+        """
         return Applications(self.key,self.secret,self.host,user)
 
     def application(self,app={}):
