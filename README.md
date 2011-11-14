@@ -43,9 +43,26 @@ The client can be installed as a module and imported.
 
 ** You might need to add __init__.py in submodule root repo.
 
-    git submodule init
+    Instruction from here http://chrisjean.com/2009/04/20/git-submodules-adding-using-removing-and-updating/
+
+    to init:
     git submodule add git@github.com:socialize/socialize-python-sdk.git socialize_python_sdk
+    git submodule init
     git submodule update
+    
+    #** I didn't add __init__.py into root folder because it will break every test
+    #** I will try to fix it later
+    
+    touch socialize_python_sdk/__init__.py
+
+    
+
+    to update:
+    goto submodule directory, 
+    git submodule init
+    git submodule update
+    git pull
+
 
 
 Examples:
