@@ -1,5 +1,33 @@
-from base import ObjectBase
+from base import ObjectBase , CollectionBase
 
+class ApiUsers(CollectionBase):
+    '''
+        find a list of api users in application
+    '''
+    def __init__(self, key,secret,host,app_id):
+        self.key = key                                              
+        self.secret  = secret
+        self.host = host
+        self.app_id= app_id
+        self.next_url = None
+        self.previous_url = None        
+    
+    def find(self, params={}):
+        params['application_id'] = self.app_id
+        meta, items = self._find('apiuser',params)
+        api_users=[]
+        for item in items:
+            api_user = ApiUser(self.key, self.secret, self.host, item)
+            api_users.append(api_user)    
+        return meta, api_users
+    
+    def findOne(self, api_user_id, params={}):
+        '''
+            findOne doesn't care about application_id
+        '''
+        item = self._findOne('apiuser',api_user_id, params)
+        api_user = ApiUser(self.key, self.secret, self.host, item)
+        return api_user 
 
 class ApiUser(ObjectBase):
     '''
@@ -9,11 +37,11 @@ class ApiUser(ObjectBase):
     def __repr__(self):
         return '<api_user id: %s ,first_name: %s>'%(self.id, self.first_name)
 
-    def __init__(self, key,secret,url,api_user={}):
+    def __init__(self, key,secret,host,api_user={}):
         '''
             new app using app_dict = {}, id = 0
         '''
-        self.url = url
+        self.host = host
         self.key = key
         self.secret = secret
         if type(api_user)==int:
@@ -44,20 +72,16 @@ class ApiUser(ObjectBase):
             update object
         '''
         new_item = self._get('apiuser', self.id)
-        self = self.__init__(self.key, self.secret, self.url, new_item) 
- 
+        self = self.__init__(self.key, self.secret, self.host, new_item) 
+    
+    def ban(self, app_id):
+        '''
+            ban current user 
+            payload require app_id because api_user_id can be in multiple app with 3rdPartyAuth
+            return True when success / else raise Exception
+        '''
+        payload = {'application_id': app_id}
+        return self._put('apiuser', self.id, payload=payload, verb='ban')
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
+        

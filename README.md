@@ -41,6 +41,12 @@ Usage
 
 The client can be installed as a module and imported.
 
+** You might need to add __init__.py in submodule root repo.
+
+    git module init
+    git module add <http> socialize_partner_sdk
+    git module update
+
 
 Examples:
 

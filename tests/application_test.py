@@ -7,6 +7,9 @@ except:
 from socialize.client import Partner ,Applications, Application
 from tests.base import SocializeTest
 from time import sleep
+import base64
+
+
 class ApplicationTestRead(SocializeTest):
     '''
         find(), findOne(),
@@ -90,6 +93,21 @@ class ApplicationTestRead(SocializeTest):
 
         self.assertEqual( type(new_app), type(new_app2))
         self.assertEqual( new_app, new_app)
+    
+    def test_find_api_users(self):
+        '''
+            ** test list user from application
+        '''
+        user_id= 12
+        app_id = 42
+
+        apps = self.partner.applications(user_id)
+        app = apps.findOne(app_id)
+        meta, users = app.list_api_users()
+        self.assertNotEqual( len(users), 0 )
+        for user in users:
+            self.assertNotEqual(user.id ,0) 
+        
 
 class ApplicationTestWrite(SocializeTest):
     '''
@@ -106,7 +124,7 @@ class ApplicationTestWrite(SocializeTest):
         
         app_id = self.create_app()
         self.update_app(app_id)
-
+        self.test_delete_app(app_id)
     def create_app(self):
         applications = self.partner.applications(user_id)
         app =  applications.new()
@@ -170,3 +188,19 @@ class ApplicationTestWrite(SocializeTest):
         app = applications.findOne(delete_app)
         self.assertEqual( app.delete(), True)  
 
+    def test_upload_p12(self):
+        '''
+            ** Upload p12 to application for notification system
+            
+        '''
+        ## UPload to deleted app
+        applications = self.partner.applications(user_id)
+        app = applications.findOne(delete_app)
+
+        p12_filename = 'tests/new_certificate_pkey.p12'
+        p12_content = open(p12_filename, 'rb').read()
+        p12_base64 = base64.b64encode(p12_content)
+        p12_password = 'success'                    
+        resp = app.upload_p12(p12_base64=p12_base64,
+                key_password=p12_password )
+        self.assertTrue(resp)

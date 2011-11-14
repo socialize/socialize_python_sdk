@@ -13,6 +13,10 @@ class PartnerBase(object):
             'apiuser'           : 'api_user',
             }                    
 
+    partner_endpoint_verb = {
+            'application' : ['upload_p12'],
+            'apiuser' : ['ban']
+            }
 
 class CollectionBase(PartnerBase):
     def _find(self, endpoint, params={}):
@@ -21,7 +25,7 @@ class CollectionBase(PartnerBase):
             See the children class for which constraints are supported.
         """
         
-        request_url = '%s/%s/%s/%s/'%(self.url,
+        request_url = '%s/%s/%s/%s/'%(self.host,
                                 self.base_partner_path,
                                 self.version,
                                 self.partner_endpoints[endpoint])
@@ -31,18 +35,18 @@ class CollectionBase(PartnerBase):
         objects = response['objects']
         return meta, objects
 
-    def _findOne(self, endpoint, app_id, params={}):
+    def _findOne(self, endpoint, item_id, params={}):
         """
             Fetches a single result form the server, optionally based on constraints.
             See the children class for which constraints are supported.
 
             Only ID is supported to find one.
         """ 
-        request_url = '%s/%s/%s/%s/%s/'%(self.url,
+        request_url = '%s/%s/%s/%s/%s/'%(self.host,
                                 self.base_partner_path,
                                 self.version,
                                 self.partner_endpoints[endpoint],
-                                app_id
+                                item_id
                                 )
         request = Request(self.key,self.secret)
         return request.get(request_url, params)
@@ -51,7 +55,7 @@ class CollectionBase(PartnerBase):
         '''
             DELETE specific item on api
         '''
-        request_url = '%s/%s/%s/%s/%s/'%(self.url,
+        request_url = '%s/%s/%s/%s/%s/'%(self.host,
                                 self.base_partner_path,
                                 self.version,
                                 self.partner_endpoints[endpoint],
@@ -62,29 +66,43 @@ class CollectionBase(PartnerBase):
                                                      
 
 class ObjectBase(PartnerBase):
-    def _post(self, endpoint, payload, params={}):
+    def _post(self, endpoint, payload, item=None, verb=None):
         """
             POST payload to api 
+            verb is special endpoint for activity
         """
-        request_url = '%s/%s/%s/%s/'%(self.url,
+        request_url = '%s/%s/%s/%s/'%(self.host,
                                 self.base_partner_path,
                                 self.version,
                                 self.partner_endpoints[endpoint]
                                 )
+
+        if item and verb:
+            if verb in self.partner_endpoint_verb[endpoint]:
+                request_url = '%s%s/%s/' % (request_url,item, verb)
+            else:
+                raise Exception('%s is not allow in %s endpoint'%(verb, endpoint))
         request = Request(self.key,self.secret)
         return request.post(request_url, payload)   
 
-    def _put(self, endpoint, item_id, payload):
+    def _put(self, endpoint, item_id, payload, verb=None):
         """
             PUT payload to specific item_id on api
+            item_id can be <id>/verb/
+
         """
 
-        request_url = '%s/%s/%s/%s/%s/'%(self.url,
+        request_url = '%s/%s/%s/%s/%s/'%(self.host,
                                 self.base_partner_path,
                                 self.version,
                                 self.partner_endpoints[endpoint],
                                 item_id
                                 )
+        if verb:
+            if verb in self.partner_endpoint_verb[endpoint]:
+                request_url = '%s%s/' % (request_url, verb)
+            else:
+                raise Exception('%s is not allow in %s endpoint'%(verb, endpoint)) 
         request = Request(self.key,self.secret)
         return request.put(request_url, payload)   
 
@@ -92,7 +110,7 @@ class ObjectBase(PartnerBase):
         '''
             DELETE specific item on api
         '''
-        request_url = '%s/%s/%s/%s/%s/'%(self.url,
+        request_url = '%s/%s/%s/%s/%s/'%(self.host,
                                 self.base_partner_path,
                                 self.version,
                                 self.partner_endpoints[endpoint],
@@ -105,7 +123,7 @@ class ObjectBase(PartnerBase):
         """
             update itself after post/put
         """
-        request_url = '%s/%s/%s/%s/%s/'%(self.url,
+        request_url = '%s/%s/%s/%s/%s/'%(self.host,
                                 self.base_partner_path,
                                 self.version,
                                 self.partner_endpoints[endpoint],
@@ -145,7 +163,6 @@ class Request(object):
     def put(self, url,payload):
         '''
             HACKED oauth2 doesn't like PUT method, so I need to modify it. in the parameters.
-            
         '''
         url_payload = urllib.quote(json.dumps(payload))
         url += '?payload=%s'%url_payload
