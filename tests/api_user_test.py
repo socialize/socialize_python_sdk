@@ -47,7 +47,7 @@ class ApiUserTest(SocializeTest):
         
         print api_client.to_dict()
 
-    def test_ban_user(self):
+    def test_ban_user_by_app_and_id(self):
         '''
             ** test ban user from single app
         '''
@@ -60,3 +60,16 @@ class ApiUserTest(SocializeTest):
 
         resp = api_client.ban(app_id)
         self.assertTrue(resp)
+
+
+    def test_ban_user_by_id(self):
+        '''
+            ** test ban user from user_id
+        '''
+
+        app_id = 104458
+        api_user_id  = 53118705
+        api_user = self.partner.api_user(api_user_id=api_user_id)
+        print api_user.to_dict()
+        resp = api_user.ban(app_id)
+        self.assertTrue(resp)     

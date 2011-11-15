@@ -173,7 +173,6 @@ class Request(object):
         req.sign_request(oauth.SignatureMethod_HMAC_SHA1(), self.consumer, self.token)
         headers =  req.to_header()
         headers['content-length']= '0'
-        print headers
 
         http =  httplib2.Http()
         response, content  = http.request(url, method='PUT',headers=headers )
