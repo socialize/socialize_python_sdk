@@ -1,3 +1,8 @@
+import sys, os
+cmd_folder = os.path.dirname(os.path.abspath(__file__)[-len('tests')])
+if cmd_folder not in sys.path:
+   sys.path.insert(0, cmd_folder)    
+
 try:
     from local_settings import version, host, key, secret, user_id , app_id, delete_app
 except:
