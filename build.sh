@@ -25,11 +25,10 @@ clean() {
 
 unit_test(){
     
-    clean
-    build
+    #clean
+    #build
     echo ----------- Running Unit Test ----------------
-    $INSTALL_DIR/bin/nosetests tests --with-coverage --cover-package=socialize -v
-    $INSTALL_DIR/bin/coverage xml
+    $INSTALL_DIR/bin/nosetests tests --with-xunit --with-coverage --cover-package=socialize -v --cover-html
     $INSTALL_DIR/bin/coverage html -d tests/html
 }
 

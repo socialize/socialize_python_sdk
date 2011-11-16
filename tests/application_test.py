@@ -14,7 +14,6 @@ from tests.base import SocializeTest
 from time import sleep
 import base64
 
-
 class ApplicationTestRead(SocializeTest):
     '''
         find(), findOne(),

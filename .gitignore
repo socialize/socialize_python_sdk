@@ -3,5 +3,7 @@
 *.swo
 local_settings.py
 .coverage
+tests/xml
+tests/html
 coverage.xml
 _install/
