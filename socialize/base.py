@@ -158,10 +158,6 @@ class Request(object):
         response, content = self.client.request(url,
                                             method='POST',
                                             body='payload='+payload,)
-#                                            headers={'Content-Type':'application/json'})
-        print '#' *100
-        print payload
-        print '#' * 20 , 'before txn'
         return self.__construct_response(url, response, content,payload)
     
     def put(self, url,payload):
