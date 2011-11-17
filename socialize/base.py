@@ -157,7 +157,8 @@ class Request(object):
         payload = json.dumps(payload)
         response, content = self.client.request(url,
                                             method='POST',
-                                            body='payload='+payload)
+                                            body='payload='+payload,)
+#                                            headers={'Content-Type':'application/json'})
         print '#' *100
         print payload
         print '#' * 20 , 'before txn'
@@ -220,5 +221,5 @@ class Request(object):
             except Exception, err:
                 raise Exception('Bad response please check\n%s\n%s\n%s'%(url, formatted_payload, err))
         elif status_code[0] != '2':    ## Only accept '2xx'
-            raise Exception('Server return status code %s\n%s\n%s\n%s'%(status_code,formatted_payload,url,content))
+            raise Exception('Server return status code %s\n%s\nuri:%s\nresponse:%s'%(status_code,formatted_payload,url,content))
         return content      

@@ -198,14 +198,13 @@ class TestApplicationWriteOperations(SocializeTest):
         '''
         applications = self.partner.applications(user_id)
         app = applications.findOne(app_id)
-
+        print app
         icon_filename = 'app_icon.png'
         icon_content = open(icon_filename, 'rb').read()
         icon_base64 = base64.b64encode(icon_content) 
         print len(icon_base64)
         resp = app.upload_icon( icon_base64)
-        print resp.content
-        print resp.status_code
+        print "Response: ", resp
 
 
     def xtest_upload_p12(self):

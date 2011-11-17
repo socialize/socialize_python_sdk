@@ -1,6 +1,7 @@
 
 from base import CollectionBase, ObjectBase
 from users import ApiUsers
+from urllib2 import quote
 
 class Applications(CollectionBase):
     ''' find() Return collection of Application
@@ -184,7 +185,7 @@ class Application(ObjectBase):
             upload base64 encoded image for app_icon
             return True when success else raise exception
         '''
-        payload = {'icon_base64': base64_img}
+        payload = {'icon_base64': quote(base64_img) }
         resp = self._post( endpoint = 'application',
                 payload = payload,
                 item=self.id,
