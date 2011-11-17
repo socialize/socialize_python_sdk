@@ -1,20 +1,20 @@
 import sys, os
 cmd_folder = os.path.dirname(os.path.abspath(__file__)[-len('tests')])
 if cmd_folder not in sys.path:
-   sys.path.insert(0, cmd_folder)    
-
+    sys.path.insert(0, cmd_folder)    
+sys.path.append('..')
 try:
     from local_settings import version, host, key, secret, user_id , app_id, delete_app
 except:
-    print 'unable to load local settings using-> settings.py'
+    print 'Failed to load local_settings.py. Switching to settings.py'
     from settings import version, host, key, secret, user_id , app_id, delete_app
 
 from socialize.client import Partner ,Applications, Application
-from tests.base import SocializeTest
+from base import SocializeTest
 from time import sleep
 import base64
 
-class ApplicationTestRead(SocializeTest):
+class TestApplicationReadOperations(SocializeTest):
     '''
         find(), findOne(),
     '''   
@@ -113,7 +113,7 @@ class ApplicationTestRead(SocializeTest):
             self.assertNotEqual(user.id ,0) 
         
 
-class ApplicationTestWrite(SocializeTest):
+class TestApplicationWriteOperations(SocializeTest):
     '''
         save() , update(), delete()
         This test has been disable by QA 
@@ -199,7 +199,7 @@ class ApplicationTestWrite(SocializeTest):
         applications = self.partner.applications(user_id)
         app = applications.findOne(app_id)
 
-        icon_filename = 'tests/app_icon.png'
+        icon_filename = 'app_icon.png'
         icon_content = open(icon_filename, 'rb').read()
         icon_base64 = base64.b64encode(icon_content) 
         print len(icon_base64)
