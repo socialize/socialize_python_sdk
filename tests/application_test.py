@@ -129,6 +129,7 @@ class TestApplicationWriteOperations(SocializeTest):
         app_id = self.create_app()
         self.update_app(app_id)
         self.test_delete_app(app_id)
+    
     def create_app(self):
         applications = self.partner.applications(user_id)
         app =  applications.new()
@@ -199,7 +200,7 @@ class TestApplicationWriteOperations(SocializeTest):
         applications = self.partner.applications(user_id)
         app = applications.findOne(app_id)
 
-        icon_filename = 'app_icon.png'
+        icon_filename = 'tests/app_icon.png'
         icon_content = open(icon_filename, 'rb').read()
         icon_base64 = base64.b64encode(icon_content) 
         print len(icon_base64)
