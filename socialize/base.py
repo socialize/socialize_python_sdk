@@ -15,7 +15,7 @@ class PartnerBase(object):
 
     partner_endpoint_verb = {
             'application' : ['upload_p12','upload_icon'],
-            'apiuser' : ['ban']
+            'apiuser' : ['ban','unban']
             }
 
 class CollectionBase(PartnerBase):
@@ -85,7 +85,7 @@ class ObjectBase(PartnerBase):
         request = Request(self.key,self.secret)
         return request.post(request_url, payload)   
 
-    def _put(self, endpoint, item_id, payload, verb=None):
+    def _put(self, endpoint, payload, item=None, verb=None):
         """
             PUT payload to specific item_id on api
             item_id can be <id>/verb/
@@ -96,7 +96,7 @@ class ObjectBase(PartnerBase):
                                 self.base_partner_path,
                                 self.version,
                                 self.partner_endpoints[endpoint],
-                                item_id
+                                item
                                 )
         if verb:
             if verb in self.partner_endpoint_verb[endpoint]:

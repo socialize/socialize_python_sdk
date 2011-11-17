@@ -74,4 +74,13 @@ class ApiUserTest(SocializeTest):
         api_user = self.partner.api_user(api_user_id=api_user_id)
         print api_user.to_dict()
         resp = api_user.ban(app_id)
+        self.assertTrue(resp)    
+
+    def xtest_unban_user_by_id(self):
+        '''
+            ** test unban user from user_id
+        '''
+        api_user = self.partner.api_user(api_user_id=api_user_id)
+        print api_user.to_dict()
+        resp = api_user.unban(app_id)
         self.assertTrue(resp)     
