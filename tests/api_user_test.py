@@ -6,7 +6,7 @@ if cmd_folder not in sys.path:
 try:
     from local_settings import version, host, key, secret, user_id , app_id, delete_app, api_user_id
 except:
-    print 'unable to load local settings using-> settings.py'
+    print 'Failed to load local_settings.py. Switching to settings.py'
     from settings import version, host, key, secret, user_id , app_id, delete_app , api_user_id
 
 from socialize.client import Partner
