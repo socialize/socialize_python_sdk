@@ -155,7 +155,7 @@ class Application(ObjectBase):
             location = self._post('application', self.__to_post_payload(True))
             self.id =location.split('/')[-2]
         else:           #PUT
-            self._put('application', self.id, self.__to_post_payload(False))
+            self._put('application', self.__to_post_payload(False), self.id)
         #self.refresh()
         
     def delete(self):
@@ -199,5 +199,8 @@ class Application(ObjectBase):
         payload = {'key_password': key_password,
                 'p12_base64': p12_base64}
 
-        resp= self._post(endpoint= 'application', payload=payload, item=self.id,verb='upload_p12')
+        resp= self._post(endpoint= 'application',
+                payload=payload,
+                item=self.id,
+                verb='upload_p12')
         return resp  

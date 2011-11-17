@@ -33,7 +33,17 @@ Partner API:
     partner/v1/application/<id>
         - GET specific application
         - PUT update application information
-        - Delete 
+        - Delete
+        - Upload P12 for push notification
+        - Upload application icon
+
+    partner/v1/api_user/
+        - Get list of api_users [ filter by application ]
+        - Get list of banned users
+
+    partner/v1/api_user/<id>
+        - ban
+        - unban
 
 
 Usage

@@ -207,7 +207,6 @@ class ApplicationTestWrite(SocializeTest):
         print resp.content
         print resp.status_code
 
-
     def xtest_upload_p12(self):
         '''
             ** NOT READY yet will do after ban api_user
