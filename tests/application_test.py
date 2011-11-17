@@ -3,6 +3,7 @@ cmd_folder = os.path.dirname(os.path.abspath(__file__)[-len('tests')])
 if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)    
 sys.path.append('..')
+sys.path.append('.')
 try:
     from local_settings import version, host, key, secret, user_id , app_id, delete_app
 except:
@@ -199,7 +200,7 @@ class TestApplicationWriteOperations(SocializeTest):
         applications = self.partner.applications(user_id)
         app = applications.findOne(app_id)
         print app
-        icon_filename = 'app_icon.png'
+        icon_filename = '%s/%s' % (self.RESOURCES_PATH, 'app_icon.png')
         icon_content = open(icon_filename, 'rb').read()
         icon_base64 = base64.b64encode(icon_content) 
         print len(icon_base64)
