@@ -1,9 +1,12 @@
 *.pyc
 *.swp
 *.swo
-local_settings.py
+/local_settings.py
 .coverage
 tests/xml
 tests/html
 coverage.xml
 _install/
+build
+.project
+.pydevproject

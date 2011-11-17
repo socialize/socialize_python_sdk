@@ -1,8 +1,8 @@
 import sys, os
 cmd_folder = os.path.dirname(os.path.abspath(__file__)[-len('tests')])
 if cmd_folder not in sys.path:
-   sys.path.insert(0, cmd_folder)    
-
+    sys.path.insert(0, cmd_folder)    
+sys.path.append('..')
 try:
     from local_settings import version, host, key, secret, user_id , app_id, delete_app
 except:
@@ -10,7 +10,7 @@ except:
     from settings import version, host, key, secret, user_id , app_id, delete_app
 
 from socialize.client import Partner ,Applications, Application
-from tests.base import SocializeTest
+from base import SocializeTest
 from time import sleep
 import base64
 
