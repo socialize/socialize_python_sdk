@@ -192,6 +192,22 @@ class ApplicationTestWrite(SocializeTest):
         app = applications.findOne(delete_app)
         self.assertEqual( app.delete(), True)  
 
+    def test_upload_image_icon(self):
+        '''
+            Upload application_icon
+        '''
+        applications = self.partner.applications(user_id)
+        app = applications.findOne(app_id)
+
+        icon_filename = 'tests/app_icon.png'
+        icon_content = open(icon_filename, 'rb').read()
+        icon_base64 = base64.b64encode(icon_content) 
+        print len(icon_base64)
+        resp = app.upload_icon( icon_base64)
+        print resp.content
+        print resp.status_code
+
+
     def xtest_upload_p12(self):
         '''
             ** NOT READY yet will do after ban api_user
@@ -207,5 +223,5 @@ class ApplicationTestWrite(SocializeTest):
         p12_base64 = base64.b64encode(p12_content)
         p12_password = 'success'                    
         resp = app.upload_p12(p12_base64=p12_base64,
-                key_password=p12_password )
+                key_password=p12_password)
         self.assertTrue(resp)

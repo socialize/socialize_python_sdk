@@ -14,7 +14,7 @@ class PartnerBase(object):
             }                    
 
     partner_endpoint_verb = {
-            'application' : ['upload_p12'],
+            'application' : ['upload_p12','upload_icon'],
             'apiuser' : ['ban']
             }
 
@@ -158,6 +158,9 @@ class Request(object):
         response, content = self.client.request(url,
                                             method='POST',
                                             body='payload='+payload)
+        print '#' *100
+        print payload
+        print '#' * 20 , 'before txn'
         return self.__construct_response(url, response, content,payload)
     
     def put(self, url,payload):
@@ -203,7 +206,10 @@ class Request(object):
             Delete return True else Exception
         '''
         formatted_payload = json.dumps(payload,sort_keys=True, indent=4) 
-        
+        print '&'* 20
+        print content
+        print '&'*20 , ' end RX'
+
         status_code = response['status']
         if status_code == '201':
             return response['location']
