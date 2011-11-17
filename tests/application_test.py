@@ -208,17 +208,15 @@ class TestApplicationWriteOperations(SocializeTest):
         print "Response: ", resp
 
 
-    def xtest_upload_p12(self):
+    def test_upload_p12(self):
         '''
-            ** NOT READY yet will do after ban api_user
-            ** Upload p12 to application for notification system
-            
+            Upload p12 for push notification
         '''
         ## UPload to deleted app
         applications = self.partner.applications(user_id)
         app = applications.findOne(delete_app)
+        p12_filename = '%s/%s' % (self.RESOURCES_PATH, 'new_certificate_pkey.p12')
 
-        p12_filename = 'tests/new_certificate_pkey.p12'
         p12_content = open(p12_filename, 'rb').read()
         p12_base64 = base64.b64encode(p12_content)
         p12_password = 'success'                    
