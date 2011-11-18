@@ -206,9 +206,9 @@ class TestApplicationWriteOperations(SocializeTest):
         print len(icon_base64)
         resp = app.upload_icon( icon_base64)
         print "Response: ", resp
+        self.assertTrue(resp)
 
-
-    def test_upload_p12(self):
+    def xtest_upload_p12(self):
         '''
             Upload p12 for push notification
         '''

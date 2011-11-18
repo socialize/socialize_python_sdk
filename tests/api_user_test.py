@@ -70,15 +70,26 @@ class ApiUserTest(SocializeTest):
     def test_ban_user_by_id(self):
         '''
             ** test ban user from user_id
+            _install/bin/nosetests -s -v tests.api_user_test:ApiUserTest.test_ban_user_by_id
         '''
         api_user = self.partner.api_user(api_user_id=api_user_id)
-        print api_user.to_dict()
-        resp = api_user.ban(app_id)
+        #print api_user.to_dict()
+        resp = api_user.ban(delete_app)
         self.assertTrue(resp)    
 
-    def xtest_unban_user_by_id(self):
+    def test_find_list_banned_users(self):
+        '''
+            ** test find list of banned users
+        '''
+        api_users = self.partner.api_users(app_id = delete_app)
+        meta, banned_list = api_users.findBanned()
+        
+        self.assertTrue(len(banned_list)>=1)
+        
+    def test_unban_user_by_id(self):
         '''
             ** test unban user from user_id
+            Hold until we can find valid p12 file
         '''
         api_user = self.partner.api_user(api_user_id=api_user_id)
         print api_user.to_dict()

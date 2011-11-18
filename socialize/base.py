@@ -15,11 +15,11 @@ class PartnerBase(object):
 
     partner_endpoint_verb = {
             'application' : ['upload_p12','upload_icon'],
-            'apiuser' : ['ban','unban']
+            'apiuser' : ['ban','unban','banned']
             }
 
 class CollectionBase(PartnerBase):
-    def _find(self, endpoint, params={}):
+    def _find(self, endpoint, params={}, verb=None):
         """
             Fetches results form the server, optionally based on constraints.
             See the children class for which constraints are supported.
@@ -29,6 +29,12 @@ class CollectionBase(PartnerBase):
                                 self.base_partner_path,
                                 self.version,
                                 self.partner_endpoints[endpoint])
+        if verb:
+            if verb in self.partner_endpoint_verb[endpoint]:
+                request_url = '%s%s/' % (request_url, verb)
+            else:
+                raise Exception('%s is not allow in %s endpoint'%(verb, endpoint))
+        
         request = Request(self.key,self.secret)
         response = request.get(request_url, params)
         meta = response['meta']
@@ -98,7 +104,8 @@ class ObjectBase(PartnerBase):
                                 self.partner_endpoints[endpoint],
                                 item
                                 )
-        if verb:
+        if item and verb:
+
             if verb in self.partner_endpoint_verb[endpoint]:
                 request_url = '%s%s/' % (request_url, verb)
             else:

@@ -29,6 +29,16 @@ class ApiUsers(CollectionBase):
         api_user = ApiUser(self.key, self.secret, self.host, item)
         return api_user 
 
+    def findBanned(self, params={}):
+        params['application_id'] = self.app_id
+        meta, items = self._find('apiuser',params, verb='banned')
+        api_users=[]
+        for item in items:
+            api_user = ApiUser(self.key, self.secret, self.host, item)
+            api_users.append(api_user)    
+        return meta, api_users
+ 
+
 class ApiUser(ObjectBase):
     '''
         find a single user from API
