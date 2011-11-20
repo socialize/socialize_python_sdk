@@ -83,13 +83,13 @@ class ApiUserTest(SocializeTest):
         '''
         api_users = self.partner.api_users(app_id = delete_app)
         meta, banned_list = api_users.findBanned()
-        
+        print meta
+        print banned_list
         self.assertTrue(len(banned_list)>=1)
         
     def test_unban_user_by_id(self):
         '''
             ** test unban user from user_id
-            Hold until we can find valid p12 file
         '''
         api_user = self.partner.api_user(api_user_id=api_user_id)
         print api_user.to_dict()
