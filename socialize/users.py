@@ -1,4 +1,5 @@
 from base import ObjectBase , CollectionBase
+from datetime import datetime
 
 class ApiUsers(CollectionBase):
     '''
@@ -59,8 +60,11 @@ class ApiUser(ObjectBase):
             self.refresh()
         else:                      
             self.id                  = int(api_user.get('id','0'))                
-            self.created             = api_user.get('created','')           
-            self.date_of_birth       = api_user.get('date_of_birth','')     
+            self.resource_uri        = api_user.get('resource_uri','')      
+            self.created             = datetime.strptime(api_user.get('created',''), '%Y-%m-%dT%H:%M:%S')           
+            self.updated             = datetime.strptime(api_user.get('updated',''),'%Y-%m-%dT%H:%M:%S')        
+
+            self.date_of_birth       = api_user.get('date_of_birth','')    
             self.description         = api_user.get('description','')       
             self.device_id           = api_user.get('device_id','')         
             self.email               = api_user.get('email:null','')        
@@ -69,10 +73,8 @@ class ApiUser(ObjectBase):
             self.last_name           = api_user.get('last_name','')         
             self.location            = api_user.get('location','')          
             self.medium_image        = api_user.get('medium_image','')      
-            self.resource_uri        = api_user.get('resource_uri','')      
             self.sex                 = api_user.get('sex','')               
             self.small_image         = api_user.get('small_image','')       
-            self.updated             = api_user.get('updated','')       
 
     def to_dict(self):
         return self.__dict__
