@@ -28,7 +28,7 @@ unit_test(){
     clean
     build
     echo ----------- Running Unit Test ----------------
-    $INSTALL_DIR/bin/nosetests tests --processes=10 --with-xunit --with-coverage --cover-package=socialize -v --cover-html
+    $INSTALL_DIR/bin/nosetests tests --with-xunit --with-coverage --cover-package=socialize -v --cover-html
     $INSTALL_DIR/bin/coverage html -d tests/html
 }
 
