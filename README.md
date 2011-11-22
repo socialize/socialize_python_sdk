@@ -17,7 +17,10 @@ required package.
     Or running tests using nosetests:
 
     _install/bin/nosetests [ -s for print output| -v more verbose ]
+    
+    Or running specific test
 
+    _install/bin/nosetests -s -v tests.api_user_test:ApiUserTest.test_ban_user_by_id
     
     
 
