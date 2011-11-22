@@ -121,6 +121,8 @@ class Application(ObjectBase):
                         "mobile_platform" : self.mobile_platform,
                         "name" : self.name,
                         "user_id" : self.user
+                        'android_package_name'   :self.android_package_name,  
+                        'apple_store_id'         :self.apple_store_id,  
                     }
         else:
             ##PUT
