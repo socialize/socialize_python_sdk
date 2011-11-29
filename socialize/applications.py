@@ -122,7 +122,8 @@ class Application(ObjectBase):
                         "name" : self.name,
                         "user_id" : self.user,
                         'android_package_name'   :self.android_package_name,  
-                        'apple_store_id'         :self.apple_store_id,        
+                        'apple_store_id'         :self.apple_store_id,
+                        "icon_url"               :self.icon_url
                      }
 
         else:
@@ -138,6 +139,7 @@ class Application(ObjectBase):
                         'stats'                  :self.stats,                 
                         'user'                   :self.user,
                         'deleted'                :self.deleted,
+                        'icon_url'               :self.icon_url
                     }
         return item
 
