@@ -10,3 +10,6 @@ _install/
 build
 .project
 .pydevproject
+.DS_Store
+cover/
+nosetest.xml
