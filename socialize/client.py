@@ -1,7 +1,9 @@
 from applications import Applications , Application
 from users import ApiUser , ApiUsers
 class Partner(object):
-
+    '''
+        Interface for Partner API
+    '''
     def __init__(self, key, secret, host='http://api.getsocialize.com', ):
         self.key= key
         self.secret = secret
@@ -32,6 +34,4 @@ class Partner(object):
 
     def api_user(self,api_user_id):
         """ return api user object"""
-        return ApiUser(self.key,self.secret,self.host,api_user_id)   
-    
-    
+        return ApiUser(self.key,self.secret,self.host,api_user_id)       
