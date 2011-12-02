@@ -21,7 +21,7 @@ class ApiUserTest(SocializeTest):
         '''
             ** test init api_user by api_user_id
         '''
-        api_user = self.partner.api_user(api_user_id)
+        api_user = self.partner.api_user(app_id, api_user_id)
         self.assertEqual(int(api_user.id) , api_user_id)
         self.assertTrue(len(api_user.device_id) > 0)
 
@@ -72,7 +72,8 @@ class ApiUserTest(SocializeTest):
             ** test ban user from user_id
             _install/bin/nosetests -s -v tests.api_user_test:ApiUserTest.test_ban_user_by_id
         '''
-        api_user = self.partner.api_user(api_user_id=api_user_id)
+        print app_id, api_user_id
+        api_user = self.partner.api_user(app_id, api_user_id=api_user_id)
         #print api_user.to_dict()
         resp = api_user.ban(delete_app)
         self.assertTrue(resp)    
@@ -91,7 +92,8 @@ class ApiUserTest(SocializeTest):
         '''
             ** test unban user from user_id
         '''
-        api_user = self.partner.api_user(api_user_id=api_user_id)
+        print app_id, api_user_id
+        api_user = self.partner.api_user(app_id, api_user_id=api_user_id)
         print api_user.to_dict()
         resp = api_user.unban(app_id)
         self.assertTrue(resp)     

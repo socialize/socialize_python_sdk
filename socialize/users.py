@@ -18,7 +18,7 @@ class ApiUsers(CollectionBase):
         meta, items = self._find('apiuser',params)
         api_users=[]
         for item in items:
-            api_user = ApiUser(self.key, self.secret, self.host, item)
+            api_user = ApiUser(self.key, self.secret, self.host,self.app_id, item)
             api_users.append(api_user)    
         return meta, api_users
     
@@ -26,8 +26,9 @@ class ApiUsers(CollectionBase):
         '''
             findOne doesn't care about application_id
         '''
+        params['application_id'] = self.app_id
         item = self._findOne('apiuser',api_user_id, params)
-        api_user = ApiUser(self.key, self.secret, self.host, item)
+        api_user = ApiUser(self.key, self.secret, self.host, self.app_id, item)
         return api_user 
 
     def findBanned(self, params={}):
@@ -35,7 +36,7 @@ class ApiUsers(CollectionBase):
         meta, items = self._find('apiuser',params, verb='banned')
         api_users=[]
         for item in items:
-            api_user = ApiUser(self.key, self.secret, self.host, item)
+            api_user = ApiUser(self.key, self.secret, self.host,self.app_id, item)
             api_users.append(api_user)    
         return meta, api_users
  
@@ -48,21 +49,23 @@ class ApiUser(ObjectBase):
     def __repr__(self):
         return '<api_user id: %s ,first_name: %s>'%(self.id, self.first_name)
 
-    def __init__(self, key,secret,host,api_user={}):
+    def __init__(self, key,secret,host,app_id, api_user):
         '''
             new app using app_dict = {}, id = 0
         '''
+        
         self.host = host
         self.key = key
         self.secret = secret
+        self.app_id = app_id
         if type(api_user)==int:
             self.id = api_user
             self.refresh()
-        else:                      
+        else:
             self.id                  = int(api_user.get('id','0'))                
-            self.resource_uri        = api_user.get('resource_uri','')      
-            self.created             = datetime.strptime(api_user.get('created',''), '%Y-%m-%dT%H:%M:%S')           
-            self.updated             = datetime.strptime(api_user.get('updated',''),'%Y-%m-%dT%H:%M:%S')        
+            self.resource_uri        = api_user.get('resource_uri','')
+            self.created         = datetime.strptime(api_user.get('created',None), '%Y-%m-%dT%H:%M:%S')           
+            self.updated             = datetime.strptime(api_user.get('updated',None),'%Y-%m-%dT%H:%M:%S')        
 
             self.date_of_birth       = api_user.get('date_of_birth','')    
             self.description         = api_user.get('description','')       
@@ -83,8 +86,9 @@ class ApiUser(ObjectBase):
         '''
             update object
         '''
-        new_item = self._get('apiuser', self.id)
-        self = self.__init__(self.key, self.secret, self.host, new_item) 
+        params = {'application_id': self.app_id}
+        new_item = self._get('apiuser',item_id=self.id, params= params)
+        self = self.__init__(self.key, self.secret, self.host, self.app_id, new_item) 
     
     def ban(self, app_id):
         '''

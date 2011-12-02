@@ -102,9 +102,8 @@ class TestApplicationReadOperations(SocializeTest):
     def test_find_api_users(self):
         '''
             ** test list user from application
+            _install/bin/nosetests -s -v tests.application_test:TestApplicationReadOperations.test_find_api_users
         '''
-        user_id= 12
-        app_id = 42
 
         apps = self.partner.applications(user_id)
         app = apps.findOne(app_id)

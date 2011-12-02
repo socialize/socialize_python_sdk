@@ -32,6 +32,6 @@ class Partner(object):
         """
         return ApiUsers(self.key, self.secret, self.host, app_id)
 
-    def api_user(self,api_user_id):
+    def api_user(self,app_id, api_user_id):
         """ return api user object"""
-        return ApiUser(self.key,self.secret,self.host,api_user_id)       
+        return ApiUser(self.key,self.secret,self.host,app_id, api_user_id)       
