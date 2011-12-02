@@ -20,10 +20,11 @@ class ApiUserTest(SocializeTest):
     def test_init(self):
         '''
             ** test init api_user by api_user_id
+            _install/bin/nosetests -s -v tests.api_user_test:ApiUserTest.test_init
+
         '''
         api_user = self.partner.api_user(app_id, api_user_id)
         self.assertEqual(int(api_user.id) , api_user_id)
-        self.assertTrue(len(api_user.device_id) > 0)
 
     def test_find(self):
         '''
@@ -34,7 +35,6 @@ class ApiUserTest(SocializeTest):
         
         for item in collection:
             self.assertNotEqual(int(item.id) , 0)
-            self.assertNotEqual(len(item.device_id) , 0)
             print item
 
     def test_findOne(self):
@@ -48,7 +48,6 @@ class ApiUserTest(SocializeTest):
         api_client = api_users.findOne(api_user_id=user_id)
 
         self.assertEqual(int(api_client.id), user_id)
-        self.assertNotEqual(len(api_client.device_id) , 0)
         
         print api_client.to_dict()
 

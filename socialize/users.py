@@ -1,5 +1,6 @@
 from base import ObjectBase , CollectionBase
 from datetime import datetime
+from simplejson import loads
 
 class ApiUsers(CollectionBase):
     '''
@@ -53,18 +54,16 @@ class ApiUser(ObjectBase):
         '''
             new app using app_dict = {}, id = 0
         '''
-        
         self.host = host
         self.key = key
         self.secret = secret
         self.app_id = app_id
         if type(api_user)==int:
             self.id = api_user
-            self.refresh()
         else:
             self.id                  = int(api_user.get('id','0'))                
             self.resource_uri        = api_user.get('resource_uri','')
-            self.created         = datetime.strptime(api_user.get('created',None), '%Y-%m-%dT%H:%M:%S')           
+            self.created             = datetime.strptime(api_user.get('created',None), '%Y-%m-%dT%H:%M:%S')           
             self.updated             = datetime.strptime(api_user.get('updated',None),'%Y-%m-%dT%H:%M:%S')        
 
             self.date_of_birth       = api_user.get('date_of_birth','')    
@@ -78,6 +77,11 @@ class ApiUser(ObjectBase):
             self.medium_image        = api_user.get('medium_image','')      
             self.sex                 = api_user.get('sex','')               
             self.small_image         = api_user.get('small_image','')       
+            
+            self.stats               = api_user.get('stats','{}')
+            self.user_devices        = api_user.get('user_devices','[]') 
+                
+
 
     def to_dict(self):
         return self.__dict__
