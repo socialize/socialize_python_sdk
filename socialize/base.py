@@ -126,7 +126,7 @@ class ObjectBase(PartnerBase):
         request = Request(self.key,self.secret)
         return request.delete(request_url)   
 
-    def _get(self, endpoint, item_id):
+    def _get(self, endpoint, item_id, params={}):
         """
             update itself after post/put
         """
@@ -137,7 +137,7 @@ class ObjectBase(PartnerBase):
                                 item_id
                                 )
         request = Request(self.key,self.secret)
-        return request.get(request_url, params={})   
+        return request.get(request_url, params=params)   
 
 
 class Request(object):
