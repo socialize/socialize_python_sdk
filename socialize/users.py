@@ -24,9 +24,6 @@ class ApiUsers(CollectionBase):
         return meta, api_users
     
     def findOne(self, api_user_id, params={}):
-        '''
-            findOne doesn't care about application_id
-        '''
         params['application_id'] = self.app_id
         item = self._findOne('apiuser',api_user_id, params)
         api_user = ApiUser(self.key, self.secret, self.host, self.app_id, item)
