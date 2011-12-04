@@ -25,7 +25,7 @@ required package.
     
 
 This SDK is a work in progress. Below are the implemented endpoints.
-
+ 
 
 Partner API:
 
