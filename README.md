@@ -3,7 +3,7 @@ Socialize Python SDK
 
 How to use
 ----------
-
+     
 First time running you will need to activate the virtual environment to download
 required package.
 
