@@ -3,6 +3,8 @@ from base import CollectionBase, ObjectBase
 from users import ApiUsers
 from urllib2 import quote
 
+from django.utils.encoding import smart_str
+
 class Applications(CollectionBase):
     ''' find() Return collection of Application
         findOne(id) Return single application by id 
@@ -98,7 +100,7 @@ class Application(ObjectBase):
             self.apple_store_id             =app.get('apple_store_id','') 
             self.category                   =app.get('category','') 
             self.description                =app.get('description','') 
-            self.name                       =app.get('name','') 
+            self.name                       =smart_str(app.get('name','')) 
             self.mobile_platform            =app.get('platforms',[]) 
             self.resource_uri               =app.get('resource_uri','') 
             self.stats                      =app.get('stats','') 
