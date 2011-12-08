@@ -13,8 +13,8 @@ class Applications(CollectionBase):
         **  parameter deleted is to filter not-deleted app.
     '''
     ## next, previous will be carefully implement next release 
-    find_valid_constrains = ['format','offset','limit','user','order_by','deleted']
-    findOne_valid_constrains = ['format','user'] ## not allowed any constrain
+    find_valid_constrains = ['format','offset','limit','user', 'user_id','order_by','deleted']
+    findOne_valid_constrains = ['format','user', 'user_id'] ## not allowed any constrain
 
     def verify_constrain(self,params,is_findOne):
         for query in params:
@@ -34,7 +34,7 @@ class Applications(CollectionBase):
         self.previous_url = None
     
     def find(self,params={}):
-        params['user']=self.user
+        params['user_id']=self.user
         self.verify_constrain(params, is_findOne=False)
         meta, items = self._find('application',params)
         apps = []
@@ -44,7 +44,7 @@ class Applications(CollectionBase):
         return meta,apps
 
     def findOne(self, app_id, params={}):
-        params['user'] = self.user
+        params['user_id'] = self.user
         self.verify_constrain(params, is_findOne=True)
         item = self._findOne('application',app_id,params)
         app = Application(self.key,self.secret,self.host,item)
