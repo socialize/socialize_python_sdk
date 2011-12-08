@@ -35,6 +35,7 @@ class Applications(CollectionBase):
     
     def find(self,params={}):
         params['user_id']=self.user
+        params['user']=self.user #for api changes, make sure both work
         self.verify_constrain(params, is_findOne=False)
         meta, items = self._find('application',params)
         apps = []
@@ -45,6 +46,7 @@ class Applications(CollectionBase):
 
     def findOne(self, app_id, params={}):
         params['user_id'] = self.user
+        params['user']=self.user #for api changes, make sure both work
         self.verify_constrain(params, is_findOne=True)
         item = self._findOne('application',app_id,params)
         app = Application(self.key,self.secret,self.host,item)
