@@ -98,7 +98,7 @@ class Application(ObjectBase):
             self.socialize_app              =app.get('socialize_app','') 
 
             ## modifiable  
-            self.android_package_name 		=app.get('android_package_name','') 
+            self.android_package_name 	    =app.get('android_package_name','') 
             self.apple_store_id             =app.get('apple_store_id','') 
             self.category                   =app.get('category','') 
             self.description                =app.get('description','') 
@@ -113,7 +113,7 @@ class Application(ObjectBase):
             user_id = int(app.get('user','0'))
             if user_id == 0:
                 user_id = int(app.get('user_id','0'))
-            self.user  
+            self.user  			    =user_id
 
     def __to_post_payload(self,isPost=True):    
         '''
