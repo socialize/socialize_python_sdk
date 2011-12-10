@@ -106,9 +106,14 @@ class Application(ObjectBase):
             self.mobile_platform            =app.get('platforms',[]) 
             self.resource_uri               =app.get('resource_uri','') 
             self.stats                      =app.get('stats','') 
-            self.user                       =int(app.get('user','0'))
             self.display_name               =self.name
             self.icon_url                   =app.get('icon_url',None)
+            
+            #to make forward and backward compatible with API-user changes (temporary)
+            user_id = int(app.get('user','0'))
+            if user_id == 0:
+                user_id = int(app.get('user_id','0'))
+            self.user  
 
     def __to_post_payload(self,isPost=True):    
         '''
