@@ -97,6 +97,8 @@ class Application(ObjectBase):
             self.socialize_consumer_secret  =app.get('socialize_consumer_secret','') 
             self.socialize_app              =app.get('socialize_app','') 
 
+            self.push_certificate           =app.get('push_certificate', None)
+            
             ## modifiable  
             self.android_package_name 	    =app.get('android_package_name','') 
             self.apple_store_id             =app.get('apple_store_id','') 
