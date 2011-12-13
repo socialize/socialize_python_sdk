@@ -10,16 +10,17 @@ class IphoneCertificate(ObjectBase):
     def __repr__(self):
         return '<cert id: %s ,code_sign_identity: %s>'%(self.id, self.code_sign_identity)
 
-    def __init__(self, key, secret, host, app_id, cert):
+    def __init__(self, key, secret, host, cert):
         '''
             new cert using app_dict = {}, id = 0
         '''
         self.host = host
         self.key = key
         self.secret = secret
-        self.app_id = app_id
         if type(cert)==int:
             self.id = cert
+        elif not cert:
+            self.id = None
         else:
             self.id                  = int(cert.get('id','0'))                
             self.resource_uri        = cert.get('resource_uri','')
@@ -37,17 +38,12 @@ class IphoneCertificate(ObjectBase):
         '''
             Get available iPhone certificate
         '''
-        params = {'id': self.id}
-        cert = self._get('iphone_certificate',item_id=self.id, params= params)
+        cert = None
+        if self.id:
+            params = {'id': self.id}
+            cert = self._get('iphone_certificate',item_id=self.id, params= params)
         return cert
     
-    def refresh(self):
-        '''
-            update object
-        '''
-        params = {'id': self.id}
-        new_item = self._get('iphone_certificate',item_id=self.id, params= params)
-        self = self.__init__(self.key, self.secret, self.host, self.app_id, new_item) 
 
      
         

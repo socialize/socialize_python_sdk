@@ -227,6 +227,6 @@ class Application(ObjectBase):
         '''
             Get available iPhone certificate
         '''
-        iphone_cert = IphoneCertificate(self.key, self.secret, self.host, self.id, self.push_certificate)
+        iphone_cert = IphoneCertificate(self.key, self.secret, self.host, self.push_certificate)
         cert = iphone_cert.get()
         return cert
