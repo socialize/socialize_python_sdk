@@ -137,7 +137,6 @@ class ObjectBase(PartnerBase):
                                 self.partner_endpoints[endpoint],
                                 item_id
                                 )
-        print request_url
         
         request = Request(self.key,self.secret)
         return request.get(request_url, params=params)   
