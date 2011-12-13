@@ -1,6 +1,7 @@
 
 from base import CollectionBase, ObjectBase
 from users import ApiUsers
+from certificates import IphoneCertificate
 from urllib2 import quote
 
 from django.utils.encoding import smart_str
@@ -220,4 +221,12 @@ class Application(ObjectBase):
                 payload=payload,
                 item=self.id,
                 verb='upload_p12')
-        return resp  
+        return resp
+    
+    def get_iphone_certificate(self,params={}):
+        '''
+            Get available iPhone certificate
+        '''
+        api_users = IphoneCertificate(self.key, self.secret, self.host, self.id)
+        collection = api_users.find(params)
+        return collection
