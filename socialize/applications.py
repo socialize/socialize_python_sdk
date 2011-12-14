@@ -1,6 +1,7 @@
 
 from base import CollectionBase, ObjectBase
 from users import ApiUsers
+from certificates import IphoneCertificate
 from urllib2 import quote
 
 from django.utils.encoding import smart_str
@@ -97,6 +98,8 @@ class Application(ObjectBase):
             self.socialize_consumer_secret  =app.get('socialize_consumer_secret','') 
             self.socialize_app              =app.get('socialize_app','') 
 
+            self.push_certificate           =app.get('push_certificate', None)
+            
             ## modifiable  
             self.android_package_name 	    =app.get('android_package_name','') 
             self.apple_store_id             =app.get('apple_store_id','') 
@@ -218,4 +221,12 @@ class Application(ObjectBase):
                 payload=payload,
                 item=self.id,
                 verb='upload_p12')
-        return resp  
+        return resp
+    
+    def get_iphone_certificate(self,params={}):
+        '''
+            Get available iPhone certificate
+        '''
+        iphone_cert = IphoneCertificate(self.key, self.secret, self.host, self.push_certificate)
+        cert = iphone_cert.get()
+        return cert

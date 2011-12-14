@@ -11,6 +11,7 @@ class PartnerBase(object):
             'application'       : 'application',
             'webuser'           : 'web_user',
             'apiuser'           : 'api_user',
+            'iphone_certificate': 'iphone_certificate',
             }                    
 
     partner_endpoint_verb = {
@@ -136,6 +137,7 @@ class ObjectBase(PartnerBase):
                                 self.partner_endpoints[endpoint],
                                 item_id
                                 )
+        
         request = Request(self.key,self.secret)
         return request.get(request_url, params=params)   
 
