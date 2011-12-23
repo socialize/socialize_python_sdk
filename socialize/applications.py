@@ -99,6 +99,7 @@ class Application(ObjectBase):
             self.socialize_app              =app.get('socialize_app','') 
 
             self.push_certificate           =app.get('push_certificate', None)
+            self.is_socialize_editable           =app.get('is_socialize_editable', True)
             
             ## modifiable  
             self.android_package_name 	    =app.get('android_package_name','') 
