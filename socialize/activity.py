@@ -4,7 +4,7 @@ from urllib2 import quote
 from django.utils.encoding import smart_str
 from datetime import datetime
 from users import ApiUser
-
+from entity import Entity
 
 class Activities(CollectionBase):
     ''' find() Return collection of Activity
@@ -26,27 +26,14 @@ class Activities(CollectionBase):
         self.previous_url = None        
     
     def find(self, params={}):
-        params['application_id'] = self.app_id
+        params['application'] = self.app_id
         meta, items = self._find(self.activity_type ,params)
         activities=[]
         for item in items:
             activity = Activity(self.key, self.secret, self.host, item)
             activities.append(activity)    
         return meta, activities
-    
-class Entity(ObjectBase):
-    '''
-        Construct entity object
-    '''
-    def __init__(self, entity={}):
-        self.id         = int(entity.get('id','0'))
-        self.key        = entity.get('key','')
-        self.name       = smart_str(entity.get('name',''))   
-        self.type       = entity.get('type','') 
-        self.views      = entity.get('views',None)       
-        self.shares     = entity.get('shares',None)       
-        self.likes      = entity.get('likes',None)       
-        self.comments   = entity.get('comments',None)       
+        
 
 class Activity(ObjectBase):
     '''
@@ -55,7 +42,7 @@ class Activity(ObjectBase):
     '''
 
     def __repr__(self):
-        return '<id: %s ,%s %s on \"%s\">'%(self.id,self.user.username,self.activity_type,self.entity.name)   
+        return '<id: %s ,%s %s on \"%s\" in app: %s | %s>'%(self.id,self.user.username,self.activity_type,self.entity.name,self.application, self.created)   
 
  
     def __init__(self, key,secret,host,activity={}):
