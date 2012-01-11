@@ -1,7 +1,8 @@
 from base import ObjectBase , CollectionBase
 from datetime import datetime
 from simplejson import loads
-
+from django.utils.encoding import smart_str
+ 
 class ApiUsers(CollectionBase):
     '''
         find a list of api users in application
@@ -60,13 +61,14 @@ class ApiUser(ObjectBase):
         else:
             self.id                  = int(api_user.get('id','0'))                
             self.resource_uri        = api_user.get('resource_uri','')
-            self.created             = datetime.strptime(api_user.get('created',None), '%Y-%m-%dT%H:%M:%S')           
-            self.updated             = datetime.strptime(api_user.get('updated',None),'%Y-%m-%dT%H:%M:%S')        
+            self.created             = datetime.strptime(api_user.get('created','2001-01-01T00:00:01'), '%Y-%m-%dT%H:%M:%S')           
+            self.updated             = datetime.strptime(api_user.get('updated','2000-01-01T00:00:01'),'%Y-%m-%dT%H:%M:%S')        
 
+            self.username            = smart_str(api_user.get('username',''))
             self.date_of_birth       = api_user.get('date_of_birth','')    
             self.description         = api_user.get('description','')       
             self.device_id           = api_user.get('device_id','')         
-            self.email               = api_user.get('email:null','')        
+            self.email               = api_user.get('email','')        
             self.first_name          = api_user.get('first_name','')        
             self.last_name           = api_user.get('last_name','')         
             self.location            = api_user.get('location','')          

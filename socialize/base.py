@@ -12,6 +12,10 @@ class PartnerBase(object):
             'webuser'           : 'web_user',
             'apiuser'           : 'api_user',
             'iphone_certificate': 'iphone_certificate',
+            'view'              : 'view',
+            'share'             : 'share',
+            'comment'           : 'comment',
+            'like'              : 'like',
             }                    
 
     partner_endpoint_verb = {

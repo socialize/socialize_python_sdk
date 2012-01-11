@@ -1,5 +1,7 @@
 from applications import Applications , Application
 from users import ApiUser , ApiUsers
+from activity import Activities
+
 class Partner(object):
     '''
         Interface for Partner API
@@ -34,4 +36,33 @@ class Partner(object):
 
     def api_user(self,app_id, api_user_id):
         """ return api user object"""
-        return ApiUser(self.key,self.secret,self.host,app_id, api_user_id)       
+        return ApiUser(self.key,self.secret,self.host,app_id, api_user_id)
+
+    def view(self, app_id):
+        """
+            return colection of views object
+        """
+        return Activities(self.key, self.secret, self.host,app_id, 'view')
+        
+
+    def comment(self, app_id):
+        """
+            return colection of views object
+        """
+        return Activities(self.key, self.secret, self.host,app_id, 'comment')
+
+    def like(self, app_id):
+        """
+            return colection of views object
+        """
+        return Activities(self.key, self.secret, self.host,app_id, 'like')
+        
+
+    def share(self, app_id):
+        """
+            return colection of views object
+        """
+        return Activities(self.key, self.secret, self.host,app_id, 'share')
+
+
+ 
