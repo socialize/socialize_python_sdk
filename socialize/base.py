@@ -11,6 +11,7 @@ class PartnerBase(object):
             'application'       : 'application',
             'webuser'           : 'web_user',
             'apiuser'           : 'api_user',
+            'apiuser_stat'      : 'api_user_stat',
             'iphone_certificate': 'iphone_certificate',
             'view'              : 'view',
             'share'             : 'share',

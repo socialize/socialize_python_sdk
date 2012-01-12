@@ -12,6 +12,43 @@ except:
 from socialize.client import Partner
 from base import SocializeTest
 
+
+class ApiUserStatTest(SocializeTest):
+    def test_init_stats(self):
+        '''
+            nosetests -s -v tests.api_user_test:ApiUserStatTest.test_init_stats
+
+        '''
+        api_user_stats = self.partner.api_user_stats(app_id)
+        self.assertEqual(api_user_stats.app_id,app_id)
+
+    def test_find(self):
+        """    
+            nosetests -s -v tests.api_user_test:ApiUserStatTest.test_find 
+        """
+        api_user_stats = self.partner.api_user_stats(app_id)
+        meta, stats = api_user_stats.find()
+        
+        self.assertTrue( len(stats) > 0)
+        memory = []
+        for item in stats:
+            self.assertTrue( item.id not in memory)
+            memory.append(item.id)
+            
+            print item
+
+    def test_findOne(self):
+        """    
+            nosetests -s -v tests.api_user_test:ApiUserStatTest.test_findOne 
+        """
+        api_user_stats = self.partner.api_user_stats(app_id)
+        api_user = api_user_stats.findOne(api_user_id = api_user_id)
+        self.assertEqual( api_user.id , api_user_id)
+        print api_user
+
+        
+
+
 class ApiUserTest(SocializeTest):
 
     '''
@@ -33,7 +70,7 @@ class ApiUserTest(SocializeTest):
         api_users = self.partner.api_users(app_id=5)
         meta, collection = api_users.find()
         
-        for item in collection:
+        for item in collection:                         
             self.assertNotEqual(int(item.id) , 0)
             print item
 

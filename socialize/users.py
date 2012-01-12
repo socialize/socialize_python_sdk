@@ -3,6 +3,73 @@ from datetime import datetime
 from simplejson import loads
 from django.utils.encoding import smart_str
  
+
+
+
+
+class ApiUserStats(CollectionBase):
+    '''
+        Api User Stat is a new endpoint replace api_user, with more information.
+        Goal is to replace api_user with api_user_stat.
+    '''
+    def __init__(self, key,secret,host,app_id):
+        self.key = key                                              
+        self.secret  = secret
+        self.host = host
+        self.app_id= app_id
+        self.next_url = None
+        self.previous_url = None        
+    
+    def find(self, params={}):
+        params['application_id'] = self.app_id
+        meta, items = self._find('apiuser_stat',params)
+        api_user_stats=[]
+        for item in items:
+            stat = ApiUserStat(self.key, self.secret, self.host,self.app_id, item)
+            api_user_stats.append(stat)    
+        return meta, api_user_stats
+    
+    def findOne(self, api_user_id, params={}):
+        params['application_id'] = self.app_id
+        item = self._findOne('apiuser_stat',api_user_id, params)
+        api_user_stats = ApiUserStat(self.key, self.secret, self.host, self.app_id, item)
+        return api_user_stats                           
+
+class ApiUserStat(ObjectBase):
+    '''
+        A Single object of API user stats. Support GET only , no update
+    '''
+    def __repr__(self):
+        return '<api_user id: %s ,username: %s (%s,%s,%s,%s = %s)>'%(self.id, self.user.username,
+                                self.comments,self.likes, self.views, self.shares,self.total)
+
+    def __init__(self, key,secret,host,app_id, api_user_stat):
+        self.host = host
+        self.key = key
+        self.secret = secret
+        self.app_id = app_id
+         
+        self.id                  = int(api_user_stat.get('id','0'))                
+        self.resource_uri        = api_user_stat.get('resource_uri','')
+        self.created             = datetime.strptime(api_user_stat.get('created','2001-01-01T00:00:01'), '%Y-%m-%dT%H:%M:%S')           
+        self.updated             = datetime.strptime(api_user_stat.get('updated','2001-01-01T00:00:01'), '%Y-%m-%dT%H:%M:%S')           
+ 
+        self.user                = ApiUser(key, secret, host, self.app_id, api_user_stat.get('user',{}))
+
+        self.application         = api_user_stat.get('application','')
+        self.comments            = api_user_stat.get('comments',0)
+        self.likes               = api_user_stat.get('likes',0)
+        self.views               = api_user_stat.get('views',0)
+        self.shares              = api_user_stat.get('shares',0)
+        self.total               = api_user_stat.get('total',0)
+        self.is_banned           = api_user_stat.get('is_banned','')
+        
+    def to_dict(self):
+        return self.__dict__ 
+
+
+
+
 class ApiUsers(CollectionBase):
     '''
         find a list of api users in application

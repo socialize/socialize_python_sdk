@@ -1,5 +1,5 @@
 from applications import Applications , Application
-from users import ApiUser , ApiUsers
+from users import ApiUser , ApiUsers, ApiUserStats, ApiUserStat
 from activity import Activities
 
 class Partner(object):
@@ -37,6 +37,18 @@ class Partner(object):
     def api_user(self,app_id, api_user_id):
         """ return api user object"""
         return ApiUser(self.key,self.secret,self.host,app_id, api_user_id)
+
+    def api_user_stats(self, app_id):
+        """ 
+            return collection of api_user_stat object
+            
+        """
+        return ApiUserStats(self.key, self.secret, self.host, app_id)
+
+    def api_user_stat(self,app_id, api_user_id):
+        """ return api user object"""
+        return ApiUserStat(self.key,self.secret,self.host,app_id, api_user_id)
+ 
 
     def activities(self, app_id, activity_type):
         """
