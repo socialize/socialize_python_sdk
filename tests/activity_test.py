@@ -78,17 +78,21 @@ class ActivityTest(SocializeTest):
     def test_comment_find_order_by_date(self):
         '''
             ** test get list of comment by app_id order by created
+            nosetests -s -v tests.activity_test:ActivityTest.test_comment_find_order_by_date    
         '''
         comment = self.partner.comment(app_id)
-        params= {'order_by':'-created'}
+        params= {'order_by':'-created', 'deleted':0, 'limit':100}
         meta, collection = comment.find(params)
-        
+
         prev_created = datetime.strptime('2999-01-01T00:00:00','%Y-%m-%dT%H:%M:%S')
+        self.assertEqual( len(collection), 100)
         for item in collection:
             self.assertNotEqual(int(item.id) , 0)
             self.assertEqual(comment.activity_type , 'comment')
             self.assertTrue( prev_created >= item.created)
             prev_created = item.created
+            self.assertFalse( item.deleted)
             print item
+
 
 
