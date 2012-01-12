@@ -13,7 +13,6 @@ from socialize.client import Partner
 from base import SocializeTest
 
 class ActivityTest(SocializeTest):
-    print app_id
     '''
         find()
     '''   

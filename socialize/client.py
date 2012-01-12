@@ -38,6 +38,12 @@ class Partner(object):
         """ return api user object"""
         return ApiUser(self.key,self.secret,self.host,app_id, api_user_id)
 
+    def activities,(self, app_id, activity_type):
+        """
+            return colection of any activity object by activity_type
+        """
+        return Activities(self.key, self.secret, self.host,app_id, activity_type)
+ 
     def view(self, app_id):
         """
             return colection of views object
