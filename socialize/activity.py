@@ -33,17 +33,19 @@ class Activities(CollectionBase):
             activity = Activity(self.key, self.secret, self.host, item)
             activities.append(activity)    
         return meta, activities
-        
 
 class Activity(ObjectBase):
     '''
         Construct activity base on activity_type
         can not create new activity from dashboard
     '''
+    class Medium():
+        def __init__(self, medium={}):
+            self.id = medium.get('id',None)
+            self.medium = medium.get('medium',None)
 
     def __repr__(self):
         return '<id: %s ,%s %s on \"%s\" in app: %s | %s>'%(self.id,self.user.username,self.activity_type,self.entity.name,self.application, self.created)   
-
  
     def __init__(self, key,secret,host,activity={}):
         self.host = host
@@ -70,3 +72,14 @@ class Activity(ObjectBase):
         self.text          			= activity.get('text',None)      
         self.deleted       			= activity.get('deleted',None)         
         
+        if self.activity_type == 'share':
+            self.medium             = self.Medium(activity.get('medium',{}))
+
+    def delete(self):
+        if self.activity_type == 'comment':
+            
+            self._delete('comment',self.id)
+        else:
+            raise Exception('Delete is not allow in %s activity'%(self.activity_type))
+        
+

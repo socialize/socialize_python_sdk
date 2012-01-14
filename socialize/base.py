@@ -192,7 +192,7 @@ class Request(object):
         response, content  = http.request(url, method='PUT',headers=headers )
         return self.__construct_response(url, response, content)
 
-    def delete(self,url):
+    def delete(self,url,payload={}):
         response, content = self.client.request(url,
                                             method='DELETE',
                                             )

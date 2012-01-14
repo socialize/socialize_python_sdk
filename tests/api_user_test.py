@@ -2,7 +2,7 @@ import sys, os
 cmd_folder = os.path.dirname(os.path.abspath(__file__)[-len('tests')])
 if cmd_folder not in sys.path:
     sys.path.insert(0, cmd_folder)
-
+from datetime import datetime
 try:
     from local_settings import version, host, key, secret, user_id , app_id, delete_app, api_user_id
 except:
@@ -47,7 +47,63 @@ class ApiUserStatTest(SocializeTest):
         print api_user
 
         
+    def test_most_recent_users(self):
+        """    
+            nosetests -s -v tests.api_user_test:ApiUserStatTest.test_most_recent_users 
+        """
+        api_user_stats = self.partner.api_user_stats(app_id)
+        meta, recent = api_user_stats.most_recent_users()
+        
+        self.assertTrue( len(recent) > 0)
+        memory = []
+        prv_created = datetime.strptime('2999-01-01T01:01:01', '%Y-%m-%dT%H:%M:%S')
+        for item in recent:
+            
+            self.assertTrue( item.id not in memory)
+            memory.append(item.id)
+            print prv_created , item.created
+            self.assertTrue( prv_created > item.created)
 
+              
+            prv_created  = item.created
+ 
+
+    def test_most_active_users(self):
+        """    
+            nosetests -s -v tests.api_user_test:ApiUserStatTest.test_most_active_users 
+        """
+        api_user_stats = self.partner.api_user_stats(app_id)
+        meta, active = api_user_stats.most_active_users()
+        
+        self.assertTrue( len(active) > 0)
+        memory = []
+        prv_total = 9999999999999999999
+        for item in active:
+            
+            self.assertTrue( item.id not in memory)
+            memory.append(item.id)
+            self.assertTrue( prv_total > item.total)
+            prv_created  = item.total
+
+         
+
+    def test_banned_users(self):
+        """    
+            nosetests -s -v tests.api_user_test:ApiUserStatTest.test_banned_users 
+        """
+        api_user_stats = self.partner.api_user_stats(app_id)
+        meta, active = api_user_stats.banned_users()
+        
+        self.assertTrue( len(active) > 0)
+        memory = []
+        for item in active:
+            
+            self.assertTrue( item.id not in memory)
+            memory.append(item.id)
+            self.assertTrue( item.is_banned)
+            prv_created  = item.total
+
+ 
 
 class ApiUserTest(SocializeTest):
 

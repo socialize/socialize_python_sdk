@@ -25,6 +25,23 @@ class ActivityTest(SocializeTest):
         comment = self.partner.comment(app_id)
         self.assertEqual(comment.activity_type , 'comment')
         self.assertEqual(comment.app_id , app_id)
+    
+    def test_invalid_delete_activities(self):
+        '''
+            ** nosetests -s -v tests.activity_test:ActivityTest.test_invalid_delete_activities 
+        '''
+        for item in ['comment','view','like','share']:
+            activity = self.partner.activities(app_id, item)
+            meta, collection = activity.find()
+
+            one_activity = collection[0]
+            if item == 'comment':
+                one_activity.delete()
+            else:
+                self.assertRaises(Exception, one_activity.delete )
+
+
+       
 
     def test_comment_find(self):
         '''
@@ -60,8 +77,10 @@ class ActivityTest(SocializeTest):
         
         for item in collection:
             self.assertNotEqual(int(item.id) , 0)
-            self.assertEqual(share.activity_type , 'share')
-            print item
+            self.assertEqual(item.activity_type , 'share')
+            print item.medium.medium
+            self.assertNotEqual(item.medium.id, None)
+            self.assertNotEqual(item.medium.medium, None)
 
     def test_like_find(self):
         '''

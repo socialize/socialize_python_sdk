@@ -35,6 +35,26 @@ class ApiUserStats(CollectionBase):
         api_user_stats = ApiUserStat(self.key, self.secret, self.host, self.app_id, item)
         return api_user_stats                           
 
+    def most_active_users(self, params={}):
+        params['order_by'] = '-total' 
+        return self.find(params)
+
+    def most_recent_users(self, params={}):  
+        params['order_by'] = '-id'
+        return self.find(params)
+
+    def banned_users(self, params={}):  
+        params['is_banned']= 1
+        return self.find(params)
+        
+    def authd_users(self, params={}):
+        '''
+            NOT YET IMPLEMENTED on partner api
+        '''
+        pass
+
+
+
 class ApiUserStat(ObjectBase):
     '''
         A Single object of API user stats. Support GET only , no update
