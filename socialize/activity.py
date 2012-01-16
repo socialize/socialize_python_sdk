@@ -62,7 +62,7 @@ class Activity(ObjectBase):
         self.updated			    = datetime.strptime(activity.get('updated','2001-01-01T00:00:01'),'%Y-%m-%dT%H:%M:%S')                
                                          
         ## Sub-structure
-        self.entity                 = Entity(activity.get('entity',{}))
+        self.entity                 = Entity(key, secret, host, activity.get('entity',{}))
         self.user                   = ApiUser(key, secret, host, self.application, activity.get('user',{}))
 
         self.lat			        = activity.get('lat',None)             
@@ -80,6 +80,6 @@ class Activity(ObjectBase):
             
             self._delete('comment',self.id)
         else:
-            raise Exception('Delete is not allow in %s activity'%(self.activity_type))
+            raise Exception('Delete is not allowed in %s activity'%(self.activity_type))
         
 

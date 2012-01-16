@@ -1,6 +1,7 @@
 from applications import Applications , Application
 from users import ApiUser , ApiUsers, ApiUserStats, ApiUserStat
 from activity import Activities
+from entity import Entities
 
 class Partner(object):
     '''
@@ -49,6 +50,11 @@ class Partner(object):
         """ return api user object"""
         return ApiUserStat(self.key,self.secret,self.host,app_id, api_user_id)
  
+    def entities(self,app_id):
+        """
+            return collection of entities object
+        """
+        return Entities(self.key,self.secret,self.host,app_id)
 
     def activities(self, app_id, activity_type):
         """

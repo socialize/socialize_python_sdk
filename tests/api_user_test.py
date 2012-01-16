@@ -85,8 +85,6 @@ class ApiUserStatTest(SocializeTest):
             self.assertTrue( prv_total > item.total)
             prv_created  = item.total
 
-         
-
     def test_banned_users(self):
         """    
             nosetests -s -v tests.api_user_test:ApiUserStatTest.test_banned_users 
@@ -102,8 +100,6 @@ class ApiUserStatTest(SocializeTest):
             memory.append(item.id)
             self.assertTrue( item.is_banned)
             prv_created  = item.total
-
- 
 
 class ApiUserTest(SocializeTest):
 

@@ -17,6 +17,7 @@ class PartnerBase(object):
             'share'             : 'share',
             'comment'           : 'comment',
             'like'              : 'like',
+            'entity'            : 'entity',
             }                    
 
     partner_endpoint_verb = {
