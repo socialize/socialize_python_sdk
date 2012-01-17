@@ -43,7 +43,7 @@ class ApiUserStatTest(SocializeTest):
         """
         api_user_stats = self.partner.api_user_stats(app_id)
         api_user = api_user_stats.findOne(api_user_id = api_user_id)
-        self.assertEqual( api_user.id , api_user_id)
+        self.assertEqual( api_user.user.id , api_user_id)
         print api_user
 
         

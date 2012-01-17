@@ -38,7 +38,8 @@ class ApiUserStats(CollectionBase):
         params['application_id'] = self.app_id
         params['user__id'] = api_user_id
         meta, items = self._find('apiuser_stat', params)
-        item = items['objects'][0]
+        item = items[0]
+        
         api_user_stat = ApiUserStat(self.key, self.secret, self.host, self.app_id, item)
         return api_user_stat                           
 
@@ -67,7 +68,7 @@ class ApiUserStat(ObjectBase):
         A Single object of API user stats. Support GET only , no update
     '''
     def __repr__(self):
-        return '<api_user id: %s ,username: %s (%s,%s,%s,%s = %s)>'%(self.id, self.user.username,
+        return '<api_user id: %s ,username: %s (%s,%s,%s,%s = %s)>'%(self.user.id, self.user.username,
                                 self.comments,self.likes, self.views, self.shares,self.total)
 
     def __init__(self, key,secret,host,app_id, api_user_stat):
