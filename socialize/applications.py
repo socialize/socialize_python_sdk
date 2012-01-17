@@ -239,3 +239,16 @@ class Application(ObjectBase):
         iphone_cert = IphoneCertificate(self.key, self.secret, self.host, self.push_certificate)
         cert = iphone_cert.get()
         return cert
+    
+    
+    def set_notifications_enabled(self, enabled):
+        '''
+            set notifications enabled to True or False
+            return True when success else raise exception
+        '''
+        payload = {'notifications_enabled': enabled }
+        resp = self._put( endpoint = 'application',
+                payload = payload,
+                item=self.id)
+        return resp
+    
