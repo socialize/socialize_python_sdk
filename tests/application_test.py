@@ -206,7 +206,22 @@ class TestApplicationWriteOperations(SocializeTest):
         resp = app.upload_icon( icon_base64)
         print "Response: ", resp
         self.assertTrue(resp)
+    
+    def test_set_notifications_enabled(self):
+        '''
+            Set notification_enabled to True
+        '''
+        applications = self.partner.applications(user_id)
+        app = applications.findOne(app_id)
+        print app
+        resp = app.set_notifications_enabled(True)
 
+        print "Response: ", resp
+        app = applications.findOne(app_id)
+        self.assertEqual( app.id , app_id)
+        self.assertTrue( app.name != '') 
+        self.assertEqual(app.notifications_enabled, True)
+ 
     def xtest_upload_p12(self):
         '''
             Upload p12 for push notification
