@@ -30,10 +30,17 @@ class ApiUserStats(CollectionBase):
         return meta, api_user_stats
     
     def findOne(self, api_user_id, params={}):
+        '''
+            This work differently from other endpoints, 
+            id in this endpoint refer to stat_id
+        '''
+        
         params['application_id'] = self.app_id
-        item = self._findOne('apiuser_stat',api_user_id, params)
-        api_user_stats = ApiUserStat(self.key, self.secret, self.host, self.app_id, item)
-        return api_user_stats                           
+        params['user__id'] = api_user_id
+        meta, items = self._find('apiuser_stat', params)
+        item = items['objects'][0]
+        api_user_stat = ApiUserStat(self.key, self.secret, self.host, self.app_id, item)
+        return api_user_stat                           
 
     def most_active_users(self, params={}):
         params['order_by'] = '-total' 

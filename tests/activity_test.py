@@ -40,9 +40,6 @@ class ActivityTest(SocializeTest):
             else:
                 self.assertRaises(Exception, one_activity.delete )
 
-
-       
-
     def test_comment_find(self):
         '''
             ** test get list of comment by app_id
