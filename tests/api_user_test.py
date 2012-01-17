@@ -56,16 +56,16 @@ class ApiUserStatTest(SocializeTest):
         
         self.assertTrue( len(recent) > 0)
         memory = []
-        prv_created = datetime.strptime('2999-01-01T01:01:01', '%Y-%m-%dT%H:%M:%S')
+        prv_id = 0
         for item in recent:
             
             self.assertTrue( item.id not in memory)
             memory.append(item.id)
-            print prv_created , item.created
-            self.assertTrue( prv_created > item.created)
+            
+            self.assertTrue( prv_id <= item.id)
 
               
-            prv_created  = item.created
+            prv_created  = item.id
  
 
     def test_most_active_users(self):
@@ -82,7 +82,7 @@ class ApiUserStatTest(SocializeTest):
             
             self.assertTrue( item.id not in memory)
             memory.append(item.id)
-            self.assertTrue( prv_total > item.total)
+            self.assertTrue( prv_total >= item.total)
             prv_created  = item.total
 
     def test_banned_users(self):
