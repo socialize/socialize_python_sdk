@@ -191,9 +191,9 @@ class ApiUser(ObjectBase):
             self.last_name           = api_user.get('last_name','')         
             self.location            = api_user.get('location','')          
             self.sex                 = api_user.get('sex','')               
-            self.small_image         = api_user.get('small_image','')       
-            self.medium_image        = api_user.get('medium_image','')      
-            self.large_image         = api_user.get('large_image','')       
+            self.small_image_uri     = api_user.get('small_image_uri','')       
+            self.medium_image_uri    = api_user.get('medium_image_uri','')      
+            self.large_image_uri     = api_user.get('large_image_uri','')       
             
             self.stats               = api_user.get('stats','{}')
             self.user_devices        = api_user.get('user_devices','[]') 
