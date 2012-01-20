@@ -21,6 +21,7 @@ class ApiUserStats(CollectionBase):
         self.previous_url = None        
     
     def find(self, params={}):
+        params['application'] = self.app_id
         params['application_id'] = self.app_id
         meta, items = self._find('apiuser_stat',params)
         api_user_stats=[]
@@ -35,13 +36,14 @@ class ApiUserStats(CollectionBase):
             id in this endpoint refer to stat_id
         '''
         
+        params['application'] = self.app_id
         params['application_id'] = self.app_id
+
         params['user__id'] = api_user_id
         meta, items = self._find('apiuser_stat', params)
-        item = items[0]
-        
-        api_user_stat = ApiUserStat(self.key, self.secret, self.host, self.app_id, item)
-        return api_user_stat                           
+        ## RETURN NOTFOUND if user not exist in the application
+        stat = ApiUserStat(self.key, self.secret, self.host,self.app_id,items[0])
+        return stat
 
     def most_active_users(self, params={}):
         params['order_by'] = '-total' 
@@ -67,6 +69,30 @@ class ApiUserStat(ObjectBase):
     '''
         A Single object of API user stats. Support GET only , no update
     '''
+
+    class Device():
+        def __repr__(self):
+            return '<device id: %s ,username: %s,app_id: %s (%s,%s,%s,%s,%s,%s)>'%(self.id, self.user, self.application,
+                    self.country_code, self.device_name, self.language_code,self.platform, self.platform_version, self.sdk_version)
+            
+        def __init__(self, device={}):
+            self.id                  = device.get('id',None)                          
+            self.application         = device.get('application',None)     
+            self.user                = device.get('user',None)            
+            self.user_stat           = device.get('user_stat',None)  
+            self.bundle_id           = device.get('bundle_id',None)       
+
+            self.device_udid         = device.get('device_udid',None)     
+            self.oauth_token         = device.get('oauth_token',None)     
+            
+            self.country_code        = device.get('country_code',None)    
+            self.device_name         = device.get('device_name',None)     
+            self.language_code       = device.get('language_code',None)   
+            self.platform            = device.get('platform',None)        
+            self.platform_version    = device.get('platform_version',None)
+            self.sdk_version         = device.get('sdk_version',None)
+
+            
     def __repr__(self):
         return '<api_user id: %s ,username: %s (%s,%s,%s,%s = %s)>'%(self.user.id, self.user.username,
                                 self.comments,self.likes, self.views, self.shares,self.total)
@@ -92,11 +118,11 @@ class ApiUserStat(ObjectBase):
         self.total               = api_user_stat.get('total',0)
         self.is_banned           = api_user_stat.get('is_banned','')
         
+        self.devices             = [self.Device(item) for item in api_user_stat.get('devices',[]) ]
+        
+
     def to_dict(self):
-        return self.__dict__ 
-
-
-
+        return self.__dict__
 
 class ApiUsers(CollectionBase):
     '''
@@ -168,9 +194,9 @@ class ApiUser(ObjectBase):
             self.last_name           = api_user.get('last_name','')         
             self.location            = api_user.get('location','')          
             self.sex                 = api_user.get('sex','')               
-            self.small_image         = api_user.get('small_image','')       
-            self.medium_image        = api_user.get('medium_image','')      
-            self.large_image         = api_user.get('large_image','')       
+            self.small_image_uri     = api_user.get('small_image_uri','')       
+            self.medium_image_uri    = api_user.get('medium_image_uri','')      
+            self.large_image_uri     = api_user.get('large_image_uri','')       
             
             self.stats               = api_user.get('stats','{}')
             self.user_devices        = api_user.get('user_devices','[]') 
