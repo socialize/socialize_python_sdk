@@ -251,4 +251,15 @@ class Application(ObjectBase):
                 payload = payload,
                 item=self.id)
         return resp
-    
+
+    def send_notification(self, message, user_id_list=[]):
+        '''
+            set notifications enabled to True or False
+            return True when success else raise exception
+        '''
+        payload = {'message': message, "users": user_id_list }
+        resp= self._post(endpoint= 'application',
+                payload=payload,
+                item=self.id,
+                verb='notification')
+        return resp
