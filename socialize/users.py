@@ -71,22 +71,28 @@ class ApiUserStat(ObjectBase):
     '''
 
     class Device():
+        def __repr__(self):
+            return '<device id: %s ,username: %s,app_id: %s (%s,%s,%s,%s,%s,%s)>'%(self.id, self.user, self.application,
+                    self.country_code, self.device_name, self.language_code,self.platform, self.platform_version, self.sdk_version)
+            
         def __init__(self, device={}):
             self.id                  = device.get('id',None)                          
             self.application         = device.get('application',None)     
             self.user                = device.get('user',None)            
             self.user_stat           = device.get('user_stat',None)  
             self.bundle_id           = device.get('bundle_id',None)       
+
+            self.device_udid         = device.get('device_udid',None)     
+            self.oauth_token         = device.get('oauth_token',None)     
             
             self.country_code        = device.get('country_code',None)    
             self.device_name         = device.get('device_name',None)     
-            self.device_udid         = device.get('device_udid',None)     
             self.language_code       = device.get('language_code',None)   
-            self.oauth_token         = device.get('oauth_token',None)     
             self.platform            = device.get('platform',None)        
             self.platform_version    = device.get('platform_version',None)
-            self.sdk_version         = device.get('sdk_version',None)     
+            self.sdk_version         = device.get('sdk_version',None)
 
+            
     def __repr__(self):
         return '<api_user id: %s ,username: %s (%s,%s,%s,%s = %s)>'%(self.user.id, self.user.username,
                                 self.comments,self.likes, self.views, self.shares,self.total)
@@ -113,13 +119,10 @@ class ApiUserStat(ObjectBase):
         self.is_banned           = api_user_stat.get('is_banned','')
         
         self.devices             = [self.Device(item) for item in api_user_stat.get('devices',[]) ]
-
+        
 
     def to_dict(self):
-        return self.__dict__ 
-
-
-
+        return self.__dict__
 
 class ApiUsers(CollectionBase):
     '''
