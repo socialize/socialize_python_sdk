@@ -42,7 +42,11 @@ class ApiUserStats(CollectionBase):
         params['user__id'] = api_user_id
         meta, items = self._find('apiuser_stat', params)
         ## RETURN NOTFOUND if user not exist in the application
-        stat = ApiUserStat(self.key, self.secret, self.host,self.app_id,items[0])
+        try:
+            stat = ApiUserStat(self.key, self.secret, self.host,self.app_id,items[0])
+        except IndexError:
+            raise Exception(404)
+
         return stat
 
     def most_active_users(self, params={}):
