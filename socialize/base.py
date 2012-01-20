@@ -3,6 +3,8 @@ import urllib
 import oauth2 as oauth
 import simplejson as json
 import httplib2
+import logging
+logger = logging.getLogger(__name__)
 
 class PartnerBase(object):
     base_partner_path = 'partner'
@@ -61,6 +63,7 @@ class CollectionBase(PartnerBase):
                                 self.partner_endpoints[endpoint],
                                 item_id
                                 )
+        
         request = Request(self.key,self.secret)
         return request.get(request_url, params)
 
@@ -163,12 +166,13 @@ class Request(object):
         self.client = oauth.Client(self.consumer,self.token)
 
     def get(self,url,params={}):
-        
+        logger.info("API Get: %s --%s--" % (url, params))
         url = self.construct_url( url, params)
         response, content = self.client.request(url,'GET')
         return  self.__construct_response(url,response, content)
 
     def post(self,url,payload,params={}):
+        logger.info("API Post: %s --%s-- ---%s--" % (url, params, payload))
         payload = json.dumps(payload)
         response, content = self.client.request(url,
                                             method='POST',
@@ -179,6 +183,7 @@ class Request(object):
         '''
             HACKED oauth2 doesn't like PUT method, so I need to modify it. in the parameters.
         '''
+        logger.info("API Put: %s --%s--" % (url, payload))
         url_payload = urllib.quote(json.dumps(payload))
         url += '?payload=%s'%url_payload
         req = oauth.Request.from_consumer_and_token(self.consumer, 
@@ -191,6 +196,8 @@ class Request(object):
 
         http =  httplib2.Http()
         response, content  = http.request(url, method='PUT',headers=headers )
+        
+        
         return self.__construct_response(url, response, content)
 
     def delete(self,url,payload={}):
