@@ -46,6 +46,17 @@ class ApiUserStatTest(SocializeTest):
         self.assertEqual( api_user.user.id , api_user_id)
         print api_user
 
+    def test_findOneNotFound(self):
+        """    
+            nosetests -s -v tests.api_user_test:ApiUserStatTest.test_findOneNotFound 
+        """
+        api_user_stats = self.partner.api_user_stats(app_id)
+        try:
+            api_user = api_user_stats.findOne(api_user_id = 1)
+        except Exception, e:
+            self.assertEqual(type(e), IndexError)  
+            self.assertEqual(e.message, 'list index out of range')
+ 
         
     def test_most_recent_users(self):
         """    
