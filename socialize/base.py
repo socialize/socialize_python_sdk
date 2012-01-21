@@ -23,7 +23,7 @@ class PartnerBase(object):
             }                    
 
     partner_endpoint_verb = {
-            'application' : ['upload_p12','upload_icon'],
+            'application' : ['upload_p12','upload_icon', 'notification'],
             'apiuser' : ['ban','unban','banned']
             }
 
@@ -99,6 +99,7 @@ class ObjectBase(PartnerBase):
             else:
                 raise Exception('%s is not allow in %s endpoint'%(verb, endpoint))
         request = Request(self.key,self.secret)
+        logger.info(request_url)
         return request.post(request_url, payload)   
 
     def _put(self, endpoint, payload, item=None, verb=None):
