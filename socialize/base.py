@@ -224,6 +224,7 @@ class Request(object):
             POST/PUT return url location, and Exception when Fail
             Delete return True else Exception
         '''
+        print url
         formatted_payload = json.dumps(payload,sort_keys=True, indent=4) 
         status_code = response['status']
         if status_code == '201':
