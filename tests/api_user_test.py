@@ -62,7 +62,7 @@ class ApiUserStatTest(SocializeTest):
             self.assertTrue( item.id not in memory)
             memory.append(item.id)
             print prv_created , item.created
-            self.assertTrue( prv_created > item.created)
+            self.assertTrue( prv_created >= item.created)
 
               
             prv_created  = item.created
