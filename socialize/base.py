@@ -227,7 +227,6 @@ class Request(object):
             Delete return True else Exception
         '''
         formatted_payload = json.dumps(payload,sort_keys=True, indent=4) 
-        print formatted_payload
         status_code = response['status']
         if status_code == '201':
             return response['location']
