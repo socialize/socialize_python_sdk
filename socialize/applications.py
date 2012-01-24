@@ -101,6 +101,8 @@ class Application(ObjectBase):
             self.push_certificate           =app.get('push_certificate', None)
             self.is_socialize_editable      =app.get('is_socialize_editable', True)
             
+           
+            ## modifiable  
             notifications_enabled           =app.get('notifications_enabled', False)
             if type(notifications_enabled) == str:
                 if notifications_enabled == "false":
@@ -108,12 +110,11 @@ class Application(ObjectBase):
                 else:
                     notifications_enabled = True
             self.notifications_enabled      =notifications_enabled
-            
-            ## modifiable  
+ 
             self.android_package_name 	    =app.get('android_package_name','') 
             self.apple_store_id             =app.get('apple_store_id','') 
             self.category                   =app.get('category','') 
-            self.description                =app.get('description','') 
+            self.description                =smart_str(app.get('description',''))
             self.name                       =smart_str(app.get('name','')) 
             self.mobile_platform            =app.get('platforms',[]) 
             self.resource_uri               =app.get('resource_uri','') 
