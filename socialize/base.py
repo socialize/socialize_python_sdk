@@ -3,6 +3,9 @@ import urllib
 import oauth2 as oauth
 import simplejson as json
 import httplib2
+import logging
+
+logger = logging.getLogger(__name__)
 
 class PartnerBase(object):
     base_partner_path = 'partner'
@@ -21,7 +24,7 @@ class PartnerBase(object):
             }                    
 
     partner_endpoint_verb = {
-            'application' : ['upload_p12','upload_icon'],
+            'application' : ['upload_p12','upload_icon', 'notification'],
             'apiuser' : ['ban','unban','banned']
             }
 
@@ -61,6 +64,7 @@ class CollectionBase(PartnerBase):
                                 self.partner_endpoints[endpoint],
                                 item_id
                                 )
+        
         request = Request(self.key,self.secret)
         return request.get(request_url, params)
 
@@ -96,6 +100,7 @@ class ObjectBase(PartnerBase):
             else:
                 raise Exception('%s is not allow in %s endpoint'%(verb, endpoint))
         request = Request(self.key,self.secret)
+        logger.info(request_url)
         return request.post(request_url, payload)   
 
     def _put(self, endpoint, payload, item=None, verb=None):
@@ -163,22 +168,24 @@ class Request(object):
         self.client = oauth.Client(self.consumer,self.token)
 
     def get(self,url,params={}):
-        
+        logger.info("API Get: %s --%s--" % (url, params))
         url = self.construct_url( url, params)
         response, content = self.client.request(url,'GET')
-        return  self.__construct_response(url,response, content)
+        return  self.__construct_response(url,response, content,method='GET')
 
     def post(self,url,payload,params={}):
+        logger.info("API Post: %s --%s-- ---%s--" % (url, params, payload))
         payload = json.dumps(payload)
         response, content = self.client.request(url,
                                             method='POST',
                                             body='payload='+payload,)
-        return self.__construct_response(url, response, content,payload)
+        return self.__construct_response(url, response, content,payload,method='POST')
     
     def put(self, url,payload):
         '''
             HACKED oauth2 doesn't like PUT method, so I need to modify it. in the parameters.
         '''
+        logger.info("API Put: %s --%s--" % (url, payload))
         url_payload = urllib.quote(json.dumps(payload))
         url += '?payload=%s'%url_payload
         req = oauth.Request.from_consumer_and_token(self.consumer, 
@@ -191,13 +198,15 @@ class Request(object):
 
         http =  httplib2.Http()
         response, content  = http.request(url, method='PUT',headers=headers )
-        return self.__construct_response(url, response, content)
+        
+        
+        return self.__construct_response(url, response, content,method='PUT')
 
     def delete(self,url,payload={}):
         response, content = self.client.request(url,
                                             method='DELETE',
                                             )
-        return self.__construct_response(url, response, content) 
+        return self.__construct_response(url, response, content,method='DELETE') 
     
     def construct_url(self,url, params={}):
         '''
@@ -212,7 +221,7 @@ class Request(object):
         )
         return url
 
-    def __construct_response(self, url, response, content, payload=''):
+    def __construct_response(self, url, response, content, payload='', method=''):
         '''response from request will be json for GET
             POST/PUT return url location, and Exception when Fail
             Delete return True else Exception
@@ -231,5 +240,5 @@ class Request(object):
             except Exception, err:
                 raise Exception('Bad response please check\n%s\n%s\n%s'%(url, formatted_payload, err))
         elif status_code[0] != '2':    ## Only accept '2xx'
-            raise Exception('Server return status code %s\n%s\nuri:%s\nresponse:%s'%(status_code,formatted_payload,url,content))
+            raise Exception('Server return status code %s\nmethod:%s\n%s\nuri:%s\nresponse:%s'%(status_code,method,formatted_payload,url,content))
         return content      

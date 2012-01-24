@@ -46,6 +46,17 @@ class ApiUserStatTest(SocializeTest):
         self.assertEqual( api_user.user.id , api_user_id)
         print api_user
 
+    def test_findOneNotFound(self):
+        """    
+            nosetests -s -v tests.api_user_test:ApiUserStatTest.test_findOneNotFound 
+        """
+        api_user_stats = self.partner.api_user_stats(app_id)
+        try:
+            api_user = api_user_stats.findOne(api_user_id = 1)
+        except Exception, e:
+            self.assertEqual(type(e), Exception)  
+            self.assertEqual(e.message, 404)
+ 
         
     def test_most_recent_users(self):
         """    
@@ -56,16 +67,17 @@ class ApiUserStatTest(SocializeTest):
         
         self.assertTrue( len(recent) > 0)
         memory = []
-        prv_created = datetime.strptime('2999-01-01T01:01:01', '%Y-%m-%dT%H:%M:%S')
+        prv_id = 0
         for item in recent:
             
             self.assertTrue( item.id not in memory)
             memory.append(item.id)
-            print prv_created , item.created
-            self.assertTrue( prv_created >= item.created)
+
+            
+            self.assertTrue( prv_id <= item.id)
 
               
-            prv_created  = item.created
+            prv_created  = item.id
  
 
     def test_most_active_users(self):
@@ -82,7 +94,7 @@ class ApiUserStatTest(SocializeTest):
             
             self.assertTrue( item.id not in memory)
             memory.append(item.id)
-            self.assertTrue( prv_total > item.total)
+            self.assertTrue( prv_total >= item.total)
             prv_created  = item.total
 
     def test_banned_users(self):
