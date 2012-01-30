@@ -26,11 +26,12 @@ class Applications(CollectionBase):
                 if query not in self.find_valid_constrains:
                     raise Exception("parameter %s is not acceptable in find()\n %s"%(query, self.find_valid_constrains))
                             
-    def __init__(self, key,secret,host,user):
+    def __init__(self, key,secret,host,user=None,socialize_consumer_key=None):
         self.key = key                                              
         self.secret  = secret
         self.host = host
         self.user= user
+        self.socialize_consumer_key= socialize_consumer_key
         self.next_url = None
         self.previous_url = None
     
@@ -52,6 +53,25 @@ class Applications(CollectionBase):
         item = self._findOne('application',app_id,params)
         app = Application(self.key,self.secret,self.host,item)
         return app
+
+    def findByKey(self, params={}):
+        if self.socialize_consumer_key:
+            params['socialize_consumer_key']=self.socialize_consumer_key
+        else:
+            raise Exception("socialize_consumer_key is invalid")
+        
+        meta, items = self._find('application',params)
+        try:
+            app = Application(self.key,self.secret,self.host,items[0])
+            return app
+        except IndexError:
+            raise Exception(404)
+
+        
+ 
+        
+
+
 
     def new(self):
         return Application(self.key,self.secret,self.host)
