@@ -16,6 +16,7 @@ from time import sleep
 import base64
 
 class TestApplicationReadOperations(SocializeTest):
+
     '''
         find(), findOne(),
     '''   
@@ -31,6 +32,17 @@ class TestApplicationReadOperations(SocializeTest):
         self.assertEqual( app.socialize_consumer_key, socialize_consumer_key) 
         self.assertNotEqual( app.socialize_consumer_secret, None) 
         
+    def test_get_appstore_id(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_get_appstore_id
+        '''
+        apps = self.partner.applications(user_id)
+
+        ## get specific app id
+        app = apps.findOne(app_id)
+        print app.appstore_url()     
+        self.assertEqual( app.appstore_url(), "http://itunes.apple.com/us/app/id%s"%app.apple_store_id)
+
     def test_collections_get(self):
         '''
             ** get applications by user in database
@@ -116,7 +128,7 @@ class TestApplicationReadOperations(SocializeTest):
     def test_find_api_users(self):
         '''
             ** test list user from application
-            _install/bin/nosetests -s -v tests.application_test:TestApplicationReadOperations.test_find_api_users
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_find_api_users
         '''
 
         apps = self.partner.applications(user_id)

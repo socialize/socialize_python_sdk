@@ -284,3 +284,7 @@ class Application(ObjectBase):
                 item=self.id,
                 verb='notification')
         return resp
+
+
+    def appstore_url(self):
+        return "http://itunes.apple.com/us/app/id%s" % self.apple_store_id      
