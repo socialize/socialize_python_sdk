@@ -32,9 +32,9 @@ class TestApplicationReadOperations(SocializeTest):
         self.assertEqual( app.socialize_consumer_key, socialize_consumer_key) 
         self.assertNotEqual( app.socialize_consumer_secret, None) 
         
-    def test_get_appstore_id(self):
+    def test_get_appstore_url(self):
         '''
-            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_get_appstore_id
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_get_appstore_url
         '''
         apps = self.partner.applications(user_id)
 
@@ -42,6 +42,18 @@ class TestApplicationReadOperations(SocializeTest):
         app = apps.findOne(app_id)
         print app.appstore_url()     
         self.assertEqual( app.appstore_url(), "http://itunes.apple.com/us/app/id%s"%app.apple_store_id)
+
+    def test_get_android_market_url(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_get_android_market_url
+        '''
+        apps = self.partner.applications(user_id)
+
+        ## get specific app id
+        app = apps.findOne(app_id)
+        print app.android_market_url()     
+        self.assertEqual( app.android_market_url(), "https://market.android.com/details?id=%s" % self.android_package_name)
+        
 
     def test_collections_get(self):
         '''
