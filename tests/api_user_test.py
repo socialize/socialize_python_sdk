@@ -72,6 +72,7 @@ class ApiUserStatTest(SocializeTest):
             
             self.assertTrue( item.id not in memory)
             memory.append(item.id)
+
             
             self.assertTrue( prv_id <= item.id)
 
