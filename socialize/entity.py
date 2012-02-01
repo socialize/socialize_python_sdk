@@ -61,7 +61,8 @@ class Entity(ObjectBase):
         self.views      = entity.get('views',None)       
         self.shares     = entity.get('shares',None)       
         self.likes      = entity.get('likes',None)       
-        self.comments   = entity.get('comments',None)      
+        self.comments   = entity.get('comments',None)
+        self.total_activity   = entity.get('total_activity',None)
 
     def __repr__(self):
         return '<id: %s ,key: %s, name: \"%s\" app: %s created: %s>'%(self.id,
