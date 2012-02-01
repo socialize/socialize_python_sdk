@@ -5,10 +5,10 @@ if cmd_folder not in sys.path:
 sys.path.append('..')
 sys.path.append('.')
 try:
-    from local_settings import version, host, key, secret, user_id , app_id, delete_app
+    from local_settings import version, host, key, secret, user_id , app_id, delete_app, socialize_consumer_key
 except:
     print 'Failed to load local_settings.py. Switching to settings.py'
-    from settings import version, host, key, secret, user_id , app_id, delete_app
+    from settings import version, host, key, secret, user_id , app_id, delete_app,socialize_consumer_key
 
 from socialize.client import Partner ,Applications, Application
 from base import SocializeTest
@@ -16,9 +16,45 @@ from time import sleep
 import base64
 
 class TestApplicationReadOperations(SocializeTest):
+
     '''
         find(), findOne(),
     '''   
+    
+    def test_find_by_key(self):
+        '''
+            ** test list user from application
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_find_by_key
+        '''
+
+        apps = self.partner.applications(user=None, socialize_consumer_key=socialize_consumer_key)
+        app = apps.findByKey()
+        self.assertEqual( app.socialize_consumer_key, socialize_consumer_key) 
+        self.assertNotEqual( app.socialize_consumer_secret, None) 
+        
+    def test_get_appstore_url(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_get_appstore_url
+        '''
+        apps = self.partner.applications(user_id)
+
+        ## get specific app id
+        app = apps.findOne(app_id)
+        print app.appstore_url()     
+        self.assertEqual( app.appstore_url(), "http://itunes.apple.com/us/app/id%s"%app.apple_store_id)
+
+    def test_get_android_market_url(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_get_android_market_url
+        '''
+        apps = self.partner.applications(user_id)
+
+        ## get specific app id
+        app = apps.findOne(app_id)
+        print app.android_market_url()     
+        self.assertEqual( app.android_market_url(), "https://market.android.com/details?id=%s" % app.android_package_name)
+        
+
     def test_collections_get(self):
         '''
             ** get applications by user in database
@@ -75,7 +111,8 @@ class TestApplicationReadOperations(SocializeTest):
         ## show Application Object <id: 240754 ,name: test_app>
     def test_app_obj(self):
         '''
-            ** return valid type of object
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_app_obj
+
         '''
         apps = self.partner.applications(user_id)
         self.assertEqual( type(apps), Applications)
@@ -88,6 +125,7 @@ class TestApplicationReadOperations(SocializeTest):
 
     def test_new_apps(self):
         '''
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_new_apps
             ** test two ways of creating new application
         '''
         new_app = self.partner.application()
@@ -102,7 +140,7 @@ class TestApplicationReadOperations(SocializeTest):
     def test_find_api_users(self):
         '''
             ** test list user from application
-            _install/bin/nosetests -s -v tests.application_test:TestApplicationReadOperations.test_find_api_users
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_find_api_users
         '''
 
         apps = self.partner.applications(user_id)

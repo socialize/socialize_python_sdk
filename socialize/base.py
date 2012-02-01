@@ -4,6 +4,7 @@ import oauth2 as oauth
 import simplejson as json
 import httplib2
 import logging
+
 logger = logging.getLogger(__name__)
 
 #debugging
@@ -175,7 +176,7 @@ class Request(object):
             logger.info("API Get: %s --%s--" % (url, params))
         url = self.construct_url( url, params)
         response, content = self.client.request(url,'GET')
-        return  self.__construct_response(url,response, content)
+        return  self.__construct_response(url,response, content,method='GET')
 
     def post(self,url,payload,params={}):
         if show_connections:
@@ -184,7 +185,7 @@ class Request(object):
         response, content = self.client.request(url,
                                             method='POST',
                                             body='payload='+payload,)
-        return self.__construct_response(url, response, content,payload)
+        return self.__construct_response(url, response, content,payload,method='POST')
     
     def put(self, url,payload):
         '''
@@ -206,13 +207,13 @@ class Request(object):
         response, content  = http.request(url, method='PUT',headers=headers )
         
         
-        return self.__construct_response(url, response, content)
+        return self.__construct_response(url, response, content,method='PUT')
 
     def delete(self,url,payload={}):
         response, content = self.client.request(url,
                                             method='DELETE',
                                             )
-        return self.__construct_response(url, response, content) 
+        return self.__construct_response(url, response, content,method='DELETE') 
     
     def construct_url(self,url, params={}):
         '''
@@ -227,12 +228,12 @@ class Request(object):
         )
         return url
 
-    def __construct_response(self, url, response, content, payload=''):
+    def __construct_response(self, url, response, content, payload='', method=''):
         '''response from request will be json for GET
             POST/PUT return url location, and Exception when Fail
             Delete return True else Exception
         '''
-        #print url
+
         formatted_payload = json.dumps(payload,sort_keys=True, indent=4) 
         status_code = response['status']
         if status_code == '201':
@@ -247,5 +248,5 @@ class Request(object):
             except Exception, err:
                 raise Exception('Bad response please check\n%s\n%s\n%s'%(url, formatted_payload, err))
         elif status_code[0] != '2':    ## Only accept '2xx'
-            raise Exception('Server return status code %s\n%s\nuri:%s\nresponse:%s'%(status_code,formatted_payload,url,content))
+            raise Exception('Server return status code %s\nmethod:%s\n%s\nuri:%s\nresponse:%s'%(status_code,method,formatted_payload,url,content))
         return content      

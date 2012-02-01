@@ -30,11 +30,12 @@ class Applications(CollectionBase):
                 if query not in self.find_valid_constrains:
                     raise Exception("parameter %s is not acceptable in find()\n %s"%(query, self.find_valid_constrains))
                             
-    def __init__(self, key,secret,host,user):
+    def __init__(self, key,secret,host,user=None,socialize_consumer_key=None):
         self.key = key                                              
         self.secret  = secret
         self.host = host
         self.user= user
+        self.socialize_consumer_key= socialize_consumer_key
         self.next_url = None
         self.previous_url = None
     
@@ -57,6 +58,19 @@ class Applications(CollectionBase):
         app = Application(self.key,self.secret,self.host,item)
         return app
 
+    def findByKey(self, params={}):
+        if self.socialize_consumer_key:
+            params['socialize_consumer_key']=self.socialize_consumer_key
+        else:
+            raise Exception("socialize_consumer_key is invalid")
+        
+        meta, items = self._find('application',params)
+        try:
+            app = Application(self.key,self.secret,self.host,items[0])
+            return app
+        except IndexError:
+            raise Exception(404)
+ 
     def new(self):
         return Application(self.key,self.secret,self.host)
 
@@ -105,6 +119,8 @@ class Application(ObjectBase):
             self.push_certificate           =app.get('push_certificate', None)
             self.is_socialize_editable      =app.get('is_socialize_editable', True)
             
+           
+            ## modifiable  
             notifications_enabled           =app.get('notifications_enabled', False)
             if type(notifications_enabled) == str:
                 if notifications_enabled == "false":
@@ -112,12 +128,11 @@ class Application(ObjectBase):
                 else:
                     notifications_enabled = True
             self.notifications_enabled      =notifications_enabled
-            
-            ## modifiable  
+ 
             self.android_package_name 	    =app.get('android_package_name','') 
             self.apple_store_id             =app.get('apple_store_id','') 
             self.category                   =app.get('category','') 
-            self.description                =app.get('description','') 
+            self.description                =smart_str(app.get('description',''))
             self.name                       =smart_str(app.get('name','')) 
             self.mobile_platform            =app.get('platforms',[]) 
             self.resource_uri               =app.get('resource_uri','') 
@@ -276,3 +291,10 @@ class Application(ObjectBase):
                 item=self.id,
                 verb='notification')
         return resp
+
+    def android_market_url(self):
+        return "https://market.android.com/details?id=%s" % self.android_package_name  
+
+
+    def appstore_url(self):
+        return "http://itunes.apple.com/us/app/id%s" % self.apple_store_id      

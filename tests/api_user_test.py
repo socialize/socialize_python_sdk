@@ -54,8 +54,8 @@ class ApiUserStatTest(SocializeTest):
         try:
             api_user = api_user_stats.findOne(api_user_id = 1)
         except Exception, e:
-            self.assertEqual(type(e), IndexError)  
-            self.assertEqual(e.message, 'list index out of range')
+            self.assertEqual(type(e), Exception)  
+            self.assertEqual(e.message, 404)
  
         
     def test_most_recent_users(self):
@@ -72,6 +72,7 @@ class ApiUserStatTest(SocializeTest):
             
             self.assertTrue( item.id not in memory)
             memory.append(item.id)
+
             
             self.assertTrue( prv_id <= item.id)
 
