@@ -7,6 +7,9 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+#debugging
+show_connections = False
+
 class PartnerBase(object):
     base_partner_path = 'partner'
     version = 'v1'
@@ -100,7 +103,8 @@ class ObjectBase(PartnerBase):
             else:
                 raise Exception('%s is not allow in %s endpoint'%(verb, endpoint))
         request = Request(self.key,self.secret)
-        logger.info(request_url)
+        if show_connections:
+            logger.info(request_url)
         return request.post(request_url, payload)   
 
     def _put(self, endpoint, payload, item=None, verb=None):
@@ -168,13 +172,15 @@ class Request(object):
         self.client = oauth.Client(self.consumer,self.token)
 
     def get(self,url,params={}):
-        logger.info("API Get: %s --%s--" % (url, params))
+        if show_connections:
+            logger.info("API Get: %s --%s--" % (url, params))
         url = self.construct_url( url, params)
         response, content = self.client.request(url,'GET')
         return  self.__construct_response(url,response, content,method='GET')
 
     def post(self,url,payload,params={}):
-        logger.info("API Post: %s --%s-- ---%s--" % (url, params, payload))
+        if show_connections:
+            logger.info("API Post: %s --%s-- ---%s--" % (url, params, payload))
         payload = json.dumps(payload)
         response, content = self.client.request(url,
                                             method='POST',
@@ -185,7 +191,8 @@ class Request(object):
         '''
             HACKED oauth2 doesn't like PUT method, so I need to modify it. in the parameters.
         '''
-        logger.info("API Put: %s --%s--" % (url, payload))
+        if show_connections:
+            logger.info("API Put: %s --%s--" % (url, payload))
         url_payload = urllib.quote(json.dumps(payload))
         url += '?payload=%s'%url_payload
         req = oauth.Request.from_consumer_and_token(self.consumer, 
@@ -226,6 +233,7 @@ class Request(object):
             POST/PUT return url location, and Exception when Fail
             Delete return True else Exception
         '''
+
         formatted_payload = json.dumps(payload,sort_keys=True, indent=4) 
         status_code = response['status']
         if status_code == '201':

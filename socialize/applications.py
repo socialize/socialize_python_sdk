@@ -6,6 +6,10 @@ from urllib2 import quote
 
 from django.utils.encoding import smart_str
 
+
+import logging
+logger = logging.getLogger(__name__)
+
 class Applications(CollectionBase):
     ''' find() Return collection of Application
         findOne(id) Return single application by id 
@@ -136,11 +140,20 @@ class Application(ObjectBase):
             self.display_name               =self.name
             self.icon_url                   =app.get('icon_url',None)
             
+            self.stats                      =app.get('stats',{})
+            
+            #logger.info(self.stats)
+            
             #to make forward and backward compatible with API-user changes (temporary)
             user_id = int(app.get('user','0'))
             if user_id == 0:
                 user_id = int(app.get('user_id','0'))
             self.user  			    =user_id
+
+    def android_market_url(self):
+        return "https://market.android.com/details?id=%s" % self.android_package_name
+    def appstore_url(self):
+        return "http://itunes.apple.com/us/app/id%s" % self.apple_store_id
 
     def __to_post_payload(self,isPost=True):    
         '''
