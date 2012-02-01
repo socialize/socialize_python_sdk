@@ -34,6 +34,11 @@ class Activities(CollectionBase):
             activities.append(activity)    
         return meta, activities
 
+    def deleteComment(self, comment_id):
+        comment = Activity(self.key, self.secret, self.host, comment_id)
+        return comment.delete()
+        
+
 class Activity(ObjectBase):
     '''
         Construct activity base on activity_type
@@ -52,28 +57,33 @@ class Activity(ObjectBase):
         self.key = key
         self.secret = secret  
         
-        self.id                  	= int(activity.get('id','0'))                                                                
-        self.resource_uri           = activity.get('resource_uri','')
-        self.application   			= activity.get('application',None)     	
-        self.activity_type 			= activity.get('activity_type',None)    
-        self.created       			= datetime.strptime(activity.get('created','2001-01-01T00:00:01'),'%Y-%m-%dT%H:%M:%S')       
+        if type(activity)==int:
+            ##  Only comment that you can assing id for deletion
+            self.id = activity
+            self.activity_type = 'comment'
+        else:
+            self.id                  	= int(activity.get('id','0'))                                                                
+            self.resource_uri           = activity.get('resource_uri','')
+            self.application   			= activity.get('application',None)     	
+            self.activity_type 			= activity.get('activity_type',None)    
+            self.created       			= datetime.strptime(activity.get('created','2001-01-01T00:00:01'),'%Y-%m-%dT%H:%M:%S')       
 
-        ## View , Share can't be updated
-        self.updated			    = datetime.strptime(activity.get('updated','2001-01-01T00:00:01'),'%Y-%m-%dT%H:%M:%S')                
-                                         
-        ## Sub-structure
-        self.entity                 = Entity(key, secret, host, activity.get('entity',{}))
-        self.user                   = ApiUser(key, secret, host, self.application, activity.get('user',{}))
+            ## View , Share can't be updated
+            self.updated			    = datetime.strptime(activity.get('updated','2001-01-01T00:00:01'),'%Y-%m-%dT%H:%M:%S')                
+                                             
+            ## Sub-structure
+            self.entity                 = Entity(key, secret, host, activity.get('entity',{}))
+            self.user                   = ApiUser(key, secret, host, self.application, activity.get('user',{}))
 
-        self.lat			        = activity.get('lat',None)             
-        self.lng         		  	= activity.get('lng',None)              
-        self.share_location			= activity.get('share_location',None)  
-        ## View, Like don't have text, and can't be deleted
-        self.text          			= activity.get('text',None)      
-        self.deleted       			= activity.get('deleted',None)         
-        
-        if self.activity_type == 'share':
-            self.medium             = self.Medium(activity.get('medium',{}))
+            self.lat			        = activity.get('lat',None)             
+            self.lng         		  	= activity.get('lng',None)              
+            self.share_location			= activity.get('share_location',None)  
+            ## View, Like don't have text, and can't be deleted
+            self.text          			= activity.get('text',None)      
+            self.deleted       			= activity.get('deleted',None)         
+            
+            if self.activity_type == 'share':
+                self.medium             = self.Medium(activity.get('medium',{}))
 
     def delete(self):
         if self.activity_type == 'comment':
@@ -81,5 +91,5 @@ class Activity(ObjectBase):
             self._delete('comment',self.id)
         else:
             raise Exception('Delete is not allowed in %s activity'%(self.activity_type))
-        
+        return True
 

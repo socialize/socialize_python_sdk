@@ -19,17 +19,26 @@ class ActivityTest(SocializeTest):
     def test_init(self):
         '''
             ** test init activity by app_id
-            _install/bin/nosetests -s -v tests.activity_test:ActivityTest.test_init
+            nosetests -s -v tests.activity_test:ActivityTest.test_init
 
         '''
         comment = self.partner.comment(app_id)
         self.assertEqual(comment.activity_type , 'comment')
         self.assertEqual(comment.app_id , app_id)
-    
+
+    def untest_delete_comment(self):
+        '''
+            nosetests -s -v tests.activity_test:ActivityTest.test_delete_comment  
+            ## Note: comment 's filtered by api , so we can't delete same comment twice.
+        '''
+        comment = self.partner.comment(app_id)
+        delete_comment_id=3
+        self.assertTrue( comment.deleteComment(3))
+        
+
     def untest_invalid_delete_activities(self):
         '''
             ** nosetests -s -v tests.activity_test:ActivityTest.test_invalid_delete_activities
-            we need to make sure that there 's always enough comment to delete
         '''
         for item in ['comment','view','like','share']:
             activity = self.partner.activities(app_id, item)
