@@ -262,8 +262,6 @@ class ApiUser(ObjectBase):
             
             self.stats               = api_user.get('stats','{}')
             self.user_devices        = api_user.get('user_devices','[]') 
-                
-
 
     def to_dict(self):
         return self.__dict__
