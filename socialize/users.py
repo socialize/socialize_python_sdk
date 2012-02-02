@@ -131,10 +131,10 @@ class ApiUserStat(ObjectBase):
     
     def __get_ssz_user_score(self):
         #totals
-        tc = self.comments
-        tl = self.likes
-        ts = self.shares
-        tv = self.views
+        tc = 0 if self.comments < 0 else self.comments
+        tl = 0 if self.likes < 0 else self.likes 
+        ts = 0 if self.shares < 0 else self.shares  
+        tv = 0 if self.views < 0 else self.views     
         #print tc, tl, ts, tv
         
         ##weights
