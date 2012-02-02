@@ -2,7 +2,7 @@ from base import ObjectBase , CollectionBase
 from datetime import datetime
 from simplejson import loads
 from django.utils.encoding import smart_str
- 
+import math
 
 
 
@@ -95,7 +95,7 @@ class ApiUserStat(ObjectBase):
             self.platform            = device.get('platform',None)        
             self.platform_version    = device.get('platform_version',None)
             self.sdk_version         = device.get('sdk_version',None)
-
+            
             
     def __repr__(self):
         return '<api_user id: %s ,username: %s (%s,%s,%s,%s = %s)>'%(self.user.id, self.user.username,
@@ -124,6 +124,64 @@ class ApiUserStat(ObjectBase):
         
         self.devices             = [self.Device(item) for item in api_user_stat.get('devices',[]) ]
         
+        #calculate score
+        self.score               = self.__get_ssz_user_score()
+        self.mo                  = self.__get_ssz_user_MO()
+        self.badges              = self.__get_badges()
+    
+    def __get_ssz_user_score(self):
+        #totals
+        tc = 0 if self.comments < 0 else self.comments
+        tl = 0 if self.likes < 0 else self.likes 
+        ts = 0 if self.shares < 0 else self.shares  
+        tv = 0 if self.views < 0 else self.views     
+        #print tc, tl, ts, tv
+        
+        ##weights
+        cw = tc*5.0
+        lw = tl*1.3
+        sw = ts*9.0
+        vw = tv*.03
+        #print cw, lw, sw, vw
+        
+        ##logs
+        cl = math.log10(cw+1)
+        ll = math.log10(lw+1)
+        sl = math.log10(sw+1)
+        vl = math.log10(vw+1)
+        #print cl, ll, sl, vl
+        
+        score = (cl+ll+sl+vl)/6.0 * 100.0
+        return round(score, 2)
+        
+
+    def __get_ssz_user_MO(self):
+        #totals
+        tc = self.comments
+        tl = self.likes
+        ts = self.shares
+        tv = self.views
+        #print tc, tl, ts, tv
+        
+        #compared ratio
+        total = tc+tl+ts
+        compared = 0
+        if tv > 0:
+            compared = (total*1.0)/(tv*1.0)
+        #print total, compared
+        #give type
+        if compared > 0.025:
+            return "Contributor"
+        return "Voyeur"
+    
+    def __get_badges(self):
+        badges = []
+        if self.comments > 30:
+            badges.append("commenter")
+        if self.likes > 30:
+            badges.append("lover")
+        return badges
+            
 
     def to_dict(self):
         return self.__dict__
@@ -204,8 +262,6 @@ class ApiUser(ObjectBase):
             
             self.stats               = api_user.get('stats','{}')
             self.user_devices        = api_user.get('user_devices','[]') 
-                
-
 
     def to_dict(self):
         return self.__dict__

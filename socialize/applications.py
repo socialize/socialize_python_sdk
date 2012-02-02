@@ -6,6 +6,10 @@ from urllib2 import quote
 
 from django.utils.encoding import smart_str
 
+
+import logging
+logger = logging.getLogger(__name__)
+
 class Applications(CollectionBase):
     ''' find() Return collection of Application
         findOne(id) Return single application by id 
@@ -26,11 +30,12 @@ class Applications(CollectionBase):
                 if query not in self.find_valid_constrains:
                     raise Exception("parameter %s is not acceptable in find()\n %s"%(query, self.find_valid_constrains))
                             
-    def __init__(self, key,secret,host,user):
+    def __init__(self, key,secret,host,user=None,socialize_consumer_key=None):
         self.key = key                                              
         self.secret  = secret
         self.host = host
         self.user= user
+        self.socialize_consumer_key= socialize_consumer_key
         self.next_url = None
         self.previous_url = None
     
@@ -53,6 +58,19 @@ class Applications(CollectionBase):
         app = Application(self.key,self.secret,self.host,item)
         return app
 
+    def findByKey(self, params={}):
+        if self.socialize_consumer_key:
+            params['socialize_consumer_key']=self.socialize_consumer_key
+        else:
+            raise Exception("socialize_consumer_key is invalid")
+        
+        meta, items = self._find('application',params)
+        try:
+            app = Application(self.key,self.secret,self.host,items[0])
+            return app
+        except IndexError:
+            raise Exception(404)
+ 
     def new(self):
         return Application(self.key,self.secret,self.host)
 
@@ -122,11 +140,20 @@ class Application(ObjectBase):
             self.display_name               =self.name
             self.icon_url                   =app.get('icon_url',None)
             
+            self.stats                      =app.get('stats',{})
+            
+            #logger.info(self.stats)
+            
             #to make forward and backward compatible with API-user changes (temporary)
             user_id = int(app.get('user','0'))
             if user_id == 0:
                 user_id = int(app.get('user_id','0'))
             self.user  			    =user_id
+
+    def android_market_url(self):
+        return "https://market.android.com/details?id=%s" % self.android_package_name
+    def appstore_url(self):
+        return "http://itunes.apple.com/us/app/id%s" % self.apple_store_id
 
     def __to_post_payload(self,isPost=True):    
         '''
@@ -264,6 +291,9 @@ class Application(ObjectBase):
                 item=self.id,
                 verb='notification')
         return resp
+
+    def android_market_url(self):
+        return "https://market.android.com/details?id=%s" % self.android_package_name  
 
 
     def appstore_url(self):

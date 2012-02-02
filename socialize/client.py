@@ -12,12 +12,20 @@ class Partner(object):
         self.secret = secret
         self.host = host
 
-    def applications(self,user):
+    def applications(self,user=None, socialize_consumer_key=None):
         """ return collection of applications object
             create new app* applications.new()
             list apps* applications.find()  / findOne(app_id)
         """
-        return Applications(self.key,self.secret,self.host,user)
+        if user:
+            return Applications(self.key,self.secret,self.host,
+                    user,
+                    socialize_consumer_key=None)
+        else:
+            return Applications(self.key,self.secret,self.host,
+                    user=None,
+                    socialize_consumer_key=socialize_consumer_key)
+
 
     def application(self,app={}):
         """ 
@@ -27,6 +35,8 @@ class Partner(object):
                 dict = {} return new app
         """
         return Application(self.key,self.secret,self.host,app)
+
+    
     
     def api_users(self, app_id):
         """ 
