@@ -161,12 +161,14 @@ class ApiUserStat(ObjectBase):
         tl = self.likes
         ts = self.shares
         tv = self.views
-        print tc, tl, ts, tv
+        #print tc, tl, ts, tv
         
         #compared ratio
         total = tc+tl+ts
-        compared = (total*1.0)/(tv*1.0)
-        print total, compared
+        compared = 0
+        if tv > 0:
+            compared = (total*1.0)/(tv*1.0)
+        #print total, compared
         #give type
         if compared > 0.025:
             return "Contributor"
