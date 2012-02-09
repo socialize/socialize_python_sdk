@@ -24,14 +24,28 @@ class PartnerBase(object):
             'comment'           : 'comment',
             'like'              : 'like',
             'entity'            : 'entity',
+            'analytic'          : 'analytic',
             }                    
 
     partner_endpoint_verb = {
             'application' : ['upload_p12','upload_icon', 'notification'],
-            'apiuser' : ['ban','unban','banned']
+            'apiuser' : ['ban','unban']
             }
 
 class CollectionBase(PartnerBase):
+    def _request(self, endpoint, params={}):
+        """
+            simple request - response with out parsing any content.
+        """
+        request_url = '%s/%s/%s/%s/'%(self.host,
+                                self.base_partner_path,
+                                self.version,
+                                self.partner_endpoints[endpoint])
+ 
+        request = Request(self.key,self.secret)
+        response = request.get(request_url, params)
+        return response
+ 
     def _find(self, endpoint, params={}, verb=None):
         """
             Fetches results form the server, optionally based on constraints.

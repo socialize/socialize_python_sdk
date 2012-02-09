@@ -166,7 +166,7 @@ class TestApplicationWriteOperations(SocializeTest):
         
         app_id = self.create_app()
         self.update_app(app_id)
-        self.test_delete_app(app_id)
+        self.delete_application(app_id)
     def create_app(self):
         applications = self.partner.applications(user_id)
         app =  applications.new()
@@ -205,30 +205,32 @@ class TestApplicationWriteOperations(SocializeTest):
         self.assertEqual(app.name,new_name)
         self.assertTrue(app.last_saved != previous_save_time)
 
-    def test_delete_app(self,delete_app = delete_app):
+    def delete_application(self,delete_app):
         '''
             ** test Application DELETE 
+            v1.17.0 
+            application endpoint no longer return deleted app
         '''
         applications = self.partner.applications(user_id)
         app = applications.findOne(delete_app)
         ## return True when succesfully delete
         resp = app.delete()
         self.assertTrue(resp)
-        app = applications.findOne(delete_app)
-        self.assertEqual( app.delete(), True)
+#        app = applications.findOne(delete_app)
+        #self.assertEqual( app.delete(), True)
 
-    def test_applications_delete( self,delete_app = delete_app):
-        '''
-            ** Applications delete by app_id
-        '''
-        applications = self.partner.applications(user_id)
-        resp = applications.delete(delete_app)
-        ## return True when succesfully delete
-        self.assertTrue(resp)
+#    def test_applications_delete( self,delete_app = delete_app):
+        #'''
+            #** Applications delete by app_id
+        #'''
+        #applications = self.partner.applications(user_id)
+        #resp = applications.delete(delete_app)
+        ### return True when succesfully delete
+        #self.assertTrue(resp)
 
-        applications = self.partner.applications(user_id)        
-        app = applications.findOne(delete_app)
-        self.assertEqual( app.delete(), True)  
+        #applications = self.partner.applications(user_id)        
+        #app = applications.findOne(delete_app)
+        #self.assertEqual( app.delete(), True)  
 
     def test_upload_image_icon(self):
         '''

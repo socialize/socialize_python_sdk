@@ -213,14 +213,15 @@ class ApiUsers(CollectionBase):
         api_user = ApiUser(self.key, self.secret, self.host, self.app_id, item)
         return api_user 
 
-    def findBanned(self, params={}):
-        params['application_id'] = self.app_id
-        meta, items = self._find('apiuser',params, verb='banned')
-        api_users=[]
-        for item in items:
-            api_user = ApiUser(self.key, self.secret, self.host,self.app_id, item)
-            api_users.append(api_user)    
-        return meta, api_users
+    ## API CANCLE ENDPOINT  will be remove if there 's no complain from website
+    #def findBanned(self, params={}):
+        #params['application_id'] = self.app_id
+        #meta, items = self._find('apiuser',params, verb='banned')
+        #api_users=[]
+        #for item in items:
+            #api_user = ApiUser(self.key, self.secret, self.host,self.app_id, item)
+            #api_users.append(api_user)    
+        #return meta, api_users
  
 
 class ApiUser(ObjectBase):
@@ -292,16 +293,16 @@ class ApiUser(ObjectBase):
         payload = {'application_id': app_id}
         return self._post('apiuser',  payload, item=self.id, verb='unban')
     
-    def isbanned(self, app_id):
-        '''
-            check if current user is banned
-            payload require app_id because api_user_id can be in multiple app with 3rdPartyAuth
-            return True when success / else Talse
-        '''
-        payload = {'application_id': app_id, "id":self.id}
-        response = self._get('apiuser',  'banned', payload)
-        if len(response["objects"]) > 0:
-            return True
-        return False
+#    def isbanned(self, app_id):
+        #'''
+            #check if current user is banned
+            #payload require app_id because api_user_id can be in multiple app with 3rdPartyAuth
+            #return True when success / else Talse
+        #'''
+        #payload = {'application_id': app_id, "id":self.id}
+        #response = self._get('apiuser',  'banned', payload)
+        #if len(response["objects"]) > 0:
+            #return True
+        #return False
      
         
