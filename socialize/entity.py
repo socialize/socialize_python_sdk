@@ -59,7 +59,7 @@ class Entity(ObjectBase):
         # I don't think self.key at object level is being use anywhere (only on application) 
 
         self.key        = entity.get('key','')
-        self.name       = smart_str(entity.get('name',''))   
+        self.name       = smart_str(entity.get('name',''), strings_only=True)   
         self.type       = entity.get('type','') 
         self.views      = entity.get('views',None)       
         self.shares     = entity.get('shares',None)       

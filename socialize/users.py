@@ -248,7 +248,7 @@ class ApiUser(ObjectBase):
             self.created             = datetime.strptime(api_user.get('created','2001-01-01T00:00:01'), '%Y-%m-%dT%H:%M:%S')           
             self.updated             = datetime.strptime(api_user.get('updated','2000-01-01T00:00:01'),'%Y-%m-%dT%H:%M:%S')        
 
-            self.username            = smart_str(api_user.get('username',''))
+            self.username            = smart_str(api_user.get('username',''), strings_only=True)
             self.date_of_birth       = api_user.get('date_of_birth','')    
             self.description         = api_user.get('description','')       
             self.device_id           = api_user.get('device_id','')         
