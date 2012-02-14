@@ -197,7 +197,7 @@ class ApiUserStat(ObjectBase):
             compared = (total*1.0)/(tv*1.0)
         #print total, compared
         #give type
-        if compared > 0.025:
+        if compared > 0.025 or total > tv:
             return "Contributor"
         return "Voyeur"
     

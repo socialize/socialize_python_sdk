@@ -177,19 +177,12 @@ class Application(ObjectBase):
                 else:
                     stats["actions_per_user"] = round(actions/users, 2)
             
-    def android_market_url(self):
-        return "https://market.android.com/details?id=%s" % self.android_package_name
-    def amazon_android_market_url(self):
-        return "http://www.amazon.com/gp/mas/dl/android?p=%s" % self.android_package_name
-    def appstore_url(self):
-        return "http://itunes.apple.com/us/app/id%s" % self.apple_store_id
-
     def __to_post_payload(self,isPost=True):    
         '''
             isPost = Add new application
             not isPost = PUT , update application
         '''
-## PARTNER api model accept only 50 char_len
+        ## PARTNER api model accept only 50 char_len
         self.name = self.name[:49]
 
         if isPost:
@@ -309,12 +302,14 @@ class Application(ObjectBase):
                 item=self.id)
         return resp
 
-    def send_notification(self, message, user_id_list=[]):
+    def send_notification(self, message, user_id_list=[], url=None):
         '''
             set notifications enabled to True or False
             return True when success else raise exception
         '''
         payload = {'message': message, "users": user_id_list }
+        if url:
+            payload.update({"url":url})
         resp= self._post(endpoint= 'application',
                 payload=payload,
                 item=self.id,
@@ -324,6 +319,8 @@ class Application(ObjectBase):
     def android_market_url(self):
         return "https://market.android.com/details?id=%s" % self.android_package_name  
 
-
     def appstore_url(self):
         return "http://itunes.apple.com/us/app/id%s" % self.apple_store_id      
+
+    def amazon_android_market_url(self):
+        return "http://www.amazon.com/gp/mas/dl/android?p=%s" % self.android_package_name
