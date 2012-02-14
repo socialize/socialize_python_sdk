@@ -153,7 +153,9 @@ class ApiUserStat(ObjectBase):
         lowest  =  formular( 1,1,1,1)
 
         ## Adjustable, this means max score 100% ~ should have 1000 actions per each activity (comment share like view)
+        ## always > 0
         highest = formular( 1000,1000,1000,1000)
+
 
         
 
