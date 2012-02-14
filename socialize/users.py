@@ -125,9 +125,36 @@ class ApiUserStat(ObjectBase):
         self.devices             = [self.Device(item) for item in api_user_stat.get('devices',[]) ]
         
         #calculate score
-        self.score               = self.__get_ssz_user_score()
+        #self.score               = self.__get_ssz_user_score()
+        self.score               = self.__new_ssz_user_score()
         self.mo                  = self.__get_ssz_user_MO()
         self.badges              = self.__get_badges()
+    
+    def __new_ssz_user_score(self):
+        GRAPH_VELOCITY = 2
+        
+        def activity_score(activity_count, weight):
+            return math.log(max(activity_count, 1)*weight)
+
+        def formular(comment, share,like, view):
+            # pre defince weight of activity
+            weight = { 'like': 20,
+                'share': 50,
+                'comment':30,
+                'view': 5} 
+            
+            cs = activity_score( comment, weight['comment'])
+            ss = activity_score( share, weight['share'])
+            ls = activity_score( like, weight['like'])
+            vs = activity_score( view, weight['view'])
+
+            return cs+ss+ls+vs
+
+        user_sum = formular( self.comments, self.shares, self.likes, self.views)
+        lowest  =  formular( 1,1,1,1)
+        highest = formular( 1000,1000,1000,1000)
+
+        return (user_sum - lowest) * (highest * GRAPH_VELOCITY / 100) 
     
     def __get_ssz_user_score(self):
         #totals
