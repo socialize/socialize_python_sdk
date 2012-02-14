@@ -154,7 +154,7 @@ class ApiUserStat(ObjectBase):
         lowest  =  formular( 1,1,1,1)
         highest = formular( 1000,1000,1000,1000)
 
-        return (user_sum - lowest) * (highest * GRAPH_VELOCITY / 100) 
+        return round((user_sum - lowest) * (highest * GRAPH_VELOCITY / 100) ,2)
     
     def __get_ssz_user_score(self):
         #totals
