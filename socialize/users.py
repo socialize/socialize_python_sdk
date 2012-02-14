@@ -131,9 +131,10 @@ class ApiUserStat(ObjectBase):
         self.badges              = self.__get_badges()
     
     def __new_ssz_user_score(self):
-        GRAPH_VELOCITY = 2
+        GRAPH_VELOCITY = 1.5
         
         def activity_score(activity_count, weight):
+            # ln( activity+1) * weight)
             return math.log(max(activity_count, 1)*weight)
 
         def formular(comment, share,like, view):
@@ -141,20 +142,24 @@ class ApiUserStat(ObjectBase):
             weight = { 'like': 20,
                 'share': 50,
                 'comment':30,
-                'view': 5} 
-            
+                'view': 5}
             cs = activity_score( comment, weight['comment'])
             ss = activity_score( share, weight['share'])
             ls = activity_score( like, weight['like'])
             vs = activity_score( view, weight['view'])
-
             return cs+ss+ls+vs
 
         user_sum = formular( self.comments, self.shares, self.likes, self.views)
         lowest  =  formular( 1,1,1,1)
+
+        ## Adjustable, this means max score 100% ~ should have 1000 actions per each activity (comment share like view)
         highest = formular( 1000,1000,1000,1000)
 
-        return round((user_sum - lowest) * (highest * GRAPH_VELOCITY / 100) ,2)
+        
+
+        score = round((user_sum- lowest) * (GRAPH_VELOCITY * 100 / highest) ,2)
+
+        return 100.00 if score > 100 else score
     
     def __get_ssz_user_score(self):
         #totals
