@@ -11,6 +11,7 @@ except:
 
 from socialize.client import Partner
 from base import SocializeTest
+from socialize.base import Error, ErrorNotFound
 
 class EntityTest(SocializeTest):
     '''
@@ -47,8 +48,12 @@ class EntityTest(SocializeTest):
     
     def test_entity_NotFound(self):
         '''
-            nosetests -s -v tests.entity_test:EntityTest.test_entity_NotFound     
+
+            nosetests -s -v tests.entity_test:EntityTest.test_entity_NotFound
         '''
+
         entity = self.partner.entities(app_id)
-        item = entity.findOne(99999999999)
-        print item
+        try:
+            item = entity.findOne(9999999)
+        except ErrorNotFound:
+            pass
