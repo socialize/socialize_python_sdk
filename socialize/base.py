@@ -115,7 +115,7 @@ class ObjectBase(PartnerBase):
             if verb in self.partner_endpoint_verb[endpoint]:
                 request_url = '%s%s/%s/' % (request_url,item, verb)
             else:
-                raise Exception('%s is not allow in %s endpoint'%(verb, endpoint))
+                raise Error(content='%s is not allow in %s endpoint'%(verb, endpoint))
         request = Request(self.key,self.secret)
         if show_connections:
             logger.info(request_url)
@@ -139,7 +139,7 @@ class ObjectBase(PartnerBase):
             if verb in self.partner_endpoint_verb[endpoint]:
                 request_url = '%s%s/' % (request_url, verb)
             else:
-                raise Exception('%s is not allow in %s endpoint'%(verb, endpoint)) 
+                raise Error(content='%s is not allow in %s endpoint'%(verb, endpoint)) 
         request = Request(self.key,self.secret)
         return request.put(request_url, payload)   
 
@@ -273,7 +273,7 @@ class Error(Exception):
         base clase for exception
     """
     def __init__(self,
-            status_code,
+            status_code=None,
             url=None,
             method=None,
             payload=None,
@@ -284,8 +284,10 @@ class Error(Exception):
         self.method = method
         self.payload = payload
         self.content = content
-        Exception.__init__(self, self.message())
-        
+        if status_code:
+            Exception.__init__(self, self.message())
+        else:
+            Exception.__init__(self, self.content)
     def message(self):
         return "ERROR:\tServer return status code: %s\nurl: %s\nmethod: %s\npayload: %s\ncontent: %s"%(self.status_code, self.url, self.method, self.payload, self.content)
 
