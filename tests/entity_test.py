@@ -47,6 +47,8 @@ class EntityTest(SocializeTest):
     
     def test_entity_NotFound(self):
         '''
-            nosetests -s -v
+            nosetests -s -v tests.entity_test:EntityTest.test_entity_NotFound     
         '''
-        pass
+        entity = self.partner.entities(app_id)
+        item = entity.findOne(99999999999)
+        print item
