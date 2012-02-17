@@ -45,4 +45,8 @@ class EntityTest(SocializeTest):
         item = entity.findOne(entity_id)
         self.assertNotEqual(int(item.id), 0 )
     
-                  
+    def test_entity_NotFound(self):
+        '''
+            nosetests -s -v
+        '''
+        pass
