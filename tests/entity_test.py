@@ -48,7 +48,8 @@ class EntityTest(SocializeTest):
     
     def test_entity_NotFound(self):
         '''
-            nosetests -s -v tests.entity_test:EntityTest.test_entity_findOne
+
+            nosetests -s -v tests.entity_test:EntityTest.test_entity_NotFound
         '''
 
         entity = self.partner.entities(app_id)
