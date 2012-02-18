@@ -56,3 +56,4 @@ class EntityTest(SocializeTest):
             item = entity.findOne(9999999)
         except ErrorNotFound:
             pass
+ 
