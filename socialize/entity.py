@@ -47,16 +47,19 @@ class Entity(ObjectBase):
     '''
     def __init__(self, key,secret,host,entity={}):
         self.host = host
-        self.key = key
-        self.secret = secret          
+        self.consumer_key = key
+        self.consumer_secret = secret          
         
         self.created    = datetime.strptime(entity.get('created','2001-01-01T00:00:01'),'%Y-%m-%dT%H:%M:%S')       
         self.application= entity.get('application',None)
         self.resource_uri= entity.get('resource_uri','')
         self.id         = int(entity.get('id','0'))
 
+        #TODO this self.key is over write app's consumer key 
+        # I don't think self.key at object level is being use anywhere (only on application) 
+
         self.key        = entity.get('key','')
-        self.name       = smart_str(entity.get('name',''))   
+        self.name       = smart_str(entity.get('name',''), strings_only=True)   
         self.type       = entity.get('type','') 
         self.views      = entity.get('views',None)       
         self.shares     = entity.get('shares',None)       

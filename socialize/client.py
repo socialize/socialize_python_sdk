@@ -2,6 +2,7 @@ from applications import Applications , Application
 from users import ApiUser , ApiUsers, ApiUserStats, ApiUserStat
 from activity import Activities
 from entity import Entities
+from analytic import Analytics
 
 class Partner(object):
     '''
@@ -11,6 +12,9 @@ class Partner(object):
         self.key= key
         self.secret = secret
         self.host = host
+
+    def analytics(self, app_id):
+        return Analytics(self.key, self.secret, self.host, app_id)
 
     def applications(self,user=None, socialize_consumer_key=None):
         """ return collection of applications object

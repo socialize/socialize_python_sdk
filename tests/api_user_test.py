@@ -178,15 +178,16 @@ class ApiUserTest(SocializeTest):
         resp = api_user.ban(delete_app)
         self.assertTrue(resp)    
 
-    def test_find_list_banned_users(self):
-        '''
-            ** test find list of banned users
-        '''
-        api_users = self.partner.api_users(app_id = delete_app)
-        meta, banned_list = api_users.findBanned()
-        print meta
-        print banned_list
-        self.assertTrue(len(banned_list)>=1)
+#    def cancle_test_find_list_banned_users(self):
+        #'''
+            #API CANCLE THIS ENDPOINT as of v1.17.0
+            #** test find list of banned users
+        #'''
+        #api_users = self.partner.api_users(app_id = delete_app)
+        #meta, banned_list = api_users.findBanned()
+        #print meta
+        #print banned_list
+        #self.assertTrue(len(banned_list)>=1)
         
     def test_unban_user_by_id(self):
         '''

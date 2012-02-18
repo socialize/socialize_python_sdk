@@ -24,14 +24,28 @@ class PartnerBase(object):
             'comment'           : 'comment',
             'like'              : 'like',
             'entity'            : 'entity',
+            'analytic'          : 'analytic',
             }                    
 
     partner_endpoint_verb = {
             'application' : ['upload_p12','upload_icon', 'notification'],
-            'apiuser' : ['ban','unban','banned']
+            'apiuser' : ['ban','unban']
             }
 
 class CollectionBase(PartnerBase):
+    def _request(self, endpoint, params={}):
+        """
+            simple request - response with out parsing any content.
+        """
+        request_url = '%s/%s/%s/%s/'%(self.host,
+                                self.base_partner_path,
+                                self.version,
+                                self.partner_endpoints[endpoint])
+ 
+        request = Request(self.key,self.secret)
+        response = request.get(request_url, params)
+        return response
+ 
     def _find(self, endpoint, params={}, verb=None):
         """
             Fetches results form the server, optionally based on constraints.
@@ -101,7 +115,7 @@ class ObjectBase(PartnerBase):
             if verb in self.partner_endpoint_verb[endpoint]:
                 request_url = '%s%s/%s/' % (request_url,item, verb)
             else:
-                raise Exception('%s is not allow in %s endpoint'%(verb, endpoint))
+                raise Error(content='%s is not allow in %s endpoint'%(verb, endpoint))
         request = Request(self.key,self.secret)
         if show_connections:
             logger.info(request_url)
@@ -125,7 +139,7 @@ class ObjectBase(PartnerBase):
             if verb in self.partner_endpoint_verb[endpoint]:
                 request_url = '%s%s/' % (request_url, verb)
             else:
-                raise Exception('%s is not allow in %s endpoint'%(verb, endpoint)) 
+                raise Error(content='%s is not allow in %s endpoint'%(verb, endpoint)) 
         request = Request(self.key,self.secret)
         return request.put(request_url, payload)   
 
@@ -246,7 +260,46 @@ class Request(object):
             try:
                 return json.loads(content)
             except Exception, err:
-                raise Exception('Bad response please check\n%s\n%s\n%s'%(url, formatted_payload, err))
+                raise BadResponse(status_code, url, method, payload, "Could not decode content")
+        elif status_code =='404':
+            raise ErrorNotFound(status_code, url, method, payload,content)
         elif status_code[0] != '2':    ## Only accept '2xx'
-            raise Exception('Server return status code %s\nmethod:%s\n%s\nuri:%s\nresponse:%s'%(status_code,method,formatted_payload,url,content))
-        return content      
+            raise Error(status_code, url, method, payload,content)
+        return content  
+
+
+class Error(Exception):
+    """
+        base clase for exception
+    """
+    def __init__(self,
+            status_code=None,
+            url=None,
+            method=None,
+            payload=None,
+            content=None
+            ):
+        self.status_code = status_code
+        self.url = url
+        self.method = method
+        self.payload = payload
+        self.content = content
+        if status_code:
+            Exception.__init__(self, self.message())
+        else:
+            Exception.__init__(self, self.content)
+    def message(self):
+        return "ERROR:\tServer return status code: %s\nurl: %s\nmethod: %s\npayload: %s\ncontent: %s"%(self.status_code, self.url, self.method, self.payload, self.content)
+
+class BadResponse(Error):
+    '''
+        couldn't decode response.content
+    '''
+    pass
+
+class ErrorNotFound(Error):
+    '''
+        status code:404 
+        try to access deleted object or not exists
+    '''
+    pass

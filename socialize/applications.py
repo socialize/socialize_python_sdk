@@ -132,8 +132,8 @@ class Application(ObjectBase):
             self.android_package_name 	    =app.get('android_package_name','') 
             self.apple_store_id             =app.get('apple_store_id','') 
             self.category                   =app.get('category','') 
-            self.description                =smart_str(app.get('description',''))
-            self.name                       =smart_str(app.get('name','')) 
+            self.description                =smart_str(app.get('description',''), strings_only=True)
+            self.name                       =smart_str(app.get('name',''), strings_only=True) 
             self.mobile_platform            =app.get('platforms',[]) 
             self.resource_uri               =app.get('resource_uri','') 
             self.stats                      =app.get('stats','') 
@@ -142,6 +142,8 @@ class Application(ObjectBase):
             
             self.stats                      =app.get('stats',{})
             
+            if len(self.stats) > 0:
+                self.__calculate_stats(self.stats )
             #logger.info(self.stats)
             
             #to make forward and backward compatible with API-user changes (temporary)
@@ -150,17 +152,37 @@ class Application(ObjectBase):
                 user_id = int(app.get('user_id','0'))
             self.user  			    =user_id
 
-    def android_market_url(self):
-        return "https://market.android.com/details?id=%s" % self.android_package_name
-    def appstore_url(self):
-        return "http://itunes.apple.com/us/app/id%s" % self.apple_store_id
-
+    
+    #math helpers for end user
+    def __calculate_stats(self, stats):
+        #get views per user
+        #get actions per user
+        if "users" in stats:
+            
+            if "views" in stats:
+                views = stats.get("views", 0) * 1.0
+                users = stats.get("users", 0) * 1.0
+                if users <= 0:
+                    stats["views_per_user"] = 0
+                else:
+                    stats["views_per_user"] = round(views/users, 2) 
+            if "comments" in stats and "likes" in stats and "shares" in stats:
+                stats["actions_per_user"] = None
+                comments = stats.get("comments", 0)
+                likes = stats.get("likes", 0)
+                shares = stats.get("shares", 0)
+                actions = (comments + likes + shares) * 1.0
+                if users <= 0:
+                    stats["actions_per_user"] = 0
+                else:
+                    stats["actions_per_user"] = round(actions/users, 2)
+            
     def __to_post_payload(self,isPost=True):    
         '''
             isPost = Add new application
             not isPost = PUT , update application
         '''
-## PARTNER api model accept only 50 char_len
+        ## PARTNER api model accept only 50 char_len
         self.name = self.name[:49]
 
         if isPost:
@@ -280,12 +302,14 @@ class Application(ObjectBase):
                 item=self.id)
         return resp
 
-    def send_notification(self, message, user_id_list=[]):
+    def send_notification(self, message, user_id_list=[], url=None):
         '''
             set notifications enabled to True or False
             return True when success else raise exception
         '''
         payload = {'message': message, "users": user_id_list }
+        if url:
+            payload.update({"url":url})
         resp= self._post(endpoint= 'application',
                 payload=payload,
                 item=self.id,
@@ -295,6 +319,8 @@ class Application(ObjectBase):
     def android_market_url(self):
         return "https://market.android.com/details?id=%s" % self.android_package_name  
 
-
     def appstore_url(self):
         return "http://itunes.apple.com/us/app/id%s" % self.apple_store_id      
+
+    def amazon_android_market_url(self):
+        return "http://www.amazon.com/gp/mas/dl/android?p=%s" % self.android_package_name

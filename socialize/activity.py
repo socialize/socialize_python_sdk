@@ -1,7 +1,6 @@
 from base import CollectionBase, ObjectBase
 from users import ApiUsers
 from urllib2 import quote
-from django.utils.encoding import smart_str
 from datetime import datetime
 from users import ApiUser
 from entity import Entity

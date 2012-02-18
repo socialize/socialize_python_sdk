@@ -125,9 +125,43 @@ class ApiUserStat(ObjectBase):
         self.devices             = [self.Device(item) for item in api_user_stat.get('devices',[]) ]
         
         #calculate score
-        self.score               = self.__get_ssz_user_score()
+        #self.score               = self.__get_ssz_user_score()
+        self.score               = self.__new_ssz_user_score()
         self.mo                  = self.__get_ssz_user_MO()
         self.badges              = self.__get_badges()
+    
+    def __new_ssz_user_score(self):
+        GRAPH_VELOCITY = 1.5
+        
+        def activity_score(activity_count, weight):
+            # ln( activity+1) * weight)
+            return math.log(max(activity_count, 1)*weight)
+
+        def formular(comment, share,like, view):
+            # pre defince weight of activity
+            weight = { 'like': 20,
+                'share': 50,
+                'comment':30,
+                'view': 5}
+            cs = activity_score( comment, weight['comment'])
+            ss = activity_score( share, weight['share'])
+            ls = activity_score( like, weight['like'])
+            vs = activity_score( view, weight['view'])
+            return cs+ss+ls+vs
+
+        user_sum = formular( self.comments, self.shares, self.likes, self.views)
+        lowest  =  formular( 1,1,1,1)
+
+        ## Adjustable, this means max score 100% ~ should have 1000 actions per each activity (comment share like view)
+        ## always > 0
+        highest = formular( 1000,1000,1000,1000)
+
+
+        
+
+        score = round((user_sum- lowest) * (GRAPH_VELOCITY * 100 / highest) ,2)
+
+        return 100.00 if score > 100 else score
     
     def __get_ssz_user_score(self):
         #totals
@@ -170,7 +204,7 @@ class ApiUserStat(ObjectBase):
             compared = (total*1.0)/(tv*1.0)
         #print total, compared
         #give type
-        if compared > 0.025:
+        if compared > 0.025 or total > tv:
             return "Contributor"
         return "Voyeur"
     
@@ -213,14 +247,15 @@ class ApiUsers(CollectionBase):
         api_user = ApiUser(self.key, self.secret, self.host, self.app_id, item)
         return api_user 
 
-    def findBanned(self, params={}):
-        params['application_id'] = self.app_id
-        meta, items = self._find('apiuser',params, verb='banned')
-        api_users=[]
-        for item in items:
-            api_user = ApiUser(self.key, self.secret, self.host,self.app_id, item)
-            api_users.append(api_user)    
-        return meta, api_users
+    ## API CANCLE ENDPOINT  will be remove if there 's no complain from website
+    #def findBanned(self, params={}):
+        #params['application_id'] = self.app_id
+        #meta, items = self._find('apiuser',params, verb='banned')
+        #api_users=[]
+        #for item in items:
+            #api_user = ApiUser(self.key, self.secret, self.host,self.app_id, item)
+            #api_users.append(api_user)    
+        #return meta, api_users
  
 
 class ApiUser(ObjectBase):
@@ -247,7 +282,7 @@ class ApiUser(ObjectBase):
             self.created             = datetime.strptime(api_user.get('created','2001-01-01T00:00:01'), '%Y-%m-%dT%H:%M:%S')           
             self.updated             = datetime.strptime(api_user.get('updated','2000-01-01T00:00:01'),'%Y-%m-%dT%H:%M:%S')        
 
-            self.username            = smart_str(api_user.get('username',''))
+            self.username            = smart_str(api_user.get('username',''), strings_only=True)
             self.date_of_birth       = api_user.get('date_of_birth','')    
             self.description         = api_user.get('description','')       
             self.device_id           = api_user.get('device_id','')         
@@ -292,16 +327,16 @@ class ApiUser(ObjectBase):
         payload = {'application_id': app_id}
         return self._post('apiuser',  payload, item=self.id, verb='unban')
     
-    def isbanned(self, app_id):
-        '''
-            check if current user is banned
-            payload require app_id because api_user_id can be in multiple app with 3rdPartyAuth
-            return True when success / else Talse
-        '''
-        payload = {'application_id': app_id, "id":self.id}
-        response = self._get('apiuser',  'banned', payload)
-        if len(response["objects"]) > 0:
-            return True
-        return False
+#    def isbanned(self, app_id):
+        #'''
+            #check if current user is banned
+            #payload require app_id because api_user_id can be in multiple app with 3rdPartyAuth
+            #return True when success / else Talse
+        #'''
+        #payload = {'application_id': app_id, "id":self.id}
+        #response = self._get('apiuser',  'banned', payload)
+        #if len(response["objects"]) > 0:
+            #return True
+        #return False
      
         
