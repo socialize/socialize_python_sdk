@@ -19,7 +19,43 @@ class TestApplicationReadOperations(SocializeTest):
 
     '''
         find(), findOne(),
-    '''   
+    '''
+ 
+    
+    def test_get_app_by_id(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_get_app_by_id
+        '''
+        app = self.partner.application(app=app_id)
+        app.refresh()
+        print app.to_dict()
+    
+    def test_keep_fetch_socialize_apps(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_keep_fetch_socialize_apps
+        '''
+        applications = self.partner.applications()
+        list_apps = []
+        limit = 50
+        offset = 0
+        params = {'limit':limit, 'offset':offset, 'show_total_count':1}
+        meta , apps = applications.findAllSocialize(params)
+        total_apps = meta['total_count']
+        list_apps = apps
+        while True:
+            offset += limit
+            params = {'limit':limit, 'offset':offset}
+            meta , apps = applications.findAllSocialize(params)
+            self.print_json(meta)
+            list_apps += apps
+            print len(list_apps)
+            if len(apps) < limit:
+                break
+
+        self.assertEqual( total_apps, len(list_apps))
+
+    
+
     def test_find_all_socialize(self):
         '''
             nosetests -s -v tests.application_test:TestApplicationReadOperations.test_find_all_socialize
