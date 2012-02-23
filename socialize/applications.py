@@ -18,7 +18,8 @@ class Applications(CollectionBase):
         **  parameter deleted is to filter not-deleted app.
     '''
     ## next, previous will be carefully implement next release 
-    find_valid_constrains = ['format','offset','limit','user', 'user_id','order_by','deleted']
+    find_valid_constrains = ['format','offset','limit','user',
+                'user_id','order_by','deleted','is_socialize_editable']
     findOne_valid_constrains = ['format','user', 'user_id'] ## not allowed any constrain
 
     def verify_constrain(self,params,is_findOne):
@@ -71,6 +72,15 @@ class Applications(CollectionBase):
         except IndexError:
             raise Exception(404)
  
+    def findAllSocialize(self, params={}):
+        params['is_socialize_editable'] = True
+        meta, items = self._find('application',params)
+        apps = []
+        for item in items:
+            app = Application(self.key,self.secret,self.host,item)
+            apps.append(app)
+        return meta,apps
+
     def new(self):
         return Application(self.key,self.secret,self.host)
 

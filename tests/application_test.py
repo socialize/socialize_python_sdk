@@ -20,7 +20,17 @@ class TestApplicationReadOperations(SocializeTest):
     '''
         find(), findOne(),
     '''   
-    
+    def test_find_all_socialize(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_find_all_socialize
+        '''
+        applications = self.partner.applications()
+        meta , apps = applications.findAllSocialize()
+        self.assertTrue( len(apps) > 1)
+        for app in apps:
+            self.assertEqual( app.is_socialize_editable, True) 
+            self.assertNotEqual( app.socialize_consumer_secret, None) 
+
     def test_find_by_key(self):
         '''
             ** test list user from application
