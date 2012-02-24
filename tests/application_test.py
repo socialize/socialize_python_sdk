@@ -20,7 +20,7 @@ class TestApplicationReadOperations(SocializeTest):
     '''
         find(), findOne(),
     '''
- 
+    
     
     def test_get_app_by_id(self):
         '''
@@ -207,6 +207,7 @@ class TestApplicationWriteOperations(SocializeTest):
     
     def test_write_flow(self):
         '''
+            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_write_flow
             ** test create app then edit the app, then refresh()
         '''
         
@@ -229,9 +230,11 @@ class TestApplicationWriteOperations(SocializeTest):
         app.save()
         ## app id will be obtain after save()
         self.assertTrue(app.id>0)
-
+        self.print_json(app.__dict__)
+        
         ## get that app from api
         app.refresh() 
+        self.print_json(app.__dict__)
 
         self.assertTrue(app.last_saved != '')
         return app.id
