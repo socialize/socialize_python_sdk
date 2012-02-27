@@ -312,12 +312,22 @@ class Application(ObjectBase):
                 item=self.id)
         return resp
 
-    def send_notification(self, message, user_id_list=[], url=None):
+    def send_notification(self, message, user_id_list=None, url=None, device_list=None, entity_id=None):
         '''
             set notifications enabled to True or False
             return True when success else raise exception
         '''
-        payload = {'message': message, "users": user_id_list }
+        payload = {'message': message}
+        
+        if user_id_list:
+            payload.update({ "users": user_id_list })
+        if url:
+            payload.update({ "url": url })
+        if device_list:
+            payload.update({ "devices": device_list })
+        if entity_id:
+            payload.update({ "entity_id": entity_id })
+        
         if url:
             payload.update({"url":url})
         resp= self._post(endpoint= 'application',
