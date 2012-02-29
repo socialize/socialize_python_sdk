@@ -131,7 +131,7 @@ class ApiUserStat(ObjectBase):
         self.badges              = self.__get_badges()
     
     def __new_ssz_user_score(self):
-        GRAPH_VELOCITY = 1.5
+        GRAPH_VELOCITY = 1
         
         def activity_score(activity_count, weight):
             # ln( activity+1) * weight)
@@ -159,7 +159,7 @@ class ApiUserStat(ObjectBase):
 
         
 
-        score = round((user_sum- lowest) * (GRAPH_VELOCITY * 100 / highest) ,2)
+        score = round((user_sum) * (GRAPH_VELOCITY * 100 / highest) ,2)
 
         return 100.00 if score > 100 else score
     

@@ -55,7 +55,7 @@ class ApiUserStatTest(SocializeTest):
             nosetests -s -v tests.api_user_test:ApiUserStatTest.test_score 
         '''
         
-        u = create_user(likes=100,shares=4,views=10)
+        u = create_user(likes=100,shares=6,views=100, comments=100)
         user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
         print user.score
         pass
