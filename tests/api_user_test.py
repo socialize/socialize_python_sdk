@@ -55,7 +55,18 @@ class ApiUserStatTest(SocializeTest):
             nosetests -s -v tests.api_user_test:ApiUserStatTest.test_score 
         '''
         
-        u = create_user(likes=100,shares=6,views=100, comments=100)
+        print 'start user'
+        u = create_user( comments=0,shares=0,likes=0,views=0)
+        user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
+        print user.score
+
+        print 'inactive'
+        u = create_user( comments=10,shares=1,likes=10,views=300)
+        user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
+        print user.score
+
+        print 'active'
+        u = create_user( comments=200,shares=100,likes=200,views=500)
         user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
         print user.score
         pass
