@@ -152,9 +152,9 @@ class ApiUserStat(ObjectBase):
         user_sum = formular( self.comments, self.shares, self.likes, self.views)
         lowest  =  formular( 1,1,1,1)
 
-        ## Adjustable, this means max score 100% ~ should have 1000 actions per each activity (comment share like view)
+        ## Adjustable, this means max score 100% ~ should have 100 actions per each activity (comment share like view)
         ## always > 0
-        highest = formular( 1000,1000,1000,1000)
+        highest = formular( comment=100,share=60,like=100,view=300)
 
 
         
