@@ -72,9 +72,10 @@ class Applications(CollectionBase):
         except IndexError:
             raise Exception(404)
  
-    def findAllSocialize(self, is_socialize=True, params={}):
+    def findAllSocialize(self, params={}, is_socialize=True):
         params['is_socialize_editable'] = is_socialize
         meta, items = self._find('application',params)
+        print params
         apps = []
         for item in items:
             app = Application(self.key,self.secret,self.host,item)

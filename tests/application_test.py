@@ -39,7 +39,7 @@ class TestApplicationReadOperations(SocializeTest):
         limit = 50
         offset = 0
         params = {'limit':limit, 'offset':offset, 'show_total_count':1}
-        meta , apps = applications.findAllSocialize(params)
+        meta , apps = applications.findAllSocialize(params=params)
         total_apps = meta['total_count']
         list_apps = apps
         while True:

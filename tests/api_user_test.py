@@ -11,7 +11,35 @@ except:
 
 from socialize.client import Partner
 from base import SocializeTest
+from socialize.users import ApiUserStat
 
+def create_user(**kwargs):
+    user  = {
+            "badges": [],
+            "updated": "2012-01-07T05:35:43",
+            "likes": 0,
+            "devices": [],
+            "created": "2011-09-01T00:00:00",
+            "mo": "Voyeur",
+            "views": 0,
+            "secret": "46d212f7-17f4-464c-a9b1-679db3bc5d25",
+            "comments": 0,
+            "app_id": 240754,
+            "application": 240754,
+            "host": "http://stage.api.getsocialize.com",
+            "score": 0.0,
+            "user": {},
+            "key": "747a34c9-a482-48a2-b946-4363cf9c8759",
+            "is_banned": False,
+            "total": 0,
+            "id": 3215174,
+            "shares": 0,
+            "resource_uri": "/partner/v1/api_user_stat/3215174/"
+        }
+    for a in kwargs:
+        user[a] = kwargs[a]
+    return user
+        
 
 class ApiUserStatTest(SocializeTest):
     def test_init_stats(self):
@@ -21,6 +49,17 @@ class ApiUserStatTest(SocializeTest):
         '''
         api_user_stats = self.partner.api_user_stats(app_id)
         self.assertEqual(api_user_stats.app_id,app_id)
+    
+    def test_score(self):
+        '''
+            nosetests -s -v tests.api_user_test:ApiUserStatTest.test_score 
+        '''
+        
+        u = create_user(likes=100,shares=4,views=10)
+        user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
+        print user.score
+        pass
+
 
     def test_find(self):
         """    
@@ -43,6 +82,8 @@ class ApiUserStatTest(SocializeTest):
         """
         api_user_stats = self.partner.api_user_stats(app_id)
         api_user = api_user_stats.findOne(api_user_id = api_user_id)
+        
+        
         self.assertEqual( api_user.user.id , api_user_id)
         print api_user
 
