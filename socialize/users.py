@@ -129,38 +129,37 @@ class ApiUserStat(ObjectBase):
         self.score               = self.__new_ssz_user_score()
         self.mo                  = self.__get_ssz_user_MO()
         self.badges              = self.__get_badges()
-    
-    def __new_ssz_user_score(self):
-        GRAPH_VELOCITY = 1.557
-        
-        def activity_score(activity_count, weight):
-            # ln( activity+1) * weight)
-            return math.log(max(activity_count, 1)*weight)
 
-        def formular(comment, share,like, view):
-            # pre defince weight of activity
-            weight = { 'like': 20,
+    
+    
+    
+    weight = { 'like': 20,
                 'share': 50,
                 'comment':30,
-                'view': 5}
-            cs = activity_score( comment, weight['comment'])
-            ss = activity_score( share, weight['share'])
-            ls = activity_score( like, weight['like'])
-            vs = activity_score( view, weight['view'])
-            return cs+ss+ls+vs
-
-        user_sum = formular( self.comments, self.shares, self.likes, self.views)
-        lowest  =  formular( 1,1,1,1)
-
-        ## Adjustable, this means max score 100% ~ should have 100 actions per each activity (comment share like view)
-        ## always > 0
-        highest = formular( comment=200,share=100,like=200,view=500)
-
-
+                'view': 5}      
         
 
-        score = round((user_sum-lowest) * (GRAPH_VELOCITY * 100 / highest) ,2)
 
+    def __formular(self,comment, share,like, view):
+        def activity_score(activity_count,activity_weight):
+            # ln( activity+1) * weight)
+            return math.log(max(activity_count, 1)* activity_weight)                 # pre defince weight of activity
+        
+        cs = activity_score( comment, self.weight['comment'])
+        ss = activity_score( share, self.weight['share'])
+        ls = activity_score( like, self.weight['like'])
+        vs = activity_score( view, self.weight['view'])
+        return cs+ss+ls+vs
+
+    def __new_ssz_user_score(self):
+        GRAPH_VELOCITY = 1.557
+        user_sum = self.__formular( self.comments, self.shares, self.likes, self.views)
+        lowest  =  self.__formular( 1,1,1,1)
+        ## Adjustable, this means max score 100% ~ should have 100 actions per each activity (comment share like view)
+        ## always > 0
+        highest = self.__formular( comment=100,share=40,like=50,view=300)
+        score = round((user_sum-lowest) * (GRAPH_VELOCITY * 100 / highest) ,2)
+        print score
         return 100.00 if score > 100 else score
     
     def __get_ssz_user_score(self):
