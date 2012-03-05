@@ -159,7 +159,6 @@ class ApiUserStat(ObjectBase):
         ## always > 0
         highest = self.__formular( comment=100,share=40,like=50,view=300)
         score = round((user_sum-lowest) * (GRAPH_VELOCITY * 100 / highest) ,2)
-        print score
         return 100.00 if score > 100 else score
     
     def __get_ssz_user_score(self):
