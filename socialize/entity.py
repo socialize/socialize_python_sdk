@@ -24,7 +24,9 @@ class Entities(CollectionBase):
         '''
             return list of entities
         '''
-        params['application'] = self.app_id
+        if self.app_id:
+            params['application'] = self.app_id
+ 
         meta, items = self._find('entity' ,params)
         entities=[]
         for item in items:
@@ -36,7 +38,9 @@ class Entities(CollectionBase):
         '''
             return single entity object
         '''
-        params['application_id'] = self.app_id
+        if self.app_id:
+            params['application'] = self.app_id
+
         item = self._findOne('entity',entity_id, params)
         entity = Entity(self.key, self.secret, self.host,item)
         return entity                           
