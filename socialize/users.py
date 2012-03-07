@@ -13,8 +13,8 @@ class ApiUserStats(CollectionBase):
         Goal is to replace api_user with api_user_stat.
     '''
     def __init__(self, key,secret,host,app_id):
-        self.key = key                                              
-        self.secret  = secret
+        self.consumer_key = key                                              
+        self.consumer_secret  = secret
         self.host = host
         self.app_id= app_id
         self.next_url = None
@@ -26,7 +26,7 @@ class ApiUserStats(CollectionBase):
         meta, items = self._find('apiuser_stat',params)
         api_user_stats=[]
         for item in items:
-            stat = ApiUserStat(self.key, self.secret, self.host,self.app_id, item)
+            stat = ApiUserStat(self.consumer_key, self.consumer_secret, self.host,self.app_id, item)
             api_user_stats.append(stat)    
         return meta, api_user_stats
     
@@ -43,7 +43,7 @@ class ApiUserStats(CollectionBase):
         meta, items = self._find('apiuser_stat', params)
         ## RETURN NOTFOUND if user not exist in the application
         try:
-            stat = ApiUserStat(self.key, self.secret, self.host,self.app_id,items[0])
+            stat = ApiUserStat(self.consumer_key, self.consumer_secret, self.host,self.app_id,items[0])
         except IndexError:
             raise Exception(404)
 
@@ -103,8 +103,8 @@ class ApiUserStat(ObjectBase):
 
     def __init__(self, key,secret,host,app_id, api_user_stat):
         self.host = host
-        self.key = key
-        self.secret = secret
+        self.consumer_key = key
+        self.consumer_secret = secret
         self.app_id = app_id
          
         self.id                  = int(api_user_stat.get('id','0'))                
@@ -223,8 +223,8 @@ class ApiUsers(CollectionBase):
         find a list of api users in application
     '''
     def __init__(self, key,secret,host,app_id):
-        self.key = key                                              
-        self.secret  = secret
+        self.consumer_key = key                                              
+        self.consumer_secret  = secret
         self.host = host
         self.app_id= app_id
         self.next_url = None
@@ -235,14 +235,14 @@ class ApiUsers(CollectionBase):
         meta, items = self._find('apiuser',params)
         api_users=[]
         for item in items:
-            api_user = ApiUser(self.key, self.secret, self.host,self.app_id, item)
+            api_user = ApiUser(self.consumer_key, self.consumer_secret, self.host,self.app_id, item)
             api_users.append(api_user)    
         return meta, api_users
     
     def findOne(self, api_user_id, params={}):
         params['application_id'] = self.app_id
         item = self._findOne('apiuser',api_user_id, params)
-        api_user = ApiUser(self.key, self.secret, self.host, self.app_id, item)
+        api_user = ApiUser(self.consumer_key, self.consumer_secret, self.host, self.app_id, item)
         return api_user 
 
     ## API CANCLE ENDPOINT  will be remove if there 's no complain from website
@@ -269,8 +269,8 @@ class ApiUser(ObjectBase):
             new app using app_dict = {}, id = 0
         '''
         self.host = host
-        self.key = key
-        self.secret = secret
+        self.consumer_key = key
+        self.consumer_secret = secret
         self.app_id = app_id
         if type(api_user)==int:
             self.id = api_user
@@ -308,7 +308,7 @@ class ApiUser(ObjectBase):
         '''
         params = {'application_id': self.app_id}
         new_item = self._get('apiuser',item_id=self.id, params= params)
-        self = self.__init__(self.key, self.secret, self.host, self.app_id, new_item) 
+        self = self.__init__(self.consumer_key, self.consumer_secret, self.host, self.app_id, new_item) 
     
     def ban(self, app_id):
         '''

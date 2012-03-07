@@ -13,8 +13,8 @@ class Entities(CollectionBase):
     findOne_valid_constrains = ['format', 'id'] 
   
     def __init__(self, key,secret,host,app_id):
-        self.key = key                                              
-        self.secret  = secret
+        self.consumer_key = key                                              
+        self.consumer_secret  = secret
         self.host = host
         self.app_id= app_id
         self.next_url = None
@@ -30,7 +30,7 @@ class Entities(CollectionBase):
         meta, items = self._find('entity' ,params)
         entities=[]
         for item in items:
-            entity = Entity(self.key, self.secret, self.host, item)
+            entity = Entity(self.consumer_key, self.consumer_secret, self.host, item)
             entities.append(entity)    
         return meta, entities
 
@@ -42,9 +42,25 @@ class Entities(CollectionBase):
             params['application'] = self.app_id
 
         item = self._findOne('entity',entity_id, params)
-        entity = Entity(self.key, self.secret, self.host,item)
+        entity = Entity(self.consumer_key, self.consumer_secret, self.host,item)
         return entity                           
-                                  
+        
+    def new(self):
+        entity =  Entity(self.consumer_key,self.consumer_secret,self.host)
+        entity.application = self.app_id
+        return entity
+
+    def delete(self, entity_id):
+
+        entity = self.findOne(entity_id)
+
+        if self.app_id == entity.application:
+            return entity.delete()
+        else:
+            raise Exception("can not perform delete for non owner")    
+    
+
+
 class Entity(ObjectBase):
     '''
         Construct entity object
@@ -70,9 +86,37 @@ class Entity(ObjectBase):
         self.likes      = entity.get('likes',None)       
         self.comments   = entity.get('comments',None)
         self.total_activity   = entity.get('total_activity',None)
+    
+    def __post_payload(self):
+        return {'application_id': self.application,
+                'key':self.key,
+                'name':self.name}
 
     def __repr__(self):
         return '<id: %s ,key: %s, name: \"%s\" app: %s created: %s>'%(self.id,
                 self.key,self.name ,self.application,self.created)   
 
-    
+    def save(self):
+        ''' 
+            create new entity or update if key exist
+        '''
+        location = self._post('entity', self.__post_payload())
+        self.id =location.split('/')[-2]
+        
+
+    def delete(self):
+        '''
+            delete object
+        '''
+        if self.id==None or int(self.id) ==0:
+            raise Exception('entity_id can not be None or 0')
+        return self._delete('entity',self.id) 
+
+    def refresh(self):
+        '''
+            update object
+        '''
+        new_item = self._get('entity', self.id)
+        self = self.__init__(self.key, self.secret, self.host, new_item) 
+ 
+

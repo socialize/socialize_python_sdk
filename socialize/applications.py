@@ -32,8 +32,8 @@ class Applications(CollectionBase):
                     raise Exception("parameter %s is not acceptable in find()\n %s"%(query, self.find_valid_constrains))
                             
     def __init__(self, key,secret,host,user=None,socialize_consumer_key=None):
-        self.key = key                                              
-        self.secret  = secret
+        self.consumer_key = key                                              
+        self.consumer_secret  = secret
         self.host = host
         self.user= user
         self.socialize_consumer_key= socialize_consumer_key
@@ -47,7 +47,7 @@ class Applications(CollectionBase):
         meta, items = self._find('application',params)
         apps = []
         for item in items:
-            app = Application(self.key,self.secret,self.host,item)
+            app = Application(self.consumer_key,self.consumer_secret,self.host,item)
             apps.append(app)
         return meta,apps
 
@@ -56,7 +56,7 @@ class Applications(CollectionBase):
         params['user']=self.user #for api changes, make sure both work
         self.verify_constrain(params, is_findOne=True)
         item = self._findOne('application',app_id,params)
-        app = Application(self.key,self.secret,self.host,item)
+        app = Application(self.consumer_key,self.consumer_secret,self.host,item)
         return app
 
     def findByKey(self, params={}):
@@ -67,7 +67,7 @@ class Applications(CollectionBase):
         
         meta, items = self._find('application',params)
         try:
-            app = Application(self.key,self.secret,self.host,items[0])
+            app = Application(self.consumer_key,self.consumer_secret,self.host,items[0])
             return app
         except IndexError:
             raise Exception(404)
@@ -78,12 +78,12 @@ class Applications(CollectionBase):
         print params
         apps = []
         for item in items:
-            app = Application(self.key,self.secret,self.host,item)
+            app = Application(self.consumer_key,self.consumer_secret,self.host,item)
             apps.append(app)
         return meta,apps
 
     def new(self):
-        return Application(self.key,self.secret,self.host)
+        return Application(self.consumer_key,self.consumer_secret,self.host)
 
     def delete(self, app_id):
         '''
@@ -111,8 +111,8 @@ class Application(ObjectBase):
             new app using app = {}, id = 0
         '''
         self.host = host
-        self.key = key
-        self.secret = secret  
+        self.consumer_key = key
+        self.consumer_secret = secret  
 
         if type(app)==int:
             self.id = app
@@ -230,7 +230,7 @@ class Application(ObjectBase):
             update object
         '''
         new_item = self._get('application', self.id)
-        self = self.__init__(self.key, self.secret, self.host, new_item) 
+        self = self.__init__(self.consumer_key, self.consumer_secret, self.host, new_item) 
 
     def save(self):
         '''
@@ -263,7 +263,7 @@ class Application(ObjectBase):
         '''
             list all available users in the application
         '''
-        api_users = ApiUsers(self.key,self.secret,self.host,self.id)
+        api_users = ApiUsers(self.consumer_key,self.consumer_secret,self.host,self.id)
         collection = api_users.find(params)
         return collection
     

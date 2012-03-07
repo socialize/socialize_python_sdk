@@ -42,7 +42,7 @@ class CollectionBase(PartnerBase):
                                 self.version,
                                 self.partner_endpoints[endpoint])
  
-        request = Request(self.key,self.secret)
+        request = Request(self.consumer_key,self.consumer_secret)
         response = request.get(request_url, params)
         return response
  
@@ -62,7 +62,7 @@ class CollectionBase(PartnerBase):
             else:
                 raise Exception('%s is not allow in %s endpoint'%(verb, endpoint))
         
-        request = Request(self.key,self.secret)
+        request = Request(self.consumer_key,self.consumer_secret)
         response = request.get(request_url, params)
         meta = response['meta']
         objects = response['objects']
@@ -82,7 +82,7 @@ class CollectionBase(PartnerBase):
                                 item_id
                                 )
         
-        request = Request(self.key,self.secret)
+        request = Request(self.consumer_key,self.consumer_secret)
         return request.get(request_url, params)
 
     def _delete(self, endpoint, item):
@@ -95,7 +95,7 @@ class CollectionBase(PartnerBase):
                                 self.partner_endpoints[endpoint],
                                 item
                                 )
-        request = Request(self.key,self.secret)
+        request = Request(self.consumer_key,self.consumer_secret)
         return request.delete(request_url)   
                                                      
 
@@ -116,7 +116,7 @@ class ObjectBase(PartnerBase):
                 request_url = '%s%s/%s/' % (request_url,item, verb)
             else:
                 raise Error(content='%s is not allow in %s endpoint'%(verb, endpoint))
-        request = Request(self.key,self.secret)
+        request = Request(self.consumer_key,self.consumer_secret)
         if show_connections:
             logger.info(request_url)
         return request.post(request_url, payload)   
@@ -140,7 +140,7 @@ class ObjectBase(PartnerBase):
                 request_url = '%s%s/' % (request_url, verb)
             else:
                 raise Error(content='%s is not allow in %s endpoint'%(verb, endpoint)) 
-        request = Request(self.key,self.secret)
+        request = Request(self.consumer_key,self.consumer_secret)
         return request.put(request_url, payload)   
 
     def _delete(self, endpoint, item_id):
@@ -153,7 +153,7 @@ class ObjectBase(PartnerBase):
                                 self.partner_endpoints[endpoint],
                                 item_id
                                 )
-        request = Request(self.key,self.secret)
+        request = Request(self.consumer_key,self.consumer_secret)
         return request.delete(request_url)   
 
     def _get(self, endpoint, item_id, params={}):
@@ -167,7 +167,7 @@ class ObjectBase(PartnerBase):
                                 item_id
                                 )
         
-        request = Request(self.key,self.secret)
+        request = Request(self.consumer_key,self.consumer_secret)
         return request.get(request_url, params=params)   
 
 
@@ -299,5 +299,18 @@ class ErrorNotFound(Error):
     '''
         status code:404 
         try to access deleted object or not exists
+    '''
+    pass
+
+class ErrorPermission(Error):
+    '''
+        status code:403
+        or try to delete the object that not belong to user
+    '''
+    pass
+
+class ErrorMissingParams(Error):
+    '''
+        missing required parameter
     '''
     pass

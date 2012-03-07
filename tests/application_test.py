@@ -69,7 +69,6 @@ class TestApplicationReadOperations(SocializeTest):
 
     def test_find_by_key(self):
         '''
-            ** test list user from application
             nosetests -s -v tests.application_test:TestApplicationReadOperations.test_find_by_key
         '''
 
@@ -185,7 +184,6 @@ class TestApplicationReadOperations(SocializeTest):
     
     def test_find_api_users(self):
         '''
-            ** test list user from application
             nosetests -s -v tests.application_test:TestApplicationReadOperations.test_find_api_users
         '''
 

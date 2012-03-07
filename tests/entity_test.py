@@ -57,4 +57,40 @@ class EntityTest(SocializeTest):
             item = entity.findOne(9999999)
         except ErrorNotFound:
             pass
- 
+
+    def test_new_entity(self):
+        '''
+            nosetests -s -v tests.entity_test:EntityTest.test_new_entity
+        '''           
+        entity = self.partner.entities(app_id)
+        e = entity.new()
+        name = 'test entity by partner sdk'
+        key  = 'http://getsocialize.com/test_sdk'
+        
+        e.name = name
+        e.key = key
+        self.assertEqual( e.application, app_id)
+        self.assertEqual( e.name , name)
+        self.assertEqual( e.key , key)
+        self.assertEqual( e.id , 0)
+        return e
+
+
+    def test_save_and_delete_entity(self):
+        '''
+            nosetests -s -v tests.entity_test:EntityTest.test_save_and_delete_entity            
+            ** stage server not support yet! wait for release 1.9.0
+        ''' 
+        e = self.test_new_entity()
+        print e.__dict__
+        e.save()
+
+        print e.delete()
+        try:
+            entity = self.partner.entities(app_id)
+            item = entity.findOne(e.id)
+            self.fail(' should not able to find entity')
+        except ErrorNotFound:
+            pass
+
+        
