@@ -159,6 +159,19 @@ class ApiUserStat(ObjectBase):
         ## always > 0
         highest = self.__formular( comment=100,share=40,like=50,view=300)
         score = round((user_sum-lowest) * (GRAPH_VELOCITY * 100 / highest) ,2)
+        
+        if self.user.impacts and self.user.impacts > 0:
+            if self.user.impacts > 50:
+                score = score * .05
+            elif self.user.impacts > 100:
+                score = score * .1
+            elif self.user.impacts > 200:
+                score = score * .15
+            elif self.user.impacts > 400:
+                score = score * .2
+            elif self.user.impacts > 800:
+                score = score * .25
+        
         return 100.00 if score > 100 else score
     
     def __get_ssz_user_score(self):
@@ -298,6 +311,14 @@ class ApiUser(ObjectBase):
             
             
             self.third_party_auth    = api_user.get('third_party_auth')
+            self.impacts = None
+            
+            impacts = 0
+            for tpa in self.third_party_auth:
+                if "connections_count" in tpa:
+                    impacts = impacts + tpa["connections_count"]
+            if impacts > 0:
+                self.impacts = impacts
 
     def to_dict(self):
         return self.__dict__
