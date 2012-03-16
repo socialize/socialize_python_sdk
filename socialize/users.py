@@ -307,10 +307,10 @@ class ApiUser(ObjectBase):
             self.large_image_uri     = api_user.get('large_image_uri','')       
             
             self.stats               = api_user.get('stats','{}')
-            self.user_devices        = api_user.get('user_devices','[]') 
+            self.user_devices        = api_user.get('user_devices',[]) 
             
             
-            self.third_party_auth    = api_user.get('third_party_auth')
+            self.third_party_auth    = api_user.get('third_party_auth',[])
             self.reach = None
             
             reach = 0

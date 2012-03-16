@@ -25,9 +25,9 @@ class AnalyticTest(SocializeTest):
         analytic = self.partner.analytics(app_id)
         self.assertEqual(analytic.app_id , app_id)
     
-    def test_analytic_find(self):
+    def test_analytic_find_day(self):
         '''
-            nosetests -s -v tests.analytic_test:AnalyticTest.test_analytic_find
+            nosetests -s -v tests.analytic_test:AnalyticTest.test_analytic_find_day
 
         '''
         analytic = self.partner.analytics(app_id) 
