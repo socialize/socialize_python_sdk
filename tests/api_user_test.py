@@ -11,7 +11,7 @@ except:
 
 from socialize.client import Partner
 from base import SocializeTest
-from socialize.users import ApiUserStat
+from socialize.users import ApiUserStat ,ApiUser
 
 def create_user(**kwargs):
     user  = {
@@ -34,7 +34,8 @@ def create_user(**kwargs):
             "total": 0,
             "id": 3215174,
             "shares": 0,
-            "resource_uri": "/partner/v1/api_user_stat/3215174/"
+            "resource_uri": "/partner/v1/api_user_stat/3215174/",
+            "third_party_auth":[],
         }
     for a in kwargs:
         user[a] = kwargs[a]
@@ -56,12 +57,14 @@ class ApiUserStatTest(SocializeTest):
         '''
         
         print 'start user'
-        u = create_user( comments=0,shares=0,likes=0,views=0)
+        u = create_user( comments=0,shares=0,likes=0,views=0,)
         user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
+        self.print_json(user)
+
         print user.score
 
         print 'inactive'
-        u = create_user( comments=10,shares=1,likes=10,views=300)
+        u = create_user( comments=10,shares=1,likes=10,views=300, )
         user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
         print user.score
 

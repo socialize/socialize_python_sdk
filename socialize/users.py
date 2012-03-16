@@ -160,9 +160,9 @@ class ApiUserStat(ObjectBase):
         highest = self.__formular( comment=100,share=40,like=50,view=300)
         score = round((user_sum-lowest) * (GRAPH_VELOCITY * 100 / highest) ,2)
         
-        if len(self.third_party_auth) == 1:
+        if len(self.user.third_party_auth) == 1:
             score = score + 2.0
-        elif len(self.third_party_auth) > 1:
+        elif len(self.user.third_party_auth) > 1:
             score = score + 5.0
         
         if self.user.reach and self.user.reach > 0:
