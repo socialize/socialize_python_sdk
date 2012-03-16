@@ -162,15 +162,15 @@ class ApiUserStat(ObjectBase):
         
         if self.user.reach and self.user.reach > 0:
             if self.user.reach > 50:
-                score = score * .05
+                score = score + (score * .05)
             elif self.user.reach > 100:
-                score = score * .1
+                score = score + (score * .1)
             elif self.user.reach > 200:
-                score = score * .15
+                score = score + (score * .15)
             elif self.user.reach > 400:
-                score = score * .2
+                score = score + (score * .2)
             elif self.user.reach > 800:
-                score = score * .25
+                score = score + (score * .25)
         
         return 100.00 if score > 100 else score
     
