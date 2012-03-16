@@ -171,7 +171,8 @@ class ApiUserStat(ObjectBase):
                 score = score + (score * .2)
             elif self.user.reach > 800:
                 score = score + (score * .25)
-        
+        score = int(round(score,0))
+
         return 100.00 if score > 100 else score
     
     def __get_ssz_user_score(self):
