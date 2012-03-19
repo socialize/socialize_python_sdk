@@ -319,6 +319,7 @@ class ApiUser(ObjectBase):
             self.third_party_auth    = api_user.get('third_party_auth',[])
             self.reach = None
             
+
             reach = 0
             for tpa in self.third_party_auth:
                 if "connections_count" in tpa:
