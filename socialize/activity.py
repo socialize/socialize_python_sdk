@@ -16,8 +16,8 @@ class Activities(CollectionBase):
     findOne_valid_constrains = ['format','user', 'id'] ## not allowed any constrain
   
     def __init__(self, key,secret,host,app_id,activity_type):
-        self.key = key                                              
-        self.secret  = secret
+        self.consumer_key = key                                              
+        self.consumer_secret  = secret
         self.host = host
         self.app_id= app_id
         self.activity_type = activity_type
@@ -29,12 +29,12 @@ class Activities(CollectionBase):
         meta, items = self._find(self.activity_type ,params)
         activities=[]
         for item in items:
-            activity = Activity(self.key, self.secret, self.host, item)
+            activity = Activity(self.consumer_key, self.consumer_secret, self.host, item)
             activities.append(activity)    
         return meta, activities
 
     def deleteComment(self, comment_id):
-        comment = Activity(self.key, self.secret, self.host, comment_id)
+        comment = Activity(self.consumer_key, self.consumer_secret, self.host, comment_id)
         return comment.delete()
         
 
@@ -53,8 +53,8 @@ class Activity(ObjectBase):
  
     def __init__(self, key,secret,host,activity={}):
         self.host = host
-        self.key = key
-        self.secret = secret  
+        self.consumer_key = key
+        self.consumer_secret = secret  
         
         if type(activity)==int:
             ##  Only comment that you can assing id for deletion

@@ -17,8 +17,8 @@ class Analytics(CollectionBase):
                             'distribution','time_interval','user_id']
  
     def __init__(self, key,secret,host,app_id):
-        self.key = key                                              
-        self.secret  = secret
+        self.consumer_key = key                                              
+        self.consumer_secret  = secret
         self.host = host
         self.app_id= app_id
         self.next_url = None
