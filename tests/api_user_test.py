@@ -55,26 +55,31 @@ class ApiUserStatTest(SocializeTest):
         '''
             nosetests -s -v tests.api_user_test:ApiUserStatTest.test_score 
         '''
-        
+        score_list=[0]
         print 'start user'
-        u = create_user( comments=0,shares=0,likes=0,views=0,)
+        u = create_user( comments=1,shares=0,likes=0,views=10,)
         user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
-        self.print_json(user)
-
         print user.score
+        score_list.append(user.score)
+
+        print 'viewer'
+        u = create_user( comments=1,shares=0,likes=0,views=400,)
+        user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
+        print user.score         
+        score_list.append(user.score)
 
         print 'inactive'
         u = create_user( comments=10,shares=1,likes=10,views=300, )
         user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
         print user.score
+        score_list.append(user.score)
 
         print 'active'
         u = create_user( comments=200,shares=100,likes=200,views=500)
         user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
         print user.score
-        pass
-
-
+        score_list.append(user.score)
+        print score_list
     def test_find(self):
         """    
             nosetests -s -v tests.api_user_test:ApiUserStatTest.test_find 
