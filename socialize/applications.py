@@ -320,7 +320,7 @@ class Application(ObjectBase):
         '''
         payload = {'message': message}
         
-        if user_id_list:
+        if type(user_id_list)==list:
             payload.update({ "users": user_id_list })
         if url:
             payload.update({ "url": url })
