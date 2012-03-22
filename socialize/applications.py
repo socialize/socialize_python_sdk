@@ -317,10 +317,12 @@ class Application(ObjectBase):
         '''
             set notifications enabled to True or False
             return True when success else raise exception
+            users must be a list of integer
         '''
         payload = {'message': message}
         
-        if user_id_list:
+        if type(user_id_list)==list:
+            user_id_list = [ int(u) for u in user_id_list ]
             payload.update({ "users": user_id_list })
         if url:
             payload.update({ "url": url })
@@ -331,6 +333,7 @@ class Application(ObjectBase):
         
         if url:
             payload.update({"url":url})
+
         resp= self._post(endpoint= 'application',
                 payload=payload,
                 item=self.id,
