@@ -313,11 +313,12 @@ class Application(ObjectBase):
                 item=self.id)
         return resp
 
-    def send_notification(self, message, user_id_list=None, url=None, device_list=None, entity_id=None):
+    def send_notification(self, message, user_id_list=None, url=None, device_list=None, entity_id=None, subscription=None):
         '''
             set notifications enabled to True or False
             return True when success else raise exception
             users must be a list of integer
+            subscription type [optional] by default is "developer_notification"
         '''
         payload = {'message': message}
         
@@ -330,7 +331,8 @@ class Application(ObjectBase):
             payload.update({ "devices": device_list })
         if entity_id:
             payload.update({ "entity_id": entity_id })
-        
+        if subscription:
+            payload.update({ "subscription": subscription})
         if url:
             payload.update({"url":url})
 

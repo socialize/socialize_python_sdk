@@ -193,8 +193,7 @@ class TestApplicationReadOperations(SocializeTest):
         self.assertNotEqual( len(users), 0 )
         for user in users:
             self.assertNotEqual(user.id ,0) 
-        
-
+    
 class TestApplicationWriteOperations(SocializeTest):
     '''
         save() , update(), delete()
@@ -308,7 +307,30 @@ class TestApplicationWriteOperations(SocializeTest):
         self.assertEqual( app.id , app_id)
         self.assertTrue( app.name != '') 
         self.assertEqual(app.notifications_enabled, True)
- 
+    
+    def test_send_developer_notification(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_send_developer_notification
+            send notification subscription: "developer_notification"
+        '''
+        applications = self.partner.applications(user_id)
+        app = applications.findOne(app_id)
+        message = "hello test from sdk \'developer_notification\'"
+        resp = app.send_notification(message, entity_id=1,user_id_list=[] ,subscription="developer_notification")
+        print "Response: ", resp
+
+    def test_send_developer_direct_entity(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_send_developer_direct_entity
+            send notification subscription: "developer_notification"
+        '''
+        applications = self.partner.applications(user_id)
+        app = applications.findOne(app_id)
+        message = "hello test from sdk \'developer_direct_entity\'"
+        resp = app.send_notification(message, entity_id=1,user_id_list=[] ,subscription="developer_direct_entity")
+        print "Response: ", resp
+                                                                         
+
     def xtest_upload_p12(self):
         '''
             Upload p12 for push notification
