@@ -317,6 +317,16 @@ class Application(ObjectBase):
                 payload = payload,
                 item=self.id)
         return resp
+    
+    def set_c2dm_token(self, token):
+        '''
+            set C2DM Token
+        '''
+        payload = {'c2dm_sender_auth_token': token }
+        resp = self._put( endpoint = 'application',
+                payload = payload,
+                item=self.id)
+        return resp
 
     def send_notification(self, message, user_id_list=None, url=None, device_list=None, entity_id=None, subscription=None):
         '''
