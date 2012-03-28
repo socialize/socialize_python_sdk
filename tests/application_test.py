@@ -375,3 +375,40 @@ class TestApplicationWriteOperations(SocializeTest):
         resp = app.upload_p12(p12_base64=p12_base64,
                 key_password=p12_password)
         self.assertTrue(resp)
+
+
+    def test_set_c2dm(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_set_c2dm
+        '''
+        pkg_name = 'com.champ.test'
+        c2dm_token = 'abcdefghijklmnop'
+
+        applications = self.partner.applications(user_id)
+        app = applications.findOne(app_id)
+        app.android_package_name = pkg_name
+        app.c2dm_sender_auth_token= c2dm_token
+        app.save()
+        app.refresh()
+        self.assertEqual( app.android_package_name ,pkg_name)
+        
+        applications = self.partner.applications(user_id)
+        app2 = applications.findOne(app_id)
+        self.assertEqual(app2.c2dm_sender_auth_token,  c2dm_token) 
+
+    def test_set_invalid_c2dm(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_set_invalid_c2dm
+        '''
+        pkg_name = ''
+        c2dm_token = 'abcdefghijklmnop'
+
+        applications = self.partner.applications(user_id)
+        app = applications.findOne(app_id)
+        app.android_package_name = pkg_name
+        app.c2dm_sender_auth_token= c2dm_token
+        try:
+            app.save()
+        except ErrorC2DMwithoutPackageName,e :
+            self.assertEqual(e.content , "Need android package name in order to send smart alert")
+        

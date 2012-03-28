@@ -75,7 +75,6 @@ class Applications(CollectionBase):
     def findAllSocialize(self, params={}, is_socialize=True):
         params['is_socialize_editable'] = is_socialize
         meta, items = self._find('application',params)
-        print params
         apps = []
         for item in items:
             app = Application(self.consumer_key,self.consumer_secret,self.host,item)
@@ -187,7 +186,12 @@ class Application(ObjectBase):
                     stats["actions_per_user"] = 0
                 else:
                     stats["actions_per_user"] = round(actions/users, 2)
-            
+    def validate_c2dm_token(self):
+        if self.c2dm_sender_auth_token and not self.android_package_name:
+            raise ErrorC2DMwithoutPackageName(status_code=400, content="Need android package name in order to send smart alert")
+                
+    
+
     def __to_post_payload(self,isPost=True):    
         '''
             isPost = Add new application
@@ -195,10 +199,7 @@ class Application(ObjectBase):
         '''
         ## PARTNER api model accept only 50 char_len
         self.name = self.name[:49]
-
-        if self.c2dm_sender_auth_token and not self.android_package_name:
-            raise ErrorC2DMwithoutPackageName(status_code=400, content="Need android package name in order to send smart alert")
-
+        self.validate_c2dm_token()
         if isPost:
             ## POST
             item ={    "category" : self.category,
@@ -241,6 +242,7 @@ class Application(ObjectBase):
         '''
             handle post & put for application
         '''
+        self.validate_c2dm_token()
         if int(self.user) ==0:
             raise Exception("Unable to create or update with user=0")
 
@@ -322,6 +324,7 @@ class Application(ObjectBase):
         '''
             set C2DM Token
         '''
+        self.validate_c2dm_token()
         payload = {'c2dm_sender_auth_token': token }
         resp = self._put( endpoint = 'application',
                 payload = payload,
