@@ -322,7 +322,7 @@ class Application(ObjectBase):
         '''
             set C2DM Token
         '''
-        payload = {'c2dm_sender_auth_token': token }
+        payload = {'c2dm_sender_auth_token': token, 'android_package_name': self.android_package_name }
         resp = self._put( endpoint = 'application',
                 payload = payload,
                 item=self.id)
