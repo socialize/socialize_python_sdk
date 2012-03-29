@@ -1,6 +1,7 @@
 from django.utils.encoding import smart_str
 from base import CollectionBase, ObjectBase
 from datetime import datetime
+import urllib
 
 class Entities(CollectionBase):
     ''' find() Return collection of Activity
@@ -89,8 +90,9 @@ class Entity(ObjectBase):
         self.total_activity   = entity.get('total_activity',None)
     
     def __post_payload(self):
+        key_encoded = urllib.quote(self.key)
         return {'application_id': self.application,
-                'key':self.key,
+                'key':key_encoded,
                 'name':self.name}
 
     def __repr__(self):
