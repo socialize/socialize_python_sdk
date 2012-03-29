@@ -11,6 +11,7 @@ except:
     from settings import version, host, key, secret, user_id , app_id, delete_app,socialize_consumer_key
 
 from socialize.client import Partner ,Applications, Application
+from socialize.base import ErrorC2DMwithoutPackageName
 from base import SocializeTest
 from time import sleep
 import base64
@@ -201,7 +202,31 @@ class TestApplicationWriteOperations(SocializeTest):
         you can include this test in __init__.py
         or run specific using nosetests 
     '''
-    
+    def test_invalid_add_c2dm(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_invalid_add_c2dm
+        
+        '''
+        applications = self.partner.applications(user_id)
+        app =  applications.new()
+        
+        ## app id =0 before save()
+        self.assertTrue(app.id==0)
+        
+        app.name='The newest Socialize App'
+        app.desc='Test application from python sdk'
+        app.mobile_platform=['iPhone','android', ]
+        app.category = 'Business'
+        app.c2dm_sender_auth_token = 'abc'
+        ## need to assign to specific user
+        app.user = user_id
+        
+        try:
+            app.save()
+        except ErrorC2DMwithoutPackageName,e :
+            self.assertEqual(e.content , "Need android package name in order to send smart alert")
+
+                               
     def test_write_flow(self):
         '''
             nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_write_flow
@@ -211,6 +236,7 @@ class TestApplicationWriteOperations(SocializeTest):
         app_id = self.create_app()
         self.update_app(app_id)
         self.delete_application(app_id)
+
     def create_app(self):
         applications = self.partner.applications(user_id)
         app =  applications.new()
@@ -222,6 +248,7 @@ class TestApplicationWriteOperations(SocializeTest):
         app.desc='Test application from python sdk'
         app.mobile_platform=['iPhone','android', ]
         app.category = 'Business'
+        app.android_package_name = 'com.socialize.test'
         ## need to assign to specific user
         app.user = user_id
         app.save()
@@ -235,6 +262,8 @@ class TestApplicationWriteOperations(SocializeTest):
 
         self.assertTrue(app.last_saved != '')
         return app.id
+
+
 
     def update_app(self,app_id):
         applications = self.partner.applications(user_id)
@@ -330,7 +359,6 @@ class TestApplicationWriteOperations(SocializeTest):
         resp = app.send_notification(message, entity_id=1,user_id_list=[] ,subscription="developer_direct_entity")
         print "Response: ", resp
                                                                          
-
     def xtest_upload_p12(self):
         '''
             Upload p12 for push notification
@@ -346,3 +374,62 @@ class TestApplicationWriteOperations(SocializeTest):
         resp = app.upload_p12(p12_base64=p12_base64,
                 key_password=p12_password)
         self.assertTrue(resp)
+
+
+    def test_save_c2dm(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_save_c2dm
+        '''
+        pkg_name = 'com.champ.test'
+        c2dm_token = "abcdefghijklmnop"
+
+        applications = self.partner.applications(user_id)
+        app = applications.findOne(app_id)
+        app.android_package_name = pkg_name
+        app.c2dm_sender_auth_token = c2dm_token
+        app.save()
+        
+        print app.c2dm_sender_auth_token
+        self.assertEqual( app.c2dm_sender_auth_token, c2dm_token)
+        self.assertEqual( app.android_package_name ,pkg_name)
+        
+    def test_set_c2dm(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_set_c2dm
+        '''
+        pkg_name = 'com.champ.test'
+        c2dm_token = "ABCXYXZ"
+
+        applications = self.partner.applications(user_id)
+        app = applications.findOne(app_id)
+        app.android_package_name = pkg_name
+        #print app.__dict__
+        print app.c2dm_sender_auth_token
+        app.save()
+        #print app.__dict__
+        app.set_c2dm_token(c2dm_token)
+        print c2dm_token
+        print app.android_package_name
+        print app.c2dm_sender_auth_token
+        app.refresh()
+        self.assertEqual( app.c2dm_sender_auth_token, c2dm_token)
+        self.assertEqual( app.android_package_name ,pkg_name)
+         
+
+    def test_set_invalid_c2dm(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_set_invalid_c2dm
+        '''
+        pkg_name = ''
+        c2dm_token = 'abcdefghijklmnop'
+
+        applications = self.partner.applications(user_id)
+        app = applications.findOne(app_id)
+        app.android_package_name = pkg_name
+        app.c2dm_sender_auth_token= c2dm_token
+        try:
+            app.save()
+        except ErrorC2DMwithoutPackageName,e :
+            self.assertEqual(e.content , "Need android package name in order to send smart alert")
+
+

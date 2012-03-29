@@ -314,3 +314,8 @@ class ErrorMissingParams(Error):
         missing required parameter
     '''
     pass
+
+class ErrorC2DMwithoutPackageName(Error):
+    '''
+        missing android package name, 
+    '''

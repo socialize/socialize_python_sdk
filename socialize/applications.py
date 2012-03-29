@@ -1,5 +1,5 @@
 
-from base import CollectionBase, ObjectBase
+from base import CollectionBase, ObjectBase, ErrorC2DMwithoutPackageName
 from users import ApiUsers
 from certificates import IphoneCertificate
 from urllib2 import quote
@@ -75,7 +75,6 @@ class Applications(CollectionBase):
     def findAllSocialize(self, params={}, is_socialize=True):
         params['is_socialize_editable'] = is_socialize
         meta, items = self._find('application',params)
-        print params
         apps = []
         for item in items:
             app = Application(self.consumer_key,self.consumer_secret,self.host,item)
@@ -126,7 +125,6 @@ class Application(ObjectBase):
             self.socialize_consumer_key     =app.get('socialize_consumer_key','') 
             self.socialize_consumer_secret  =app.get('socialize_consumer_secret','') 
             self.socialize_app              =app.get('socialize_app','') 
-
             self.push_certificate           =app.get('push_certificate', None)
             self.is_socialize_editable      =app.get('is_socialize_editable', True)
             
@@ -141,6 +139,7 @@ class Application(ObjectBase):
             self.notifications_enabled      =notifications_enabled
  
             self.android_package_name 	    =app.get('android_package_name','') 
+            self.c2dm_sender_auth_token     =app.get('c2dm_sender_auth_token','')
             self.apple_store_id             =app.get('apple_store_id','') 
             self.category                   =app.get('category','') 
             self.description                =smart_str(app.get('description',''), strings_only=True)
@@ -187,7 +186,12 @@ class Application(ObjectBase):
                     stats["actions_per_user"] = 0
                 else:
                     stats["actions_per_user"] = round(actions/users, 2)
-            
+    def validate_c2dm_token(self):
+        if self.c2dm_sender_auth_token and not self.android_package_name:
+            raise ErrorC2DMwithoutPackageName(status_code=400, content="Need android package name in order to send smart alert")
+                
+    
+
     def __to_post_payload(self,isPost=True):    
         '''
             isPost = Add new application
@@ -195,7 +199,7 @@ class Application(ObjectBase):
         '''
         ## PARTNER api model accept only 50 char_len
         self.name = self.name[:49]
-
+        
         if isPost:
             ## POST
             item ={    "category" : self.category,
@@ -204,6 +208,7 @@ class Application(ObjectBase):
                         "name" : self.name,
                         "user_id" : self.user,
                         'android_package_name'   :self.android_package_name,  
+                        'c2dm_sender_auth_token' :self.c2dm_sender_auth_token,
                         'apple_store_id'         :self.apple_store_id,
                         "icon_url"               :self.icon_url
                      }
@@ -212,6 +217,7 @@ class Application(ObjectBase):
             ##PUT
             item ={
                         'android_package_name'   :self.android_package_name,  
+                        #'c2dm_sender_auth_token' :self.c2dm_sender_auth_token,
                         'apple_store_id'         :self.apple_store_id,        
                         'category'               :self.category,              
                         'description'            :self.description,           
@@ -236,6 +242,7 @@ class Application(ObjectBase):
         '''
             handle post & put for application
         '''
+        
         if int(self.user) ==0:
             raise Exception("Unable to create or update with user=0")
 
@@ -308,6 +315,17 @@ class Application(ObjectBase):
             return True when success else raise exception
         '''
         payload = {'notifications_enabled': enabled }
+        resp = self._put( endpoint = 'application',
+                payload = payload,
+                item=self.id)
+        return resp
+    
+    def set_c2dm_token(self, token):
+        '''
+            set C2DM Token
+        '''
+        self.validate_c2dm_token()
+        payload = {'c2dm_sender_auth_token': token, 'android_package_name': self.android_package_name }
         resp = self._put( endpoint = 'application',
                 payload = payload,
                 item=self.id)
