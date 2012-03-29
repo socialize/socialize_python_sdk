@@ -217,7 +217,7 @@ class Application(ObjectBase):
             ##PUT
             item ={
                         'android_package_name'   :self.android_package_name,  
-                        'c2dm_sender_auth_token' :self.c2dm_sender_auth_token,
+                        #'c2dm_sender_auth_token' :self.c2dm_sender_auth_token,
                         'apple_store_id'         :self.apple_store_id,        
                         'category'               :self.category,              
                         'description'            :self.description,           
