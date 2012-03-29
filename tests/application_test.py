@@ -377,24 +377,45 @@ class TestApplicationWriteOperations(SocializeTest):
         self.assertTrue(resp)
 
 
+    def test_save_c2dm(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_save_c2dm
+        '''
+        pkg_name = 'com.champ.test'
+        c2dm_token = "abcdefghijklmnop"
+
+        applications = self.partner.applications(user_id)
+        app = applications.findOne(app_id)
+        app.android_package_name = pkg_name
+        app.c2dm_sender_auth_token = c2dm_token
+        app.save()
+        
+        print app.c2dm_sender_auth_token
+        self.assertEqual( app.c2dm_sender_auth_token, c2dm_token)
+        self.assertEqual( app.android_package_name ,pkg_name)
+        
     def test_set_c2dm(self):
         '''
             nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_set_c2dm
         '''
         pkg_name = 'com.champ.test'
-        c2dm_token = 'abcdefghijklmnop'
+        c2dm_token = "ABCXYXZ"
 
         applications = self.partner.applications(user_id)
         app = applications.findOne(app_id)
         app.android_package_name = pkg_name
-        app.c2dm_sender_auth_token= c2dm_token
+        #print app.__dict__
+        print app.c2dm_sender_auth_token
         app.save()
+        #print app.__dict__
+        app.set_c2dm_token(c2dm_token)
+        print c2dm_token
+        print app.android_package_name
+        print app.c2dm_sender_auth_token
         app.refresh()
+        self.assertEqual( app.c2dm_sender_auth_token, c2dm_token)
         self.assertEqual( app.android_package_name ,pkg_name)
-        
-        applications = self.partner.applications(user_id)
-        app2 = applications.findOne(app_id)
-        self.assertEqual(app2.c2dm_sender_auth_token,  c2dm_token) 
+         
 
     def test_set_invalid_c2dm(self):
         '''
@@ -411,4 +432,5 @@ class TestApplicationWriteOperations(SocializeTest):
             app.save()
         except ErrorC2DMwithoutPackageName,e :
             self.assertEqual(e.content , "Need android package name in order to send smart alert")
-        
+
+
