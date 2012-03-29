@@ -199,7 +199,7 @@ class Application(ObjectBase):
         '''
         ## PARTNER api model accept only 50 char_len
         self.name = self.name[:49]
-        self.validate_c2dm_token()
+        
         if isPost:
             ## POST
             item ={    "category" : self.category,
@@ -242,7 +242,7 @@ class Application(ObjectBase):
         '''
             handle post & put for application
         '''
-        self.validate_c2dm_token()
+        
         if int(self.user) ==0:
             raise Exception("Unable to create or update with user=0")
 
