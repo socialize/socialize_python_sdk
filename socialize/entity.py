@@ -90,9 +90,8 @@ class Entity(ObjectBase):
         self.total_activity   = entity.get('total_activity',None)
     
     def __post_payload(self):
-        key_encoded = urllib.quote(self.key)
         return {'application_id': self.application,
-                'key':key_encoded,
+                'key':self.key,
                 'name':self.name}
 
     def __repr__(self):
@@ -120,6 +119,6 @@ class Entity(ObjectBase):
             update object
         '''
         new_item = self._get('entity', self.id)
-        self = self.__init__(self.key, self.secret, self.host, new_item) 
+        self = self.__init__(self.consumer_key, self.consumer_secret, self.host, new_item) 
  
 

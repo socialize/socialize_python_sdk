@@ -65,7 +65,7 @@ class EntityTest(SocializeTest):
         entity = self.partner.entities(app_id)
         e = entity.new()
         name = 'test entity by partner sdk'
-        key  = 'http://getsocialize.com/test_sdk'
+        key  = 'http://getsocialize.com/test_sdk?hello=world&wt=123&fff=123123-e'
         
         e.name = name
         e.key = key
@@ -73,6 +73,16 @@ class EntityTest(SocializeTest):
         self.assertEqual( e.name , name)
         self.assertEqual( e.key , key)
         self.assertEqual( e.id , 0)
+
+        e.save()
+
+        e.refresh()
+
+        self.assertEqual( e.application, app_id)
+        self.assertEqual( e.name , name)
+        self.assertEqual( e.key , key)
+        self.assertNotEqual( e.id , 0)    
+
         return e
 
 
