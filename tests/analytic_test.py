@@ -25,7 +25,7 @@ class AnalyticTest(SocializeTest):
         analytic = self.partner.analytics(app_id)
         self.assertEqual(analytic.app_id , app_id)
     
-    def un_test_analytic_find_day(self):
+    def test_analytic_find_day(self):
         '''
             nosetests -s -v tests.analytic_test:AnalyticTest.test_analytic_find_day
 
@@ -39,7 +39,7 @@ class AnalyticTest(SocializeTest):
             self.assertTrue( len(response[item]) > 0)
             self.assertEqual( response[item][2][0] - response[item][1][0] , daydiff)
 
-    def test_analytic_find_week(self):
+    def xtest_analytic_find_week(self):
         '''
             nosetests -s -v tests.analytic_test:AnalyticTest.test_analytic_find_week
         '''

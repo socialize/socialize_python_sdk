@@ -214,7 +214,7 @@ class Application(ObjectBase):
                      }
 
         else:
-            ##PUT
+            ##PUT function using POST http method
             item ={
                         'android_package_name'   :self.android_package_name,  
                         #'c2dm_sender_auth_token' :self.c2dm_sender_auth_token,
@@ -279,7 +279,7 @@ class Application(ObjectBase):
             upload base64 encoded image for app_icon
             return True when success else raise exception
         '''
-        payload = {'icon_base64': quote(base64_img) }
+        payload = {'icon_base64': base64_img}
         resp = self._post( endpoint = 'application',
                 payload = payload,
                 item=self.id,

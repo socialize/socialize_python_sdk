@@ -123,9 +123,8 @@ class ObjectBase(PartnerBase):
 
     def _put(self, endpoint, payload, item=None, verb=None):
         """
-            PUT payload to specific item_id on api
-            item_id can be <id>/verb/
-
+            POST to api with specific id, 
+            This function no longer use PUT method as of Mar,2 
         """
 
         request_url = '%s/%s/%s/%s/%s/'%(self.host,
@@ -141,7 +140,7 @@ class ObjectBase(PartnerBase):
             else:
                 raise Error(content='%s is not allow in %s endpoint'%(verb, endpoint)) 
         request = Request(self.consumer_key,self.consumer_secret)
-        return request.put(request_url, payload)   
+        return request.post(request_url, payload)   
 
     def _delete(self, endpoint, item_id):
         '''
@@ -195,33 +194,33 @@ class Request(object):
     def post(self,url,payload,params={}):
         if show_connections:
             logger.info("API Post: %s --%s-- ---%s--" % (url, params, payload))
-        payload = json.dumps(payload)
+        payload = urllib.quote(json.dumps(payload))
         response, content = self.client.request(url,
                                             method='POST',
                                             body='payload='+payload,)
         return self.__construct_response(url, response, content,payload,method='POST')
-    
-    def put(self, url,payload):
-        '''
-            HACKED oauth2 doesn't like PUT method, so I need to modify it. in the parameters.
-        '''
-        if show_connections:
-            logger.info("API Put: %s --%s--" % (url, payload))
-        url_payload = urllib.quote(json.dumps(payload))
-        url += '?payload=%s'%url_payload
-        req = oauth.Request.from_consumer_and_token(self.consumer, 
-                    token=self.token, http_method='PUT', http_url=url, 
-                    )
+## REMOVE on April,2 2012    
+#    def put(self, url,payload):
+        #'''
+            #HACKED oauth2 doesn't like PUT method, so I need to modify it. in the parameters.
+        #'''
+        #if show_connections:
+            #logger.info("API Put: %s --%s--" % (url, payload))
+        #url_payload = urllib.quote(json.dumps(payload))
+        #url += '?payload=%s'%url_payload
+        #req = oauth.Request.from_consumer_and_token(self.consumer, 
+                    #token=self.token, http_method='POST', http_url=url, 
+                    #)
 
-        req.sign_request(oauth.SignatureMethod_HMAC_SHA1(), self.consumer, self.token)
-        headers =  req.to_header()
-        headers['content-length']= '0'
+        #req.sign_request(oauth.SignatureMethod_HMAC_SHA1(), self.consumer, self.token)
+        #headers =  req.to_header()
+        #headers['content-length']= '0'
 
-        http =  httplib2.Http()
-        response, content  = http.request(url, method='PUT',headers=headers )
+        #http =  httplib2.Http()
+        #response, content  = http.request(url, method='PUT',headers=headers )
         
         
-        return self.__construct_response(url, response, content,method='PUT')
+        #return self.__construct_response(url, response, content,method='PUT')
 
     def delete(self,url,payload={}):
         response, content = self.client.request(url,

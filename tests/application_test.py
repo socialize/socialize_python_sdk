@@ -244,7 +244,7 @@ class TestApplicationWriteOperations(SocializeTest):
         ## app id =0 before save()
         self.assertTrue(app.id==0)
         
-        app.name='The newest Socialize App'
+        app.name='The newest Socialize & App'
         app.desc='Test application from python sdk'
         app.mobile_platform=['iPhone','android', ]
         app.category = 'Business'
@@ -270,7 +270,7 @@ class TestApplicationWriteOperations(SocializeTest):
         app =  applications.findOne(app_id)            
 
         previous_save_time = app.last_saved        
-        new_name = 'Change name to new name'
+        new_name = 'Change name to new  & name'
         #print app.to_dict()
         app.name= new_name
         ## update if app already have an id
@@ -279,6 +279,24 @@ class TestApplicationWriteOperations(SocializeTest):
         app.refresh() 
         self.assertEqual(app.name,new_name)
         self.assertTrue(app.last_saved != previous_save_time)
+
+    def test_update_app(self,app_id=app_id):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_update_app
+        '''
+        applications = self.partner.applications(user_id)
+        app =  applications.findOne(app_id)            
+
+        previous_save_time = app.last_saved        
+        new_name = 'Change name to new  & name'
+        #print app.to_dict()
+        app.name= new_name
+        ## update if app already have an id
+        sleep(1)
+        app.save()
+        app.refresh() 
+        self.assertEqual(app.name,new_name)
+        self.assertTrue(app.last_saved != previous_save_time)     
 
     def delete_application(self,delete_app):
         '''
@@ -309,6 +327,7 @@ class TestApplicationWriteOperations(SocializeTest):
 
     def test_upload_image_icon(self):
         '''
+            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_upload_image_icon
             Upload application_icon
         '''
         applications = self.partner.applications(user_id)
@@ -432,4 +451,9 @@ class TestApplicationWriteOperations(SocializeTest):
         except ErrorC2DMwithoutPackageName,e :
             self.assertEqual(e.content , "Need android package name in order to send smart alert")
 
-
+    def test_create_app_with_ampersand_name(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_create_app_with_ampersand_name
+        '''
+        name = "test & test"
+        pass
