@@ -271,7 +271,7 @@ class TestApplicationWriteOperations(SocializeTest):
         app =  applications.findOne(app_id)            
 
         previous_save_time = app.last_saved        
-        new_name = 'Change name to new  & name'
+        new_name = 'Voice Band App & Co..'
         #print app.to_dict()
         app.name= new_name
         ## update if app already have an id
