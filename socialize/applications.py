@@ -127,7 +127,7 @@ class Application(ObjectBase):
             self.socialize_app              =app.get('socialize_app','') 
             self.push_certificate           =app.get('push_certificate', None)
             self.is_socialize_editable      =app.get('is_socialize_editable', True)
-            
+            self.c2dm_token_source          =app.get('c2dm_token_source', '')
            
             ## modifiable  
             notifications_enabled           =app.get('notifications_enabled', False)
@@ -217,7 +217,6 @@ class Application(ObjectBase):
             ##PUT function using POST http method
             item ={
                         'android_package_name'   :self.android_package_name,  
-                        #'c2dm_sender_auth_token' :self.c2dm_sender_auth_token,
                         'apple_store_id'         :self.apple_store_id,        
                         'category'               :self.category,              
                         'description'            :self.description,           

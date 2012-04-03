@@ -261,6 +261,7 @@ class TestApplicationWriteOperations(SocializeTest):
         self.print_json(app.__dict__)
 
         self.assertTrue(app.last_saved != '')
+        self.assertEqual( app.c2dm_token_source, 'socialize')
         return app.id
 
 
@@ -430,10 +431,13 @@ class TestApplicationWriteOperations(SocializeTest):
         print c2dm_token
         print app.android_package_name
         print app.c2dm_sender_auth_token
+
+        
         app.refresh()
+        print app.__dict__
         self.assertEqual( app.c2dm_sender_auth_token, c2dm_token)
         self.assertEqual( app.android_package_name ,pkg_name)
-         
+        self.assertEqual( app.c2dm_token_source, "developer") 
 
     def test_set_invalid_c2dm(self):
         '''
