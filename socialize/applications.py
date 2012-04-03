@@ -128,7 +128,9 @@ class Application(ObjectBase):
             self.push_certificate           =app.get('push_certificate', None)
             self.is_socialize_editable      =app.get('is_socialize_editable', True)
             self.c2dm_token_source          =app.get('c2dm_token_source', '')
-           
+            
+            self.notification_quotas        =app.get('quotas', {})
+            
             ## modifiable  
             notifications_enabled           =app.get('notifications_enabled', False)
             if type(notifications_enabled) == str:
