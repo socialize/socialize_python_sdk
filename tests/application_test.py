@@ -396,6 +396,44 @@ class TestApplicationWriteOperations(SocializeTest):
         self.assertTrue(resp)
 
 
+    def test_upload_p12(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_upload_p12
+            Upload p12 for push notification
+        '''
+        ## UPload to deleted app
+        applications = self.partner.applications(user_id)
+        print delete_app
+        app = applications.findOne(delete_app)
+        p12_password = "b3s0cial"
+        p12_base64= """MIIMdQIBAzCCDDwGCSqGSIb3DQEHAaCCDC0EggwpMIIMJTCCBq8GCSqGSIb3DQEHBqCCBqAwggacAgEAMIIGlQYJKoZIhvcNAQcBMBwGCiqGSIb3DQEMAQYwDgQIsU/CLosOVVsCAggAgIIGaFdXnV8YV1j+udzgcL+Wveza+fhaLUS6j0/KLXFmGcZgC1cMY9hZ6uzluIg
+        WJLZKQIJEQ0+O8HidL2UBGwsa2XezmY4F6TOW1b9881gN2KquBpjY2pOXDCsrKs4bZZDPo+/gbis7gGbRSkqqtQif9PkkqyOgGAxVwjGl1WhbMU1/+tQBG45t0Aw6bdLYyE7g50tVMprWBwq5JMYcgdqf+dNbi2e1dDrBT2jawcOse72EO7NRXpPnH0o9tiaAEKfSnbRfGbHrvFz4zM3FoqgHM
+        yz2k3QZX/E2KbGRCzyP+O1zJUjBKKan/vIuf0avZ0S48CsoxBALfsZ5gcU14HLB5X05LpgLgl6EyfxsGlGCL/l0GCXUEP0kHj4F2aHsgotwKl5atv8Izswj71qeChgwVJukMUHJDQfFbU18xNQxrRB8P9aFRxZFD/plQurGjPJJJCN09Qjji0asRSXej0rM//mvYqD/Q7KEGyXTu2qcCQ/905R
+        VKGt3ScXoZsmm3/F48tOexurlb54wMEFblEH6r/svvdF/kBqLWEenB25enKiJc+e952ZDNYjRPQ03e9fdhri+5JkPMqTf4zCZVDDJn3VaMyeZ4ScRKMkRKhGtz6oCW8Bkyo0vu8XvA2dNe1ltWFw10HqCX5w99SrU8LqdfNDKYsGmUuwAGxRruf4JccNVJEYhP0hxPXt6x01lGjjC6xkCs4vzx
+        jINTP1ufgglNrJ2+z7fxhi7ULhm0WE/GiyO0IKjcNf4QBz8kKmKLRiUpPiolRjASHPRm2BJIN0pIl35KfxZoGZE2laOdfaLJWyw+uWDF+cP13QuGvypFtVIKmAzqLc0mRXzrlE3exyOdciPpci17k21cmW9Rt6QPKjyLTyicvGkeR6tE6Lwzflo1pjS/HtWylH3QWniknEgRArwLM6VXR2JZoS
+        qGMsaBKmAgT/F1RO4YCUGbF12PDJJ74UwkxiLM9bIlHlmV4RoQr0i8/2+goaGVf/0hPIGQ8+CXhP2vgx2U8X3yLJHu5QGN/QozqL71V8HVjzQ5OPUG4St65WhEzNlByVz0SQWu0yzzULXlJjgEqZAHE7NkdTJwuzyerWKp6x2ua1NrUFh5E6ifWMSVo2G6F2xofh7af8xZTJ0SYvnVHOmjF6NJ
+        xloWk9tp4kFITTCVrqdDVPgUMkfy1JLd391Q20C9GvNGoxzDnK5pn9MWusNUn4vT7DYDmpZD2lJPwb9Htdi56TXzWOVxY4uwxioVVNZj2UhZa3VBAAQ1iQyawKVI1wspLoGekU7HkbgcpPTnAoDGFF21D5f8BTyQ5u1nw/vbxX1Bg43/iQROhR6gwI9GgH4rbJAm5iZl52KdRsT//uvB4DEUo8
+        554SQGG1F2FQALHpUWMhepaJKaSFjEfo513XC6+4MeZmdhcwuzyvSp+JNjnpqGnXEqtR8vo1bRDW/w/s2VlYE/hwe9d09+FxijFVavGDGadV9IynfNLK1+hnvs9RfEmSYAF9mvZ4juXIk3hXbUAxVf318ROJ2QmM0bSIEyPtmWdhn33kvswqvsH7yfvx/ZGSRB5yBNpBfhCH8Ie+EkxWRzDYQs
+        5gB+01R8z0NxsBF68Ff2PRqZUY+UXDfpk13CM23lBs62H49XuDU2d7sP5cUoxZ+m7+5TGpod05my8mNONkVye6NLjD4kVYhRpTkgnLwUu0NrVpBnLKkh8TBXgh6mjV33XTh1Nkqsjo18fbUNnfX1xEtJan3m2cd2Ee9E0C6PfnTtHn/7VeWALqm0VOBzbtdv6iZzNsVTwhByXigvZa86c51CHL
+        TUM2k8o75Dh0KYafe56lQbvY2SXtdP/u9pqaM6NQztWZcget0NRKwcAA3WabOHJSgx8NivGNRGbryi1XkmJOapvYlICaarZD6VFwTy30SUVp05I75lpWC2XPc0AH/TeKW31UzGYRH1ZyZ8V8K+ik1uhd/3i0tT9IpRkSFpqYWN0O0A6nhwpXHMF0OF3GLtngC+Es7G8TSrwozxL57kRmi4ndDB
+        N71sX9zXaiiQNx7g8LK3emavb+6NM85Ce/Q06/Gxt3U67f9qDWFnE4dQ0N5lgyM8Pm2FO/jV8GK5ZrGkh9b2bOtPGi/L8O6xYk3Iu8bEde0c3EGmbgy0czx5e5je3f/wZNUdSaH3Z2Pl9blyMXN9hd7pKQB2VFMnHCka/UQMIIFbgYJKoZIhvcNAQcBoIIFXwSCBVswggVXMIIFUwYLKoZIhvc
+        NAQwKAQKgggTuMIIE6jAcBgoqhkiG9w0BDAEDMA4ECLZtL4ZFWjf4AgIIAASCBMiONhmjm3c3cn6CHj5ZFN5QA4nLgFRxN4eK4JxYpGsCO8wA053+m+KICRs4rofqw0pdN1CUvc/Uvf01M0jpnY5LYe50lzo7kQF5n8iNvYZOiyic0n/luJp6lqN4MovV0j6a3Jw+/q4CnIgc0v+vzeiXs4Vnb
+        mkO52RDEl83RTdkCnGN+NO4xzlpBsmEMwJrOPR16xHIzjaIm5rylUn+HNVR3tnDOvl9DOgbZQz26Y3FJDw9jBvljvfWjeknR6rkezsGeZRsK/z/q33kdMRLhN8tzjSLZoQmKOkGILqIQ03lfvJSeo0IojX00FrAnlmX88O3GHmZQYgY6yY7cBkR0DsgCX75WukqrtzhXkmMKhtRmnE1q9c0Wi9
+        EhaDu5SX8ULZ5+Uu4WoFriXqwE3H8q6HefY/kHKsi25Cn8FArlNLXX0XXxx9MXNGmUGCpqlB7DntnE3pr25Vpp5CufNDit6dCJnEmJOkGrgVQ7HxKmNeE/g8b+EYW9oL3Qb3iZQUUbqXZhrM8Z/PuSLcj4AJkzlzZlZgeYy3wW5mEZxutwafv688yKC3tFsMb5WdddmU+B2ttmyYZcZ8hAnfAB
+        XsUW07JedAY/BwaZ+dnxkzLj2LpMkuGRv4GvbMvVLCqLRCgp0wn3oKpOiycCSLQtbNfrb0fOuA7+bbiYlAnLFum0Gv13km5x2sMCoX16p+hKPEjwmdA04p19YZX20GORKbYjKfniXJWDPwgAteLj6oZx7vpTmt4kJxSkL1Wvm49P4gwWo/pqrlzuxkU8nDIlwxtOhCN/Sqg6uI2uNxU+Efy035
+        tjyoCTQmlaaJIyXv2ynWxyE5615/tL86ljGWnTkeuP6XZ9fIH6PtpzlMfyuXTd7xfsKIHpsT1TU3Z4FuJPnLg5Q3r+lCf+/oWjS+Yu8AR2CCAAV/vsaBif7p4wE53PprR5g271CypnKPaLA2OlqWGLCj6VeLEk8X94jfHF552uPB0hsDWgdFmUNjiWNfNfHrJokQJwXfx1fNYF//VC3CkP5Ptq
+        tdYTXCvI/lsPEtLuVrwlPrpCDYScANdV3+mn4whBwaQCmgwgFnRI5FF0mHDZiXxgO6hASSomTyWzqeWl7j+M4O4GwNMmSyWW4z7NdcV82/uKSCnM1zJcYKadazSd5uM9tIyuJwhMuXljB+bhR6up3XvGe0hpITHaFCefQha0xHrivFTgy+X1kXarTlTyJuW1GpNVP9mj6YTWExYlCNQx5UTCMk
+        RFqC9+hbG+pNUBykqzIvxMdorJxEIn3KfJs3UCf6gVGDrFDiHoKk1mSViH+fOdVzHiGNtJRZut8XPFYCckX2uns15JY99CS5vrVd7QRD5m3VXFDs6CngXnJ9hNTbooMvUk7h+IuS9NXyJNNWdKLcu3F5WlVhFHpxtnafAswsf3qWsiO3GNVcqBW2tJ6FdVxJ0ab9nrcrwm/IPDlOMXESnCcg+F
+        kmNmhzu10QbpV9pdEACgdDnaSnYQBejw/zbeGFglg8aERCbD1yLWsC28aThf4NbQ3iY6VW72KIWtdYFk/wko6V8Pgcbogf6IxCQ7XIWj0A/C8g2PPh3VKDbrnc9GaXwZHut2EETxYGPiburRmi8z1jVQlefYj6/6huc0m+tJSIxUjArBgkqhkiG9w0BCRQxHh4cAEkAcwBhAGEAYwAgAE0AbwB
+        zAHEAdQBlAHIAYTAjBgkqhkiG9w0BCRUxFgQUfM5BKpvKQamDLgDgx4NzMKMZhnwwMDAhMAkGBSsOAwIaBQAEFKGGTENk5tA1oUImWHYHDDCkb3S2BAhQN8GVwJBfOQIBAQ=="""
+
+
+        resp = app.upload_p12(p12_base64=p12_base64,
+                key_password=p12_password)
+        
+        self.assertTrue(resp)
+
+
     def test_save_c2dm(self):
         '''
             nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_save_c2dm

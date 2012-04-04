@@ -293,7 +293,7 @@ class Application(ObjectBase):
             return True when success else raise exception
         '''
         payload = {'key_password': key_password,
-                'p12_base64': quote(p12_base64)}
+                'p12_base64': p12_base64}
 
         resp= self._post(endpoint= 'application',
                 payload=payload,
