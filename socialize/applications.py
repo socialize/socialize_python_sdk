@@ -195,10 +195,6 @@ class Application(ObjectBase):
     
 
     def __to_post_payload(self,isPost=True):    
-        '''
-            isPost = Add new application
-            not isPost = PUT , update application
-        '''
         ## PARTNER api model accept only 50 char_len
         self.name = self.name[:49]
         
@@ -216,7 +212,7 @@ class Application(ObjectBase):
                      }
 
         else:
-            ##PUT function using POST http method
+            ## update function using POST http method
             item ={
                         'android_package_name'   :self.android_package_name,  
                         'apple_store_id'         :self.apple_store_id,        
