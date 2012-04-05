@@ -15,8 +15,8 @@ class IphoneCertificate(ObjectBase):
             new cert using app_dict = {}, id = 0
         '''
         self.host = host
-        self.key = key
-        self.secret = secret
+        self.consumer_key = key
+        self.consumer_secret = secret
         if type(cert)==int:
             self.id = cert
         elif not cert:

@@ -1,8 +1,14 @@
 from urlparse import urlparse, parse_qs, urlunparse
 import urllib
-import oauth2 as oauth
+import oauth_client as oauth
 import simplejson as json
 import httplib2
+import logging
+
+logger = logging.getLogger(__name__)
+
+#debugging
+show_connections = False
 
 class PartnerBase(object):
     base_partner_path = 'partner'
@@ -11,15 +17,35 @@ class PartnerBase(object):
             'application'       : 'application',
             'webuser'           : 'web_user',
             'apiuser'           : 'api_user',
+            'apiuser_stat'      : 'api_user_stat',
             'iphone_certificate': 'iphone_certificate',
+            'view'              : 'view',
+            'share'             : 'share',
+            'comment'           : 'comment',
+            'like'              : 'like',
+            'entity'            : 'entity',
+            'analytic'          : 'analytic',
             }                    
 
     partner_endpoint_verb = {
-            'application' : ['upload_p12','upload_icon'],
-            'apiuser' : ['ban','unban','banned']
+            'application' : ['upload_p12','upload_icon', 'notification'],
+            'apiuser' : ['ban','unban']
             }
 
 class CollectionBase(PartnerBase):
+    def _request(self, endpoint, params={}):
+        """
+            simple request - response with out parsing any content.
+        """
+        request_url = '%s/%s/%s/%s/'%(self.host,
+                                self.base_partner_path,
+                                self.version,
+                                self.partner_endpoints[endpoint])
+ 
+        request = Request(self.consumer_key,self.consumer_secret)
+        response = request.get(request_url, params)
+        return response
+ 
     def _find(self, endpoint, params={}, verb=None):
         """
             Fetches results form the server, optionally based on constraints.
@@ -36,7 +62,7 @@ class CollectionBase(PartnerBase):
             else:
                 raise Exception('%s is not allow in %s endpoint'%(verb, endpoint))
         
-        request = Request(self.key,self.secret)
+        request = Request(self.consumer_key,self.consumer_secret)
         response = request.get(request_url, params)
         meta = response['meta']
         objects = response['objects']
@@ -55,7 +81,8 @@ class CollectionBase(PartnerBase):
                                 self.partner_endpoints[endpoint],
                                 item_id
                                 )
-        request = Request(self.key,self.secret)
+        
+        request = Request(self.consumer_key,self.consumer_secret)
         return request.get(request_url, params)
 
     def _delete(self, endpoint, item):
@@ -68,7 +95,7 @@ class CollectionBase(PartnerBase):
                                 self.partner_endpoints[endpoint],
                                 item
                                 )
-        request = Request(self.key,self.secret)
+        request = Request(self.consumer_key,self.consumer_secret)
         return request.delete(request_url)   
                                                      
 
@@ -88,15 +115,16 @@ class ObjectBase(PartnerBase):
             if verb in self.partner_endpoint_verb[endpoint]:
                 request_url = '%s%s/%s/' % (request_url,item, verb)
             else:
-                raise Exception('%s is not allow in %s endpoint'%(verb, endpoint))
-        request = Request(self.key,self.secret)
+                raise Error(content='%s is not allow in %s endpoint'%(verb, endpoint))
+        request = Request(self.consumer_key,self.consumer_secret)
+        if show_connections:
+            logger.info(request_url)
         return request.post(request_url, payload)   
 
     def _put(self, endpoint, payload, item=None, verb=None):
         """
-            PUT payload to specific item_id on api
-            item_id can be <id>/verb/
-
+            POST to api with specific id, 
+            This function no longer use PUT method as of Mar,2 
         """
 
         request_url = '%s/%s/%s/%s/%s/'%(self.host,
@@ -110,9 +138,9 @@ class ObjectBase(PartnerBase):
             if verb in self.partner_endpoint_verb[endpoint]:
                 request_url = '%s%s/' % (request_url, verb)
             else:
-                raise Exception('%s is not allow in %s endpoint'%(verb, endpoint)) 
-        request = Request(self.key,self.secret)
-        return request.put(request_url, payload)   
+                raise Error(content='%s is not allow in %s endpoint'%(verb, endpoint)) 
+        request = Request(self.consumer_key,self.consumer_secret)
+        return request.post(request_url, payload)   
 
     def _delete(self, endpoint, item_id):
         '''
@@ -124,7 +152,7 @@ class ObjectBase(PartnerBase):
                                 self.partner_endpoints[endpoint],
                                 item_id
                                 )
-        request = Request(self.key,self.secret)
+        request = Request(self.consumer_key,self.consumer_secret)
         return request.delete(request_url)   
 
     def _get(self, endpoint, item_id, params={}):
@@ -138,7 +166,7 @@ class ObjectBase(PartnerBase):
                                 item_id
                                 )
         
-        request = Request(self.key,self.secret)
+        request = Request(self.consumer_key,self.consumer_secret)
         return request.get(request_url, params=params)   
 
 
@@ -157,41 +185,48 @@ class Request(object):
         self.client = oauth.Client(self.consumer,self.token)
 
     def get(self,url,params={}):
-        
+        if show_connections:
+            logger.info("API Get: %s --%s--" % (url, params))
         url = self.construct_url( url, params)
         response, content = self.client.request(url,'GET')
-        return  self.__construct_response(url,response, content)
+        return  self.__construct_response(url,response, content,method='GET')
 
     def post(self,url,payload,params={}):
-        payload = json.dumps(payload)
+        if show_connections:
+            logger.info("API Post: %s --%s-- ---%s--" % (url, params, payload))
+        payload = urllib.quote(json.dumps(payload))
         response, content = self.client.request(url,
                                             method='POST',
                                             body='payload='+payload,)
-        return self.__construct_response(url, response, content,payload)
-    
-    def put(self, url,payload):
-        '''
-            HACKED oauth2 doesn't like PUT method, so I need to modify it. in the parameters.
-        '''
-        url_payload = urllib.quote(json.dumps(payload))
-        url += '?payload=%s'%url_payload
-        req = oauth.Request.from_consumer_and_token(self.consumer, 
-                    token=self.token, http_method='PUT', http_url=url, 
-                    )
+        return self.__construct_response(url, response, content,payload,method='POST')
+## REMOVE on April,2 2012    
+#    def put(self, url,payload):
+        #'''
+            #HACKED oauth2 doesn't like PUT method, so I need to modify it. in the parameters.
+        #'''
+        #if show_connections:
+            #logger.info("API Put: %s --%s--" % (url, payload))
+        #url_payload = urllib.quote(json.dumps(payload))
+        #url += '?payload=%s'%url_payload
+        #req = oauth.Request.from_consumer_and_token(self.consumer, 
+                    #token=self.token, http_method='POST', http_url=url, 
+                    #)
 
-        req.sign_request(oauth.SignatureMethod_HMAC_SHA1(), self.consumer, self.token)
-        headers =  req.to_header()
-        headers['content-length']= '0'
+        #req.sign_request(oauth.SignatureMethod_HMAC_SHA1(), self.consumer, self.token)
+        #headers =  req.to_header()
+        #headers['content-length']= '0'
 
-        http =  httplib2.Http()
-        response, content  = http.request(url, method='PUT',headers=headers )
-        return self.__construct_response(url, response, content)
+        #http =  httplib2.Http()
+        #response, content  = http.request(url, method='PUT',headers=headers )
+        
+        
+        #return self.__construct_response(url, response, content,method='PUT')
 
-    def delete(self,url):
+    def delete(self,url,payload={}):
         response, content = self.client.request(url,
                                             method='DELETE',
                                             )
-        return self.__construct_response(url, response, content) 
+        return self.__construct_response(url, response, content,method='DELETE') 
     
     def construct_url(self,url, params={}):
         '''
@@ -206,25 +241,80 @@ class Request(object):
         )
         return url
 
-    def __construct_response(self, url, response, content, payload=''):
+    def __construct_response(self, url, response, content, payload='', method=''):
         '''response from request will be json for GET
             POST/PUT return url location, and Exception when Fail
             Delete return True else Exception
         '''
         formatted_payload = json.dumps(payload,sort_keys=True, indent=4) 
-
         status_code = response['status']
         if status_code == '201':
             return response['location']
 
         elif status_code in ('204','202'):
             return True
-
         elif status_code =='200':
             try:
                 return json.loads(content)
             except Exception, err:
-                raise Exception('Bad response please check\n%s\n%s\n%s'%(url, formatted_payload, err))
+                raise BadResponse(status_code, url, method, payload, "Could not decode content")
+        elif status_code =='404':
+            raise ErrorNotFound(status_code, url, method, payload,content)
         elif status_code[0] != '2':    ## Only accept '2xx'
-            raise Exception('Server return status code %s\n%s\nuri:%s\nresponse:%s'%(status_code,formatted_payload,url,content))
-        return content      
+            raise Error(status_code, url, method, payload,content)
+        return content  
+
+
+class Error(Exception):
+    """
+        base clase for exception
+    """
+    def __init__(self,
+            status_code=None,
+            url=None,
+            method=None,
+            payload=None,
+            content=None
+            ):
+        self.status_code = status_code
+        self.url = url
+        self.method = method
+        self.payload = payload
+        self.content = content
+        if status_code:
+            Exception.__init__(self, self.message())
+        else:
+            Exception.__init__(self, self.content)
+    def message(self):
+        return "ERROR:\tServer return status code: %s\nurl: %s\nmethod: %s\npayload: %s\ncontent: %s"%(self.status_code, self.url, self.method, self.payload, self.content)
+
+class BadResponse(Error):
+    '''
+        couldn't decode response.content
+    '''
+    pass
+
+class ErrorNotFound(Error):
+    '''
+        status code:404 
+        try to access deleted object or not exists
+    '''
+    pass
+
+class ErrorPermission(Error):
+    '''
+        status code:403
+        or try to delete the object that not belong to user
+    '''
+    pass
+
+class ErrorMissingParams(Error):
+    '''
+        missing required parameter
+    '''
+    pass
+
+class ErrorC2DMwithoutPackageName(Error):
+    '''
+        missing android package name, 
+    '''
