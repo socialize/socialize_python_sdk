@@ -86,7 +86,7 @@ class EntityTest(SocializeTest):
         return e
 
 
-    def un_test_save_and_delete_entity(self):
+    def test_save_and_delete_entity(self):
         '''
             nosetests -s -v tests.entity_test:EntityTest.test_save_and_delete_entity            
             ** stage server not support yet! wait for release 1.9.0
