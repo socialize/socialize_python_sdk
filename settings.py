@@ -10,3 +10,6 @@ app_id = 0
 delete_app = 0
 
 api_user_id = 0
+entity_id = 0
+socialize_consumer_key='some-app-key'
+

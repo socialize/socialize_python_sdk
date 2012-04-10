@@ -1,5 +1,7 @@
 import unittest
+import datetime
 from socialize.client import Partner
+from simplejson import loads, dumps
 try:
     from local_settings import version, host, key, secret, user_id , app_id
 except:
@@ -12,6 +14,11 @@ class SocializeTest(unittest.TestCase):
     
     def setUp(self):
         self.partner = Partner(key,secret,host)
+
+    def print_json(self, data):
+        dthandler = lambda obj: obj.isoformat() if isinstance(obj, datetime.datetime) else None
+        txt = dumps(data, indent = 4,default=dthandler)
+        print txt
 
     def tearDown(self):
         pass
