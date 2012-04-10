@@ -124,7 +124,6 @@ class ObjectBase(PartnerBase):
     def _put(self, endpoint, payload, item=None, verb=None):
         """
             POST to api with specific id, 
-            This function no longer use PUT method as of Mar,2 
         """
 
         request_url = '%s/%s/%s/%s/%s/'%(self.host,
@@ -199,28 +198,6 @@ class Request(object):
                                             method='POST',
                                             body='payload='+payload,)
         return self.__construct_response(url, response, content,payload,method='POST')
-## REMOVE on April,2 2012    
-#    def put(self, url,payload):
-        #'''
-            #HACKED oauth2 doesn't like PUT method, so I need to modify it. in the parameters.
-        #'''
-        #if show_connections:
-            #logger.info("API Put: %s --%s--" % (url, payload))
-        #url_payload = urllib.quote(json.dumps(payload))
-        #url += '?payload=%s'%url_payload
-        #req = oauth.Request.from_consumer_and_token(self.consumer, 
-                    #token=self.token, http_method='POST', http_url=url, 
-                    #)
-
-        #req.sign_request(oauth.SignatureMethod_HMAC_SHA1(), self.consumer, self.token)
-        #headers =  req.to_header()
-        #headers['content-length']= '0'
-
-        #http =  httplib2.Http()
-        #response, content  = http.request(url, method='PUT',headers=headers )
-        
-        
-        #return self.__construct_response(url, response, content,method='PUT')
 
     def delete(self,url,payload={}):
         response, content = self.client.request(url,
@@ -243,7 +220,7 @@ class Request(object):
 
     def __construct_response(self, url, response, content, payload='', method=''):
         '''response from request will be json for GET
-            POST/PUT return url location, and Exception when Fail
+            POST return url location, and Exception when Fail
             Delete return True else Exception
         '''
         formatted_payload = json.dumps(payload,sort_keys=True, indent=4) 
