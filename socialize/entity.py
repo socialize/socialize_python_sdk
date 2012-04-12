@@ -54,8 +54,7 @@ class Entities(CollectionBase):
     def delete(self, entity_id):
 
         entity = self.findOne(entity_id)
-
-        if self.app_id == entity.application:
+        if int(self.app_id) == int(entity.application):
             return entity.delete()
         else:
             raise ErrorPermission("can not perform delete for non owner")    
