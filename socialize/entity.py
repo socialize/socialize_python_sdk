@@ -58,7 +58,7 @@ class Entities(CollectionBase):
         if self.app_id == entity.application:
             return entity.delete()
         else:
-            raise Exception("can not perform delete for non owner")    
+            raise ErrorPermission("can not perform delete for non owner")    
     
 
 
