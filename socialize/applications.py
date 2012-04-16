@@ -130,6 +130,8 @@ class Application(ObjectBase):
             self.c2dm_token_source          =app.get('c2dm_token_source', 'socialize')
             
             self.notification_quotas        =app.get('quotas', {})
+            self.__update_notification_quotas()
+            
             
             ## modifiable  
             notifications_enabled           =app.get('notifications_enabled', False)
@@ -164,6 +166,21 @@ class Application(ObjectBase):
                 user_id = int(app.get('user_id','0'))
             self.user  			    =user_id
 
+    
+    def __update_notification_quotas(self):
+        #update quota logic that is a bit messy from server
+        quotas = self.notification_quotas
+        quotas["android"]["quota_reached"] = True #False
+        quotas["android"]["quota_reached_type"] = ""
+        if "android" in quotas:
+            if quotas["android"]["quota_used"] >= quotas["android"]["quota_limit"]:
+                quotas["android"]["quota_reached"] = True
+                quotas["android"]["quota_reached_type"] = "socialize"
+            if quotas["android"]["quota_used"] == 1 and self.c2dm_token_source != "socialize":
+                quotas["android"]["quota_reached"] = True
+                quotas["android"]["quota_reached_type"] = "google"
+        self.notification_quotas = quotas
+        
     
     #math helpers for end user
     def __calculate_stats(self, stats):
