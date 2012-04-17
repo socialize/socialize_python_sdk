@@ -8,6 +8,7 @@ from django.utils.encoding import smart_str
 
 
 import logging
+from socialize_python_sdk.socialize.notifications import NotificationLogs
 logger = logging.getLogger(__name__)
 
 class Applications(CollectionBase):
@@ -170,17 +171,18 @@ class Application(ObjectBase):
     def __update_notification_quotas(self):
         #update quota logic that is a bit messy from server
         quotas = self.notification_quotas
-        quotas["android"]["quota_reached"] = True #False
-        quotas["android"]["quota_reached_type"] = ""
         if "android" in quotas:
-            if quotas["android"]["quota_used"] >= quotas["android"]["quota_limit"]:
-                quotas["android"]["quota_reached"] = True
-                quotas["android"]["quota_reached_type"] = "socialize"
-            if quotas["android"]["quota_used"] == 1 and self.c2dm_token_source != "socialize":
-                quotas["android"]["quota_reached"] = True
-                quotas["android"]["quota_reached_type"] = "google"
-        self.notification_quotas = quotas
-        
+            quotas["android"]["quota_reached"] = False
+            quotas["android"]["quota_reached_type"] = ""
+            if "android" in quotas:
+                if quotas["android"]["quota_used"] >= quotas["android"]["quota_limit"]:
+                    quotas["android"]["quota_reached"] = True
+                    quotas["android"]["quota_reached_type"] = "socialize"
+                if quotas["android"]["quota_used"] == 1 and self.c2dm_token_source != "socialize":
+                    quotas["android"]["quota_reached"] = True
+                    quotas["android"]["quota_reached_type"] = "google"
+            self.notification_quotas = quotas
+            
     
     #math helpers for end user
     def __calculate_stats(self, stats):
@@ -322,7 +324,14 @@ class Application(ObjectBase):
         cert = iphone_cert.get()
         return cert
     
-    
+    def get_notification_logs(self,params={}):
+        '''
+            Get available notification logs
+        '''
+        notification_logs = NotificationLogs(self.consumer_key, self.consumer_secret, self.host, self.id)
+        meta, logs = notification_logs.find()
+        return logs
+        
     def set_notifications_enabled(self, enabled):
         '''
             set notifications enabled to True or False
@@ -345,7 +354,7 @@ class Application(ObjectBase):
                 item=self.id)
         return resp
 
-    def send_notification(self, message, user_id_list=None, url=None, device_list=None, entity_id=None, subscription=None):
+    def send_notification(self, message, user_id_list=None, url=None, device_list=None, entity_id=None, subscription=None, broadcast_user_set=None):
         '''
             set notifications enabled to True or False
             return True when success else raise exception
@@ -354,6 +363,9 @@ class Application(ObjectBase):
         '''
         payload = {'message': message}
         
+        if broadcast_user_set:
+            payload.update({"broadcast_user_set" : broadcast_user_set})
+             
         if type(user_id_list)==list:
             user_id_list = [ int(u) for u in user_id_list ]
             payload.update({ "users": user_id_list })
@@ -367,7 +379,7 @@ class Application(ObjectBase):
             payload.update({ "subscription": subscription})
         if url:
             payload.update({"url":url})
-
+        
         resp= self._post(endpoint= 'application',
                 payload=payload,
                 item=self.id,
