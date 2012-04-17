@@ -3,12 +3,9 @@ from base import CollectionBase, ObjectBase, ErrorC2DMwithoutPackageName
 from users import ApiUsers
 from certificates import IphoneCertificate
 from urllib2 import quote
-
+from notifications import NotificationLogs
 from django.utils.encoding import smart_str
-
-
 import logging
-from socialize_python_sdk.socialize.notifications import NotificationLogs
 logger = logging.getLogger(__name__)
 
 class Applications(CollectionBase):
@@ -329,7 +326,7 @@ class Application(ObjectBase):
             Get available notification logs
         '''
         notification_logs = NotificationLogs(self.consumer_key, self.consumer_secret, self.host, self.id)
-        meta, logs = notification_logs.find()
+        meta, logs = notification_logs.find(params)
         return logs
         
     def set_notifications_enabled(self, enabled):

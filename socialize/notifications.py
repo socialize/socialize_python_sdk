@@ -52,6 +52,9 @@ class NotificationLog(ObjectBase):
             self.resource_uri        = log.get('resource_uri','')
             self.created             = datetime.strptime(log.get('created',None), '%Y-%m-%dT%H:%M:%S')
             self.message             = log.get('message','')
+            self.application        = log.get('application','')
+            self.meta               = loads(log.get('meta',"{}"))
+            self.to_users            = loads(log.get('users', "[]"))     ## String in "[]" format.
 
 
     def to_dict(self, params={}):
