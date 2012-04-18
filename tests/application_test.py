@@ -194,7 +194,17 @@ class TestApplicationReadOperations(SocializeTest):
         self.assertNotEqual( len(users), 0 )
         for user in users:
             self.assertNotEqual(user.id ,0) 
-    
+
+    def test_get_notification_log(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_get_notification_log
+        '''
+        apps = self.partner.applications(user_id)
+        app = apps.findOne(app_id)
+        logs = app.get_notification_logs()
+        for l in logs:
+            print l.to_dict()
+
 class TestApplicationWriteOperations(SocializeTest):
     '''
         save() , update(), delete()

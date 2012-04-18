@@ -1,5 +1,5 @@
 from django.utils.encoding import smart_str
-from base import CollectionBase, ObjectBase
+from base import CollectionBase, ObjectBase, ErrorPermission
 from datetime import datetime
 import urllib
 
@@ -54,11 +54,10 @@ class Entities(CollectionBase):
     def delete(self, entity_id):
 
         entity = self.findOne(entity_id)
-
-        if self.app_id == entity.application:
+        if int(self.app_id) == int(entity.application):
             return entity.delete()
         else:
-            raise Exception("can not perform delete for non owner")    
+            raise ErrorPermission("can not perform delete for non owner")    
     
 
 
