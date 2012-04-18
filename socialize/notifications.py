@@ -48,13 +48,14 @@ class NotificationLog(ObjectBase):
         elif not log:
             self.id = None
         else:
-            self.id                  = int(log.get('id','0'))                
-            self.resource_uri        = log.get('resource_uri','')
-            self.created             = datetime.strptime(log.get('created',None), '%Y-%m-%dT%H:%M:%S')
-            self.message             = log.get('message','')
+            self.id                 = int(log.get('id','0'))                
+            self.resource_uri       = log.get('resource_uri','')
+            self.created            = datetime.strptime(log.get('created',None), '%Y-%m-%dT%H:%M:%S')
+            self.message            = log.get('message','')
             self.application        = log.get('application','')
             self.meta               = loads(log.get('meta',"{}"))
-            self.to_users            = loads(log.get('users', "[]"))     ## String in "[]" format.
+            self.to_users           = loads(log.get('users', "[]"))     ## String in "[]" format.
+            self.progress           = self.__get_progress(log.get('progress',"[]"))
 
 
     def to_dict(self, params={}):
@@ -71,6 +72,11 @@ class NotificationLog(ObjectBase):
             self.__init__(self.consumer_key, self.consumer_secret, self.host, log)
         return self
     
-
-     
+    def __get_progress(self, progress):
+        if len(progress) > 0:
+            for p in progress:
+                p["updated"] =  datetime.strptime(p["updated"], '%Y-%m-%d %H:%M:%S+0000')
+        return progress
+            
+           
         
