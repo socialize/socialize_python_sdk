@@ -75,7 +75,10 @@ class NotificationLog(ObjectBase):
     def __get_progress(self, progress):
         if len(progress) > 0:
             for p in progress:
-                p["updated"] =  datetime.strptime(p["updated"], '%Y-%m-%d %H:%M:%S+0000')
+                try:
+                    p["updated"] =  datetime.strptime(p["updated"], '%Y-%m-%dT%H:%M:%S')
+                except: #backwards compatible to old timestamp format
+                    p["updated"] =  datetime.strptime(p["updated"], '%Y-%m-%d %H:%M:%S+0000')
         return progress
             
            
