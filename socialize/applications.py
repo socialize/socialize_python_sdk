@@ -189,10 +189,12 @@ class Application(ObjectBase):
             
             if "views" in stats:
                 views = stats.get("views", 0) * 1.0
+
                 if "unique_devices" in stats:
                     users = stats.get("unique_devices", 0) * 1.0
                 else:
                     users = stats.get("users", 0) * 1.0
+
                 if users <= 0:
                     stats["views_per_user"] = 0
                 else:
