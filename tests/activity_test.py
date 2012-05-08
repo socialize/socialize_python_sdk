@@ -77,7 +77,8 @@ class ActivityTest(SocializeTest):
     
     def test_share_find(self):
         '''
-            ** test get list of share by app_id
+            ** nosetests -s -v tests.activity_test:ActivityTest.test_share_find
+
         '''
         share = self.partner.share(app_id)
         meta, collection = share.find()
@@ -85,9 +86,9 @@ class ActivityTest(SocializeTest):
         for item in collection:
             self.assertNotEqual(int(item.id) , 0)
             self.assertEqual(item.activity_type , 'share')
-            print item.medium.medium
-            self.assertNotEqual(item.medium.id, None)
-            self.assertNotEqual(item.medium.medium, None)
+            print item.medium
+            self.assertNotEqual(item.medium['id'], None)
+            self.assertNotEqual(item.medium['medium'], None)
 
     def test_like_find(self):
         '''
