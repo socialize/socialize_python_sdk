@@ -2,7 +2,7 @@ from hashlib import sha1
 from urlparse import urlparse, parse_qs, urlunparse
 import urllib
 import oauth_client as oauth
-import simplejson as json
+import json
 import httplib2
 import logging
 

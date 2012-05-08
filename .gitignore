@@ -16,3 +16,5 @@ nosetests.xml
 _pip.log
 _pip/
 local_settings2.py
+*.egg
+*.egg-info

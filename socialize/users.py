@@ -1,6 +1,6 @@
 from base import ObjectBase , CollectionBase
 from datetime import datetime
-from simplejson import loads
+from json import loads
 import math
 
 
