@@ -122,7 +122,8 @@ class ApiUserStat(ObjectBase):
         self.total               = api_user_stat.get('total',0)
         self.is_banned           = api_user_stat.get('is_banned','')
         
-        self.devices             = [self.Device(item) for item in api_user_stat.get('devices',[]) ]
+        #self.devices             = [self.Device(item) for item in api_user_stat.get('devices',[]) ]
+        self.devices             = api_user_stat.get('devices',[])
         
         #calculate score
         #self.score               = self.__get_ssz_user_score()

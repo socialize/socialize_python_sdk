@@ -43,10 +43,10 @@ class Activity(ObjectBase):
         Construct activity base on activity_type
         can not create new activity from dashboard
     '''
-    class Medium():
-        def __init__(self, medium={}):
-            self.id = medium.get('id',None)
-            self.medium = medium.get('medium',None)
+#    class Medium():
+        #def __init__(self, medium={}):
+            #self.id = medium.get('id',None)
+            #self.medium = medium.get('medium',None)
 
     def __repr__(self):
         return '<id: %s ,%s %s on \"%s\" in app: %s | %s>'%(self.id,self.user.username,self.activity_type,self.entity.name,self.application, self.created)   
@@ -82,7 +82,7 @@ class Activity(ObjectBase):
             self.deleted       			= activity.get('deleted',None)         
             
             if self.activity_type == 'share':
-                self.medium             = self.Medium(activity.get('medium',{}))
+                self.medium             = activity.get('medium',{})
 
     def delete(self):
         if self.activity_type == 'comment':
