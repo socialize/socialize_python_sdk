@@ -1,4 +1,4 @@
-from django.utils.encoding import smart_str
+from utils import smart_str
 from base import CollectionBase, ObjectBase, ErrorPermission
 from datetime import datetime
 import urllib

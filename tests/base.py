@@ -1,7 +1,7 @@
 import unittest
 import datetime
 from socialize.client import Partner
-from simplejson import loads, dumps
+from json import loads, dumps
 try:
     from local_settings import version, host, key, secret, user_id , app_id
 except:

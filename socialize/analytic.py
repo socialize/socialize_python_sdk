@@ -1,4 +1,4 @@
-from django.utils.encoding import smart_str
+from utils import smart_str
 from base import CollectionBase, ObjectBase
 from datetime import datetime
 
