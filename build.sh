@@ -11,9 +11,9 @@ build() {
     echo ----------- Building virtual environment ----------------
     VPYTHON=python2.7
     [ "$OS" == "Darwin" ] && VPYTHON=python
-    ./virtualenv.py --no-site-packages --distribute $INSTALL_DIR
+    virtualenv --no-site-packages --distribute $INSTALL_DIR
     echo ----------- INSTALL REQUIREMENTS ----------------
-    $INSTALL_DIR/bin/pip install -M -E $INSTALL_DIR \
+    $INSTALL_DIR/bin/pip install -M \
         -i http://ssz-pip.s3-website-us-east-1.amazonaws.com/ \
         --download-cache $CACHE_DIR -r requirements.pip --log=./_pip.log
 }
