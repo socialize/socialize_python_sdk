@@ -4,7 +4,7 @@ from users import ApiUsers
 from certificates import IphoneCertificate
 from urllib2 import quote
 from notifications import NotificationLogs
-from django.utils.encoding import smart_str
+from utils import smart_str
 import logging
 logger = logging.getLogger(__name__)
 
