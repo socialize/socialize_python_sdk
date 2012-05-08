@@ -1,3 +1,4 @@
+from hashlib import sha1
 from urlparse import urlparse, parse_qs, urlunparse
 import urllib
 import oauth_client as oauth
@@ -6,9 +7,38 @@ import httplib2
 import logging
 
 logger = logging.getLogger(__name__)
-
-#debugging
 show_connections = False
+
+#from django.core.cache import cache
+
+#################################################
+### Django - Caching
+#def partner_set_cache(key, value, timeout=300):
+    ### Destroy cache by set value = None
+    #cache.set(key, value, timeout)      
+
+#def partner_destroy_cache(fn):
+    #""" decorator destroy is set value of that key to None """
+    #def check_cache( *args, **kwargs ):
+        #key = sha1(str(fn.__module__) + str(fn.__name__) + str(args) + str(kwargs)).hexdigest() 
+        #set_cache(key, None)
+        #return fn(*args,**kwargs)
+    #return check_cache
+
+#def partner_get_cache(fn, timeout):
+    #""" get cacha  """
+    #def check_cache( *args, **kwargs ):
+        #key = sha1(str(fn.__module__) + str(fn.__name__) + str(args) + str(kwargs)).hexdigest()
+        #value = cache.get(key)
+        #if not value:
+            #print "not cool"
+            #value = fn(*args,**kwargs)
+            #set_cache(key, value)
+        #else:
+            #print "Got Cha!"
+        #return value
+    #return check_cache
+###############################################
 
 class PartnerBase(object):
     base_partner_path = 'partner'
@@ -174,7 +204,7 @@ class Request(object):
     """ client make request
         handle error code here
         return meta, objects
-
+        manage Cache here 
     """
     
     def __init__(self,key,secret):
