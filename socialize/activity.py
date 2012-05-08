@@ -78,7 +78,7 @@ class Activity(ObjectBase):
             self.lng         		  	= activity.get('lng',None)              
             self.share_location			= activity.get('share_location',None)  
             ## View, Like don't have text, and can't be deleted
-            self.text          			= activity.get('text',None)      
+            self.text          			= activity.get('text',None)
             self.deleted       			= activity.get('deleted',None)         
             
             if self.activity_type == 'share':

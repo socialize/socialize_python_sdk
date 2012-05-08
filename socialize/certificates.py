@@ -19,16 +19,19 @@ class IphoneCertificate(ObjectBase):
         self.consumer_secret = secret
         if type(cert)==int:
             self.id = cert
+            self.get()
         elif not cert:
             self.id = None
         else:
             self.id                  = int(cert.get('id','0'))                
             self.resource_uri        = cert.get('resource_uri','')
             self.created             = datetime.strptime(cert.get('created',None), '%Y-%m-%dT%H:%M:%S')           
-            self.updated             = datetime.strptime(cert.get('cert_last_updated',None),'%Y-%m-%dT%H:%M:%S')        
+            self.updated             = datetime.strptime(cert.get('cert_last_updated',None),'%Y-%m-%d')        
 
-            self.code_sign_identity       = cert.get('date_of_birth','')    
-                
+            self.code_sign_identity  = cert.get('code_sign_identity','')    
+            self.p12_url             = cert.get('p12_url','')
+            self.cert_last_updated   = cert.get('cert_last_updated',None)
+            self.certificate_expiration_date = datetime.strptime(cert.get('certificate_expiration_date',None), '%Y-%m-%dT%H:%M:%S') 
 
 
     def to_dict(self, params={}):
@@ -42,7 +45,8 @@ class IphoneCertificate(ObjectBase):
         if self.id:
             params = {'id': self.id}
             cert = self._get('iphone_certificate',item_id=self.id, params= params)
-        return cert
+            self.__init__(self.consumer_key, self.consumer_secret, self.host, cert)
+        return self
     
 
      

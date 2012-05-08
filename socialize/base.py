@@ -25,6 +25,7 @@ class PartnerBase(object):
             'like'              : 'like',
             'entity'            : 'entity',
             'analytic'          : 'analytic',
+            'notification_log'  : 'notification_log',
             }                    
 
     partner_endpoint_verb = {
