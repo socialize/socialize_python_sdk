@@ -1,8 +1,9 @@
-from base import ObjectBase , CollectionBase
+from base import ObjectBase , CollectionBase, ErrorNotFound
 from datetime import datetime
 from json import loads
 import math
 from utils import smart_str
+
 
 
 
@@ -46,7 +47,7 @@ class ApiUserStats(CollectionBase):
         try:
             stat = ApiUserStat(self.consumer_key, self.consumer_secret, self.host,self.app_id,items[0])
         except IndexError:
-            raise Exception(404)
+            raise ErrorNotFound
 
         return stat
 
