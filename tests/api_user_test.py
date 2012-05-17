@@ -12,7 +12,7 @@ except:
 from socialize.client import Partner
 from base import SocializeTest
 from socialize.users import ApiUserStat ,ApiUser
-
+from socialize.base import ErrorNotFound
 def create_user(**kwargs):
     user  = {
             "badges": [],
@@ -113,9 +113,9 @@ class ApiUserStatTest(SocializeTest):
         api_user_stats = self.partner.api_user_stats(app_id)
         try:
             api_user = api_user_stats.findOne(api_user_id = 1)
-        except Exception, e:
-            self.assertEqual(type(e), Exception)  
-            self.assertEqual(e.message, 404)
+        except ErrorNotFound, e:
+            self.assertEqual(type(e), ErrorNotFound)  
+            #self.assertEqual(e.message, 404)
  
         
     def test_most_recent_users(self):
