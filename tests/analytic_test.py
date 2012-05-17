@@ -10,9 +10,9 @@ except:
     from settings import version, host, key, secret, user_id , app_id, delete_app , api_user_id
 
 from socialize.client import Partner
-from base import SocializeTest
+from base import SocializeTimeTest
 
-class AnalyticTest(SocializeTest):
+class AnalyticTest(SocializeTimeTest):
     '''
         find()
     '''   

@@ -10,9 +10,9 @@ except:
     from settings import version, host, key, secret, user_id , app_id, delete_app , api_user_id
 
 from socialize.client import Partner
-from base import SocializeTest
+from base import SocializeTimeTest
 
-class ActivityTest(SocializeTest):
+class ActivityTest(SocializeTimeTest):
     '''
         find()
     '''   
@@ -108,12 +108,12 @@ class ActivityTest(SocializeTest):
             ** test get list of comment by app_id order by created
         '''
         comment = self.partner.comment(app_id)
-        params= {'order_by':'-created', 'limit':100}
+        params= {'order_by':'-created', 'limit':10}
         meta, collection = comment.find(params)
 
         prev_created = datetime.strptime('2999-01-01T00:00:00','%Y-%m-%dT%H:%M:%S')
 
-        self.assertTrue( len(collection) <=100)
+        self.assertTrue( len(collection) <=10)
         self.assertTrue( len(collection) >= 2 )
         for item in collection:
             self.assertNotEqual(int(item.id) , 0)
@@ -121,7 +121,6 @@ class ActivityTest(SocializeTest):
             self.assertTrue( prev_created >= item.created)
             prev_created = item.created
             self.assertFalse( item.deleted)
-            print item
 
 
 
