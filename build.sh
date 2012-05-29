@@ -25,17 +25,20 @@ clean() {
     rm -rf tests/html coverage.xml
     find . -iname "*.pyc" | xargs rm -rvf
 }
+run_test(){
+    echo ----------- Running Unit Test ----------------
+    $INSTALL_DIR/bin/nosetests tests --with-xunit --with-coverage --cover-package=socialize -v --cover-html
+    $INSTALL_DIR/bin/coverage html -d tests/html      
+}
 
 unit_test(){
     clean
     build
-    echo ----------- Running Unit Test ----------------
-    $INSTALL_DIR/bin/nosetests tests --with-xunit --with-coverage --cover-package=socialize -v --cover-html
-    $INSTALL_DIR/bin/coverage html -d tests/html
+    run_test
 }
 
 usage() {
-    echo "$0 [build|clean|unit_test]"
+    echo "$0 [build|clean|unit_test|test]"
 }
 
 [ $# -lt 1 ] && usage && exit 1
@@ -48,6 +51,8 @@ case $OPT in
         clean ;;
     unit_test)
         unit_test ;;
+    run_test)
+        run_test ;;    
     *)
         usage
         exit 2

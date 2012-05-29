@@ -10,6 +10,7 @@ except:
 import os.path as op
 from time import time
 TESTS_ROOT_PATH = op.dirname(op.realpath(__file__))
+
 class SocializeTest(unittest.TestCase):
     RESOURCES_PATH = '%s/resources' % TESTS_ROOT_PATH
     
