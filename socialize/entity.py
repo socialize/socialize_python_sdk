@@ -86,7 +86,11 @@ class Entity(ObjectBase):
         self.shares     = entity.get('shares',None)       
         self.likes      = entity.get('likes',None)       
         self.comments   = entity.get('comments',None)
-        self.meta   = entity.get('meta',None)
+        self.meta       = entity.get('meta',None)
+        try:
+            self.meta = simplejson.loads(self.meta)
+        except:
+            pass
         self.total_activity   = entity.get('total_activity',None)
     
     def __post_payload(self):
