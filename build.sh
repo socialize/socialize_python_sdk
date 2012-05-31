@@ -38,7 +38,7 @@ unit_test(){
 }
 
 usage() {
-    echo "$0 [build|clean|unit_test|test]"
+    echo "$0 [build|clean|unit_test|run_test]"
 }
 
 [ $# -lt 1 ] && usage && exit 1
