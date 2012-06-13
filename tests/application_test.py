@@ -443,6 +443,8 @@ class TestApplicationWriteOperations(SocializeTest):
         
         self.assertTrue(resp)
 
+        cert = app.get_iphone_certificate()
+        self.assertEqual( cert.type, 'Development')
 
     def test_save_c2dm(self):
         '''

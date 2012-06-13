@@ -27,8 +27,9 @@ class IphoneCertificate(ObjectBase):
             self.resource_uri        = cert.get('resource_uri','')
             self.created             = datetime.strptime(cert.get('created',None), '%Y-%m-%dT%H:%M:%S')           
             self.cert_last_updated   = cert.get('cert_last_updated',None)
+            self.type                = cert.get('type',None)
             if self.cert_last_updated:
-                self.updated         = datetime.strptime(cert_last_updated,'%Y-%m-%d')        
+                self.updated         = datetime.strptime(self.cert_last_updated,'%Y-%m-%d')        
             else:
                 self.updated         = None
             self.code_sign_identity  = cert.get('code_sign_identity','')    
