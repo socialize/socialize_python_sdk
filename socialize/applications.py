@@ -49,6 +49,17 @@ class Applications(CollectionBase):
             apps.append(app)
         return meta,apps
 
+    def filter_by_id(self,ids=[]):
+
+        meta, items = self._find('application',{"id__in":ids})
+        
+        apps=[]
+        for item in items:
+            app = Application(self.consumer_key,self.consumer_secret,self.host,item)
+            apps.append(app)
+        return meta,apps
+ 
+
     def findOne(self, app_id, params={}):
         params['user_id'] = self.user
         params['user']=self.user #for api changes, make sure both work

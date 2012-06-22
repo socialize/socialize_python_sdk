@@ -21,7 +21,16 @@ class TestApplicationReadOperations(SocializeTest):
     '''
         find(), findOne(),
     '''
-    
+    def test_filtering_apps(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_filtering_apps
+        '''
+        app = self.partner.applications()
+        meta , apps = app.filter_by_id(ids=[42,43])
+        self.assertEqual( len(apps) ,2)
+        self.assertIn( apps[0].id , [42,43])
+        self.assertIn( apps[1].id , [42,43])
+
     
     def test_get_app_by_id(self):
         '''

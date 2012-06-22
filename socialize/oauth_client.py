@@ -470,16 +470,17 @@ class Request(dict):
         query = urlparse.urlparse(self.url)[4]
 
         url_items = self._split_url_string(query).items()
-        url_items = [(to_utf8(k), to_utf8(v)) for k, v in url_items if k != 'oauth_signature' ]
+        url_items = [(to_utf8(k), to_utf8_optional_iterator(v)) for k, v in url_items if k != 'oauth_signature' ]
         items.extend(url_items)
 
         items.sort()
-        encoded_str = urllib.urlencode(items)
+        encoded_str = urllib.urlencode(items, True)
         # Encode signature parameters per Oauth Core 1.0 protocol
         # spec draft 7, section 3.6
         # (http://tools.ietf.org/html/draft-hammer-oauth-07#section-3.6)
         # Spaces must be encoded with "%20" instead of "+"
         return encoded_str.replace('+', '%20').replace('%7E', '~')
+
 
     def sign_request(self, signature_method, consumer, token):
         """Set the signature parameter to the result of sign."""
@@ -611,8 +612,12 @@ class Request(dict):
         """Turn URL string into parameters."""
         parameters = parse_qs(param_str.encode('utf-8'), keep_blank_values=True)
         for k, v in parameters.iteritems():
-            parameters[k] = urllib.unquote(v[0])
+            if len(v) == 1:
+                parameters[k] = urllib.unquote(v[0])
+            else:
+                parameters[k] = sorted([urllib.unquote(s) for s in v])
         return parameters
+
 
 
 class Client(httplib2.Http):

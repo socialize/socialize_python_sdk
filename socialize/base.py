@@ -209,12 +209,13 @@ class Request(object):
         '''
             reconstruct url using params 
         '''
-        params['format'] = 'json'
+        #params['format'] = 'json'
         parts = urlparse(url)
         query = parse_qs(parts[4]) or {}
         query.update(params)
+        parsed_query = urllib.urlencode([(k, v) for k, vs in query.items() for v in isinstance(vs, list) and vs or [vs]])
         url = urlunparse(
-            (parts[0], parts[1], parts[2], parts[3], urllib.urlencode(query), parts[5])
+            (parts[0], parts[1], parts[2], parts[3],parsed_query, parts[5])
         )
         return url
 
