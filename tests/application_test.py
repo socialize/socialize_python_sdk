@@ -213,6 +213,7 @@ class TestApplicationReadOperations(SocializeTest):
         logs = app.get_notification_logs()
         for l in logs:
             print l.to_dict()
+            self.assertEqual( l.errors, [] )
 
 class TestApplicationWriteOperations(SocializeTest):
     '''

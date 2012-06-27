@@ -56,7 +56,7 @@ class NotificationLog(ObjectBase):
             self.meta               = loads(log.get('meta',"{}"))
             self.to_users           = loads(log.get('users', "[]"))     ## String in "[]" format.
             self.progress           = self.__get_progress(log.get('progress',[]))
-
+            self.errors             = log.get('errors',[])
 
     def to_dict(self, params={}):
         return self.__dict__
