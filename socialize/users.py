@@ -326,7 +326,7 @@ class ApiUser(ObjectBase):
             reach = 0
             for tpa in self.third_party_auth:
                 if "connections_count" in tpa:
-                    reach = reach + tpa.get("connections_count",0)
+                    reach = reach + (tpa.get("connections_count",0) or 0)
             if reach > 0:
                 self.reach = reach
 
