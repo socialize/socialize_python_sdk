@@ -399,7 +399,9 @@ class Application(ObjectBase):
                 verb='notification')
         return resp
 
-    def android_market_url(self):
+    def android_market_url(self,  is_mobile=False):
+        if is_mobile:
+            return  "amzn://apps/android?p=%s" % self.android_package_name
         return "https://market.android.com/details?id=%s" % self.android_package_name  
 
     def appstore_url(self):
