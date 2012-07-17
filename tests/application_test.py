@@ -107,7 +107,7 @@ class TestApplicationReadOperations(SocializeTest):
         ## get specific app id
         app = apps.findOne(app_id)
         print app.android_market_url()     
-        self.assertEqual( app.android_market_url(), "https://market.android.com/details?id=%s" % app.android_package_name)
+        self.assertEqual( app.android_market_url(), "http://play.google.com/store/apps/details?id=%s" % app.android_package_name)
         
 
     def test_collections_get(self):
