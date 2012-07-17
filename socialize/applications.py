@@ -399,11 +399,15 @@ class Application(ObjectBase):
                 verb='notification')
         return resp
 
-    def android_market_url(self):
-        return "https://market.android.com/details?id=%s" % self.android_package_name  
+    def android_market_url(self,  is_mobile=False):
+#        if is_mobile:
+#            return  "market://apps/android?p=%s" % self.android_package_name
+        return "http://play.google.com/store/apps/details?id=%s" % self.android_package_name  
 
     def appstore_url(self):
         return "http://itunes.apple.com/us/app/id%s" % self.apple_store_id      
 
-    def amazon_android_market_url(self):
+    def amazon_android_market_url(self,  is_mobile=False):
+#        if is_mobile:
+#            return  "amzn://apps/android?p=%s" % self.android_package_name
         return "http://www.amazon.com/gp/mas/dl/android?p=%s" % self.android_package_name
