@@ -419,6 +419,8 @@ class TestApplicationWriteOperations(SocializeTest):
         ## UPload to deleted app
         applications = self.partner.applications(user_id)
         app = applications.findOne(delete_app)
+        print delete_app
+
         #p12_filename = '%s/%s' % (self.RESOURCES_PATH, 'simple-sample-prod.p12')
 
         #p12_content = open(p12_filename, 'rb').read()
@@ -428,6 +430,9 @@ class TestApplicationWriteOperations(SocializeTest):
         p12_password = 'b3s0cial'                    
         resp = app.upload_p12(p12_base64=p12_base64,
                 key_password=p12_password)
+
+
+        print resp
         self.assertTrue(resp)
         cert = app.get_iphone_certificate()        
         self.assertEqual( cert.type, 'Production')
