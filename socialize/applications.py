@@ -374,7 +374,7 @@ class Application(ObjectBase):
             users must be a list of integer
             subscription type [optional] by default is "developer_notification"
         '''
-        payload = {'message': quote(message)}
+        payload = {'message': message}
         
         if broadcast_user_set:
             payload.update({"broadcast_user_set" : broadcast_user_set})
