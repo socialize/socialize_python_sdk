@@ -65,6 +65,18 @@ class TestApplicationReadOperations(SocializeTest):
         #self.assertEqual( total_apps, len(list_apps))
 
     
+    def test_filter_app_by_contains_package_name_or_appstore_id(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_filter_app_by_contains_package_name_or_appstore_id
+        '''
+        applications = self.partner.applications()
+        params = {"contains_store_id":1}
+        meta , apps = applications.findAllSocialize(params)
+        self.assertTrue( len(apps) > 1)
+        for app in apps:
+            self.assertEqual( app.is_socialize_editable, True) 
+            self.assertNotEqual( app.socialize_consumer_secret, None) 
+            self.assertTrue( app.android_package_name or app.apple_store_id)                                                                               
 
     def test_find_all_socialize(self):
         '''
@@ -479,9 +491,7 @@ class TestApplicationWriteOperations(SocializeTest):
         except ErrorC2DMwithoutPackageName,e :
             self.assertEqual(e.content , "Need android package name in order to send smart alert")
 
-    def test_create_app_with_ampersand_name(self):
-        '''
-            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_create_app_with_ampersand_name
-        '''
-        name = "test & test"
-        pass
+
+
+
+
