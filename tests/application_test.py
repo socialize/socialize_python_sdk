@@ -399,62 +399,26 @@ class TestApplicationWriteOperations(SocializeTest):
         resp = app.send_notification(message, entity_id=1,user_id_list=[] ,subscription="developer_direct_entity")
         print "Response: ", resp
                                                                          
-    def xtest_upload_p12(self):
+    def test_upload_p12_prod(self):
         '''
-            Upload p12 for push notification
+            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_upload_p12_prod
+
         '''
         ## UPload to deleted app
         applications = self.partner.applications(user_id)
         app = applications.findOne(delete_app)
-        p12_filename = '%s/%s' % (self.RESOURCES_PATH, 'new_certificate_pkey.p12')
+        #p12_filename = '%s/%s' % (self.RESOURCES_PATH, 'simple-sample-prod.p12')
 
-        p12_content = open(p12_filename, 'rb').read()
-        p12_base64 = base64.b64encode(p12_content)
-        p12_password = 'success'                    
+        #p12_content = open(p12_filename, 'rb').read()
+        p12_base64 = '''
+        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
+        '''
+        p12_password = 'b3s0cial'                    
         resp = app.upload_p12(p12_base64=p12_base64,
                 key_password=p12_password)
         self.assertTrue(resp)
-
-
-    def test_upload_p12(self):
-        '''
-            nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_upload_p12
-            Upload p12 for push notification
-        '''
-        ## UPload to deleted app
-        applications = self.partner.applications(user_id)
-        print delete_app
-        app = applications.findOne(delete_app)
-        p12_password = "b3s0cial"
-        p12_base64= """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"""
-
-
-        resp = app.upload_p12(p12_base64=p12_base64,
-                key_password=p12_password)
-        
-        self.assertTrue(resp)
-
-        cert = app.get_iphone_certificate()
-        self.assertEqual( cert.type, 'Development')
+        cert = app.get_iphone_certificate()        
+        self.assertEqual( cert.type, 'Production')
 
     def test_save_c2dm(self):
         '''
