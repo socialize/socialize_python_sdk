@@ -64,10 +64,9 @@ class ApiUserStats(CollectionBase):
         return self.find(params)
         
     def authd_users(self, params={}):
-        '''
-            NOT YET IMPLEMENTED on partner api
-        '''
-        pass
+        params['third_party_authenticated']=1
+        return self.find(params)
+        
 
 
 
@@ -279,7 +278,7 @@ class ApiUsers(CollectionBase):
  
 
 class ApiUser(ObjectBase):
-    '''
+    ''' DEPRECATE -- 08/31/2012
         find a single user from API
         ** API should allow filter by id & application
     '''

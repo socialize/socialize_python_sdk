@@ -94,7 +94,20 @@ class ApiUserStatTest(SocializeTest):
             memory.append(item.id)
             
             print item
-
+    def test_find_authd(self):
+        """    
+            nosetests -s -v tests.api_user_test:ApiUserStatTest.test_find_authd 
+        """
+        api_user_stats = self.partner.api_user_stats(384309)
+        meta, stats = api_user_stats.authd_users()
+        
+        self.assertTrue( len(stats) > 0)
+        memory = []
+        for item in stats:
+            self.assertTrue( item.id not in memory)
+            memory.append(item.id)
+            
+            print item                     
     def test_findOne(self):
         """    
             nosetests -s -v tests.api_user_test:ApiUserStatTest.test_findOne 
