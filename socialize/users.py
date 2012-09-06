@@ -125,10 +125,12 @@ class ApiUserStat(ObjectBase):
         
         #self.devices             = [self.Device(item) for item in api_user_stat.get('devices',[]) ]
         self.devices             = api_user_stat.get('devices',[])
+        self.user_score          = api_user_stat.get('user_score',0)
         
         #calculate score
+        ## SCORE is depricated, move user_score to API code
         #self.score               = self.__get_ssz_user_score()
-        self.score               = self.__new_ssz_user_score()
+        #self.score               = self.__new_ssz_user_score()
         self.mo                  = self.__get_ssz_user_MO()
         self.badges              = self.__get_badges()
 
@@ -142,70 +144,70 @@ class ApiUserStat(ObjectBase):
         
 
 
-    def __formular(self,comment, share,like, view):
-        def activity_score(activity_count,activity_weight):
-            # ln( activity+1) * weight)
-            return math.log(max(activity_count, 1)* activity_weight)                 # pre defince weight of activity
+#    def __formular(self,comment, share,like, view):
+        #def activity_score(activity_count,activity_weight):
+            ## ln( activity+1) * weight)
+            #return math.log(max(activity_count, 1)* activity_weight)                 # pre defince weight of activity
         
-        cs = activity_score( comment, self.weight['comment'])
-        ss = activity_score( share, self.weight['share'])
-        ls = activity_score( like, self.weight['like'])
-        vs = activity_score( view, self.weight['view'])
-        return cs+ss+ls+vs
+        #cs = activity_score( comment, self.weight['comment'])
+        #ss = activity_score( share, self.weight['share'])
+        #ls = activity_score( like, self.weight['like'])
+        #vs = activity_score( view, self.weight['view'])
+        #return cs+ss+ls+vs
 
-    def __new_ssz_user_score(self):
-        GRAPH_VELOCITY = 1.557
-        user_sum = self.__formular( self.comments, self.shares, self.likes, self.views)
-        lowest  =  self.__formular( 1,1,1,1)
-        ## Adjustable, this means max score 100% ~ should have 100 actions per each activity (comment share like view)
-        ## always > 0
-        highest = self.__formular( comment=100,share=40,like=50,view=300)
-        score = round((user_sum-lowest) * (GRAPH_VELOCITY * 100 / highest) ,2)
+#    def __new_ssz_user_score(self):
+        #GRAPH_VELOCITY = 1.557
+        #user_sum = self.__formular( self.comments, self.shares, self.likes, self.views)
+        #lowest  =  self.__formular( 1,1,1,1)
+        ### Adjustable, this means max score 100% ~ should have 100 actions per each activity (comment share like view)
+        ### always > 0
+        #highest = self.__formular( comment=100,share=40,like=50,view=300)
+        #score = round((user_sum-lowest) * (GRAPH_VELOCITY * 100 / highest) ,2)
         
-        if len(self.user.third_party_auth) == 1:
-            score = score + 2.0
-        elif len(self.user.third_party_auth) > 1:
-            score = score + 5.0
+        #if len(self.user.third_party_auth) == 1:
+            #score = score + 2.0
+        #elif len(self.user.third_party_auth) > 1:
+            #score = score + 5.0
         
-        if self.user.reach and self.user.reach > 0:
-            if self.user.reach > 50:
-                score = score + (score * .05)
-            elif self.user.reach > 100:
-                score = score + (score * .1)
-            elif self.user.reach > 200:
-                score = score + (score * .15)
-            elif self.user.reach > 400:
-                score = score + (score * .2)
-            elif self.user.reach > 800:
-                score = score + (score * .25)
-        score = int(round(score,0))
+        #if self.user.reach and self.user.reach > 0:
+            #if self.user.reach > 50:
+                #score = score + (score * .05)
+            #elif self.user.reach > 100:
+                #score = score + (score * .1)
+            #elif self.user.reach > 200:
+                #score = score + (score * .15)
+            #elif self.user.reach > 400:
+                #score = score + (score * .2)
+            #elif self.user.reach > 800:
+                #score = score + (score * .25)
+        #score = int(round(score,0))
 
-        return 100.00 if score > 100 else score
+        #return 100.00 if score > 100 else score
     
-    def __get_ssz_user_score(self):
-        #totals
-        tc = 0 if self.comments < 0 else self.comments
-        tl = 0 if self.likes < 0 else self.likes 
-        ts = 0 if self.shares < 0 else self.shares  
-        tv = 0 if self.views < 0 else self.views     
-        #print tc, tl, ts, tv
+    #def __get_ssz_user_score(self):
+        ##totals
+        #tc = 0 if self.comments < 0 else self.comments
+        #tl = 0 if self.likes < 0 else self.likes 
+        #ts = 0 if self.shares < 0 else self.shares  
+        #tv = 0 if self.views < 0 else self.views     
+        ##print tc, tl, ts, tv
         
-        ##weights
-        cw = tc*5.0
-        lw = tl*1.3
-        sw = ts*9.0
-        vw = tv*.03
-        #print cw, lw, sw, vw
+        ###weights
+        #cw = tc*5.0
+        #lw = tl*1.3
+        #sw = ts*9.0
+        #vw = tv*.03
+        ##print cw, lw, sw, vw
         
-        ##logs
-        cl = math.log10(cw+1)
-        ll = math.log10(lw+1)
-        sl = math.log10(sw+1)
-        vl = math.log10(vw+1)
-        #print cl, ll, sl, vl
+        ###logs
+        #cl = math.log10(cw+1)
+        #ll = math.log10(lw+1)
+        #sl = math.log10(sw+1)
+        #vl = math.log10(vw+1)
+        ##print cl, ll, sl, vl
         
-        score = (cl+ll+sl+vl)/6.0 * 100.0
-        return round(score, 2)
+        #score = (cl+ll+sl+vl)/6.0 * 100.0
+        #return round(score, 2)
         
 
     def __get_ssz_user_MO(self):

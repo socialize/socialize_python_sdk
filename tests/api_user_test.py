@@ -27,7 +27,7 @@ def create_user(**kwargs):
             "app_id": 240754,
             "application": 240754,
             "host": "http://stage.api.getsocialize.com",
-            "score": 0.0,
+            "user_score": 0.0,
             "user": {},
             "key": "747a34c9-a482-48a2-b946-4363cf9c8759",
             "is_banned": False,
@@ -51,35 +51,36 @@ class ApiUserStatTest(SocializeTest):
         api_user_stats = self.partner.api_user_stats(app_id)
         self.assertEqual(api_user_stats.app_id,app_id)
     
-    def test_score(self):
-        '''
-            nosetests -s -v tests.api_user_test:ApiUserStatTest.test_score 
-        '''
-        score_list=[0]
-        print 'start user'
-        u = create_user( comments=1,shares=0,likes=0,views=10,)
-        user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
-        print user.score
-        score_list.append(user.score)
+#    def test_score(self):
+        #'''
+            ### USER SCORE is depricated move to API code
+            #nosetests -s -v tests.api_user_test:ApiUserStatTest.test_score 
+        #'''
+        #score_list=[0]
+        #print 'start user'
+        #u = create_user( comments=1,shares=0,likes=0,views=10,)
+        #user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
+        #print user.score
+        #score_list.append(user.score)
 
-        print 'viewer'
-        u = create_user( comments=1,shares=0,likes=0,views=400,)
-        user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
-        print user.score         
-        score_list.append(user.score)
+        #print 'viewer'
+        #u = create_user( comments=1,shares=0,likes=0,views=400,)
+        #user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
+        #print user.score         
+        #score_list.append(user.score)
 
-        print 'inactive'
-        u = create_user( comments=10,shares=1,likes=10,views=300, )
-        user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
-        print user.score
-        score_list.append(user.score)
+        #print 'inactive'
+        #u = create_user( comments=10,shares=1,likes=10,views=300, )
+        #user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
+        #print user.score
+        #score_list.append(user.score)
 
-        print 'active'
-        u = create_user( comments=200,shares=100,likes=200,views=500)
-        user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
-        print user.score
-        score_list.append(user.score)
-        print score_list
+        #print 'active'
+        #u = create_user( comments=200,shares=100,likes=200,views=500)
+        #user = ApiUserStat(key='key',secret='secret',host='host',app_id=1,api_user_stat=u)
+        #print user.score
+        #score_list.append(user.score)
+        #print score_list
     def test_find(self):
         """    
             nosetests -s -v tests.api_user_test:ApiUserStatTest.test_find 
