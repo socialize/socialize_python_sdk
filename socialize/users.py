@@ -89,7 +89,6 @@ class ApiUserStat(ObjectBase):
 
             self.device_udid         = device.get('device_udid',None)     
             self.oauth_token         = device.get('oauth_token',None) 
-            self.meta                = device.get('meta',None)
             
             self.country_code        = device.get('country_code',None)    
             self.device_name         = device.get('device_name',None)     
@@ -315,7 +314,8 @@ class ApiUser(ObjectBase):
             self.sex                 = api_user.get('sex','')               
             self.small_image_uri     = api_user.get('small_image_uri','')       
             self.medium_image_uri    = api_user.get('medium_image_uri','')      
-            self.large_image_uri     = api_user.get('large_image_uri','')       
+            self.large_image_uri     = api_user.get('large_image_uri','')
+            self.meta                = device.get('meta',None)     
             
             self.stats               = api_user.get('stats','{}')
             self.user_devices        = api_user.get('user_devices',[]) 
