@@ -16,7 +16,7 @@ setup(name='socialize_python_sdk',
       description='Socialize Python SDK',
       author='Champ Somsuk',
       author_email='champ.somsuk@getsocialize.com',
-      packages = ['socialize'],
+      packages = ['socialize_sdk'],
       requires=depends
 )
 
