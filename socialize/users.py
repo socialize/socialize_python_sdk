@@ -88,7 +88,8 @@ class ApiUserStat(ObjectBase):
             self.bundle_id           = device.get('bundle_id',None)       
 
             self.device_udid         = device.get('device_udid',None)     
-            self.oauth_token         = device.get('oauth_token',None)     
+            self.oauth_token         = device.get('oauth_token',None) 
+            self.meta                = device.get('meta',None)
             
             self.country_code        = device.get('country_code',None)    
             self.device_name         = device.get('device_name',None)     
