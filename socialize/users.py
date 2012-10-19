@@ -315,7 +315,7 @@ class ApiUser(ObjectBase):
             self.small_image_uri     = api_user.get('small_image_uri','')       
             self.medium_image_uri    = api_user.get('medium_image_uri','')      
             self.large_image_uri     = api_user.get('large_image_uri','')
-            self.meta                = device.get('meta',None)     
+            self.meta                = api_user.get('meta',None)     
             
             self.stats               = api_user.get('stats','{}')
             self.user_devices        = api_user.get('user_devices',[]) 
