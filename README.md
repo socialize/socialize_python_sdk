@@ -1,6 +1,8 @@
 Socialize Python SDK
 ====================
 
+This SDK is used for our partners, but if you do not have a partner key, you can use this as a template with your client key to get a jump start on making any custom API calls.
+
 How to use
 ----------
      
