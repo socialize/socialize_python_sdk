@@ -243,7 +243,10 @@ class Application(ObjectBase):
                         'android_package_name'   :self.android_package_name,  
                         'c2dm_sender_auth_token' :self.c2dm_sender_auth_token,
                         'apple_store_id'         :self.apple_store_id,
-                        "icon_url"               :self.icon_url
+                        "icon_url"               :self.icon_url,
+                        "twitter_consumer_key"   :self.twitter_consumer_key,
+                        "twitter_consumer_secret":self.twitter_consumer_secret
+
                      }
 
         else:
@@ -259,7 +262,9 @@ class Application(ObjectBase):
                         'stats'                  :self.stats,                 
                         'user'                   :self.user,
                         'deleted'                :self.deleted,
-                        'icon_url'               :self.icon_url
+                        'icon_url'               :self.icon_url,
+                        "twitter_consumer_key"   :self.twitter_consumer_key,
+                        "twitter_consumer_secret":self.twitter_consumer_secret
                     }
         return item
 
