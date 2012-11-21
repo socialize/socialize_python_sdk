@@ -139,6 +139,7 @@ class Application(ObjectBase):
             self.c2dm_token_source          =app.get('c2dm_token_source', 'socialize')
             
             self.twitter_consumer_key       =app.get('twitter_consumer_key', None)
+            self.twitter_consumer_secret       =app.get('twitter_consumer_secret', None)
             
             self.notification_quotas        =app.get('quotas', {})
             self.__update_notification_quotas()
