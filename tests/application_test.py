@@ -406,12 +406,15 @@ class TestApplicationWriteOperations(SocializeTest):
             send notification subscription: "developer_notification"
         '''
         applications = self.partner.applications(user_id)
+        print "got applications"
         app = applications.findOne(app_id)
+        print "got application (1)"
         message = "hello test from sdk \'developer_direct_entity\'"
         resp = app.send_notification(message, entity_id=1,user_id_list=[] ,subscription="developer_direct_entity")
+        print "Sent notification"
         print "Response: ", resp
                                                                          
-    def test_upload_p12_prod(self):
+    def test_upload_p12_dev(self):
         '''
             nosetests -s -v tests.application_test:TestApplicationWriteOperations.test_upload_p12_prod
 
@@ -434,7 +437,7 @@ class TestApplicationWriteOperations(SocializeTest):
         #print resp
         self.assertTrue(resp)
         cert = app.get_iphone_certificate()        
-        self.assertEqual( cert.type, 'Production')
+        self.assertEqual( cert.type, 'Development')
 
     def test_save_c2dm(self):
         '''
