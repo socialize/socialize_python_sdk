@@ -283,7 +283,6 @@ class Application(ObjectBase):
         '''
             handle post & put for application
         '''
-        import vimpdb; vimpdb.set_trace() 
         if int(self.user) ==0:
             raise Exception("Unable to create or update with user=0")
 
