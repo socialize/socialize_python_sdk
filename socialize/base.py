@@ -101,6 +101,7 @@ class CollectionBase(PartnerBase):
 
 class ObjectBase(PartnerBase):
     def _post(self, endpoint, payload, item=None, verb=None):
+        import vimpdb; vimpdb.set_trace()
         """
             POST payload to api 
             verb is special endpoint for activity

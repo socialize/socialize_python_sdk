@@ -137,6 +137,8 @@ class Application(ObjectBase):
             self.push_certificate           =app.get('push_certificate', None)
             self.is_socialize_editable      =app.get('is_socialize_editable', True)
             self.c2dm_token_source          =app.get('c2dm_token_source', 'socialize')
+
+            self.custom_propagation_domain  =app.get('custom_propagation_domain', None)
             
             self.twitter_consumer_key       =app.get('twitter_consumer_key', None)
             self.twitter_consumer_secret       =app.get('twitter_consumer_secret', None)
@@ -245,26 +247,28 @@ class Application(ObjectBase):
                         'apple_store_id'         :self.apple_store_id,
                         "icon_url"               :self.icon_url,
                         "twitter_consumer_key"   :self.twitter_consumer_key,
-                        "twitter_consumer_secret":self.twitter_consumer_secret
+                        "twitter_consumer_secret":self.twitter_consumer_secret,
+                        "custom_propagation_domain" :self.custom_propagation_domain
 
                      }
 
         else:
             ## update function using POST http method
             item ={
-                        'android_package_name'   :self.android_package_name,  
-                        'apple_store_id'         :self.apple_store_id,        
-                        'category'               :self.category,              
-                        'description'            :self.description,           
-                        'name'                   :self.name,                  
-                        'mobile_platform'        :self.mobile_platform,       
-                        'resource_uri'           :self.resource_uri,          
-                        'stats'                  :self.stats,                 
-                        'user'                   :self.user,
-                        'deleted'                :self.deleted,
-                        'icon_url'               :self.icon_url,
-                        "twitter_consumer_key"   :self.twitter_consumer_key,
-                        "twitter_consumer_secret":self.twitter_consumer_secret
+                        'android_package_name'      :self.android_package_name,  
+                        'apple_store_id'            :self.apple_store_id,        
+                        'category'                  :self.category,              
+                        'description'               :self.description,           
+                        'name'                      :self.name,                  
+                        'mobile_platform'           :self.mobile_platform,       
+                        'resource_uri'              :self.resource_uri,          
+                        'stats'                     :self.stats,                 
+                        'user'                      :self.user,
+                        'deleted'                   :self.deleted,
+                        'icon_url'                  :self.icon_url,
+                        "twitter_consumer_key"      :self.twitter_consumer_key,
+                        "twitter_consumer_secret"   :self.twitter_consumer_secret,
+                        "custom_propagation_domain" :self.custom_propagation_domain
                     }
         return item
 
@@ -279,7 +283,7 @@ class Application(ObjectBase):
         '''
             handle post & put for application
         '''
-        
+        import vimpdb; vimpdb.set_trace() 
         if int(self.user) ==0:
             raise Exception("Unable to create or update with user=0")
 

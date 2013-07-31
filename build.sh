@@ -8,10 +8,34 @@ INSTALL_DIR=${INSTALL_DIR:=_install}
 CACHE_DIR=${CACHE_DIR:=_pip}
 
 build() {
+
+
     echo ----------- Building virtual environment ----------------
-    VPYTHON=python2.7
-    [ "$OS" == "Darwin" ] && VPYTHON=python
-    virtualenv  --distribute $INSTALL_DIR
+
+
+    PYTHON=$(which python2.7)
+    #setup virtual env
+    ENV_OPTS="--distribute -p $PYTHON"
+    # Set to whatever python interpreter you want for your first environment:
+    URL_BASE=http://pypi.python.org/packages/source/v/virtualenv
+    VERSION="1.9.1"
+
+    echo "initialization complete"
+    echo "Setting up virtual env in installdir: $INSTALL_DIR"
+
+    if [ ! -d $INSTALL_DIR ]; then
+        pushd $INSTALL_DIR
+        # --- Real work starts here ---
+        curl -O -L $URL_BASE/virtualenv-$VERSION.tar.gz
+        tar xzf virtualenv-$VERSION.tar.gz
+        # Create the first "bootstrap" environment.
+        echo "creating virtual environment..." 
+        $PYTHON virtualenv-$VERSION/virtualenv.py $ENV_OPTS $INSTALL_DIR
+        # Don't need this anymore.
+        popd $INSTALL_DIR
+    fi
+
+    . $INSTALL_DIR/bin/activate
 
     echo ----------- INSTALL REQUIREMENTS ----------------
     $INSTALL_DIR/bin/pip install -M \
