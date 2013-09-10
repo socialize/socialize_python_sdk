@@ -218,7 +218,11 @@ class Application(ObjectBase):
                 comments = stats.get("comments", 0)
                 likes = stats.get("likes", 0)
                 shares = stats.get("shares", 0)
-                actions = (comments + likes + shares) * 1.0
+                actions = 0.0
+                try: 
+                    actions = (comments + likes + shares) * 1.0
+                except:
+                    pass
                 if users <= 0:
                     stats["actions_per_user"] = 0
                 else:
