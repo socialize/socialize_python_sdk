@@ -18,3 +18,4 @@ _pip/
 local_settings2.py
 *.egg
 *.egg-info
+virtualenv-1.9.1*

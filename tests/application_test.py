@@ -30,7 +30,6 @@ class TestApplicationReadOperations(SocializeTest):
         self.assertEqual( len(apps) ,2)
         self.assertIn( apps[0].id , [42,43])
         self.assertIn( apps[1].id , [42,43])
-
     
     def test_get_app_by_id(self):
         '''
@@ -38,32 +37,6 @@ class TestApplicationReadOperations(SocializeTest):
         '''
         app = self.partner.application(app=app_id)
         app.refresh()
-        print app.to_dict()
-    
-#    def test_keep_fetch_socialize_apps(self):
-        #'''
-            #nosetests -s -v tests.application_test:TestApplicationReadOperations.test_keep_fetch_socialize_apps
-        #'''
-        #applications = self.partner.applications()
-        #list_apps = []
-        #limit = 50
-        #offset = 0
-        #params = {'limit':limit, 'offset':offset, 'show_total_count':1}
-        #meta , apps = applications.findAllSocialize(params=params)
-        #total_apps = meta['total_count']
-        #list_apps = apps
-        #while True:
-            #offset += limit
-            #params = {'limit':limit, 'offset':offset}
-            #meta , apps = applications.findAllSocialize(params)
-            #self.print_json(meta)
-            #list_apps += apps
-            #print len(list_apps)
-            #if len(apps) < limit:
-                #break
-
-        #self.assertEqual( total_apps, len(list_apps))
-
     
     def test_filter_app_by_contains_package_name_or_appstore_id(self):
         '''
@@ -174,8 +147,22 @@ class TestApplicationReadOperations(SocializeTest):
         app = apps.findOne(app_id)
         self.assertEqual( app.id , app_id)
         self.assertTrue( app.name != '')
-        
-        ## show Application Object <id: 240754 ,name: test_app>
+
+    def test_app_get_custom_domain(self):
+        '''
+            nosetests -s -v tests.application_test:TestApplicationReadOperations.test_app_get_custom_domain
+        '''
+        apps = self.partner.applications(user_id)
+        print app_id
+        app = apps.findOne(app_id)
+        app.custom_propagation_domain = "test.domain.com"
+        app.save()
+
+        apps = self.partner.applications(user_id)
+        app_with_custom = apps.findOne(app_id)
+
+        print str(app_with_custom.custom_propagation_domain) + "::"
+
     def test_app_obj(self):
         '''
             nosetests -s -v tests.application_test:TestApplicationReadOperations.test_app_obj
