@@ -138,6 +138,14 @@ class Application(ObjectBase):
             self.is_socialize_editable      =app.get('is_socialize_editable', True)
             self.c2dm_token_source          =app.get('c2dm_token_source', 'socialize')
 
+            self.comments          =app.get('comments', 0)
+            self.likes             =app.get('likes', 0)
+            self.shares            =app.get('shares', 0)
+            self.views             =app.get('view', 0)
+            self.users             =app.get('users', 0)
+            self.unique_devices    =app.get('unique_devices', 0)
+            self.entity_count      =app.get('entity_count', 0)
+
             self.custom_propagation_domain  =app.get('custom_propagation_domain', None)
             
             self.twitter_consumer_key       =app.get('twitter_consumer_key', None)
