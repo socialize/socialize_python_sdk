@@ -7,7 +7,7 @@ try:
     from local_settings import version, host, key, secret, user_id , app_id, delete_app, api_user_id, entity_id
 except:
     print 'Failed to load local_settings.py. Switching to settings.py'
-    from settings import version, host, key, secret, user_id , app_id, delete_app , api_user_id
+    from settings import version, host, key, secret, user_id , app_id, delete_app , api_user_id, entity_id
 
 from socialize.client import Partner
 from base import SocializeTest
